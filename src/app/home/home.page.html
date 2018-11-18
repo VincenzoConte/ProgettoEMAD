@@ -10,40 +10,6 @@
   <ion-img style="width: auto; height: 100%; align-items: center" src="/assets/img/logo.png"></ion-img>
 </ion-content>
 
-
-<ion-content padding>
-	<ion-grid>
-		<ion-row justify-content-center>
-			<ion-col size-md="6" size-lg="5">
-				<div padding>
-					<ion-item>
-						<ion-input type="text" name="email" placeholder="Email"></ion-input>
-					</ion-item>
-
-					<ion-item>
-						<ion-input type="password" name="password" placeholder="Password"></ion-input>
-					</ion-item>
-				</div>
-
-				<div padding>
-					<ion-button size="large" href="/touchid" expand="block">Login</ion-button>
-				</div>
-			</ion-col>
-		</ion-row>
-
-		<ion-row justify-content-center>
-			<ion-col size-md="6" size-lg="5">
-				<div padding>
-					<ion-button size="large" href="/touchid" expand="block">Google</ion-button>
-					<ion-button size="large" href="/touchid" expand="block">Facebook</ion-button>
-				</div>
-				<div padding>
-					<ion-button color="danger" size="large" href="/touchid" expand="block">Sign in</ion-button>
-				</div>
-			</ion-col>
-		</ion-row>
-
-
-
-	</ion-grid>
+<ion-content>
+  <app-login></app-login>
 </ion-content>

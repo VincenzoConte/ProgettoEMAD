@@ -1,0 +1,21 @@
+<div padding text-center>
+  <form (ngSubmit)="login()">
+    <ion-item>
+      <ion-input type="text" name="email" placeholder="Email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="password" name="password" placeholder="Password"></ion-input>
+    </ion-item>
+    <div text-center>
+      <ion-button type="submit" size="medium"  expand="block">Login</ion-button>
+    </div>
+  </form>
+  <div text-center padding>
+    <ion-button size="medium" expand="round">Google</ion-button>
+    <ion-button size="medium" expand="round">Facebook</ion-button>
+  </div>
+  <div text-center>
+    Non sei ancora registrato?
+    <ion-button size="medium" color="danger" expand="block">Sign in</ion-button>
+  </div>
+</div>
