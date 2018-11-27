@@ -1,0 +1,7 @@
+{
+  "name": "capperfit",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

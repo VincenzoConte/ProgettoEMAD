@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title style="text-align:center;">
+            Capperfit
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <div class="intro">
+        Tap the button below to log-in with Facebook
+    </div>
+    <div class="google_btn_container">
+        <button ion-button block icon-start>
+            <ion-icon style="padding-right: 10px;">
+                 <img src="assets/icon/google_logo.png" style="height: 20px; width: 20px;">
+            </ion-icon>
+            Login with Google
+        </button>
+    </div>
+    <div class="fb_btn_container">
+        <button ion-button block (click)="loginFacebook();" icon-start>
+            <ion-icon name="logo-facebook" style="padding-right: 10px;"></ion-icon>
+            Login with Facebook
+        </button>
+    </div>
+</ion-content> 
