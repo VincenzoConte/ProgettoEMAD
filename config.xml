@@ -87,5 +87,5 @@
         <variable name="APP_NAME" value="Capgemini Personal Fitness" />
         <variable name="FACEBOOK_ANDROID_SDK_VERSION" value="4.38.1" />
     </plugin>
-    <engine name="browser" spec="^5.0.4" />
+    <engine name="browser" spec="5.0.4" />
 </widget>
