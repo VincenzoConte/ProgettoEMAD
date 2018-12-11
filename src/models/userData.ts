@@ -1,6 +1,7 @@
-export interface User{
+export interface UserData{
+    userID: string;
+    name: string;
     email: string;
-    password: string;
     age: number;
     weight: number;
     height: number;

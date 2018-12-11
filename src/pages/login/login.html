@@ -1,45 +1,56 @@
-<ion-header text-center>
-  <ion-toolbar>
-    <ion-title ion-text color="primary">
-      Capgemini Personal Fitness
-    </ion-title>
-  </ion-toolbar>
+<!--
+  Generated template for the LoginPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+<!--
+  <ion-navbar color="primary">
+    <ion-title style="text-align: center;">Capgemini Personal Fitness</ion-title>
+  </ion-navbar>
+
+  <div class="row"> 
+	<div class="col col-50"><button class="button button-positive">
+  button-positive
+</button> </div><div class="col col-50"><button class="button button-positive">
+  button-positive
+</button></div>     
+</div>
+-->
 </ion-header>
 
 
 <ion-content padding>
-  <ion-grid>
+  <h3 style="text-align: center; text-shadow: 3px;">Capgemini Personal Fitness</h3>
+
+  <img id="capperfitLogo" src="../../assets/imgs/capperfit_logo.png"/>
+
+  <ion-item>
+    <ion-label floating>Email</ion-label>
+    <ion-input type="text" [(ngModel)]="user.email" required></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Password</ion-label>
+    <ion-input type="password" [(ngModel)]="user.password" required></ion-input>
+  </ion-item>
+
+  <ion-grid id="mailAccessDiv"> 
     <ion-row>
-      <ion-col col-sm-12 text-center>
-        <img style="heigth:100%; width:auto;" src="../../assets/imgs/capperfit_logo.png"/>
+      <ion-col col-6>
+      <button ion-button block (click)="loginMail(user);" id="loginMailBtn">Login</button>
       </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-          <ion-item>
-            <ion-label floating>Email</ion-label>
-            <ion-input type="text" [(ngModel)]="user.email"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label floating>Password</ion-label>
-            <ion-input type="password" [(ngModel)]="user.password"></ion-input>
-          </ion-item>
-
-          <button ion-button block (click)="loginMail(user);" id="loginMailBtn">Login via mail</button>
-
-          <button ion-button block color="light"
-              (click)="registerMail();" id="registerMailBtn">Registrati</button>
-
-          <button ion-button block color="danger" *ngIf="forgotLogin" id="loginForgotBtn">Ho dimenticato la password.</button>
-
-          <button ion-button icon-end
-            full (click)="loginFacebook();" id="loginFacebookBtn">
-            Entra con
-            <ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
-          </button>
+      <ion-col col-6>
+      <button ion-button block outline (click)="registerMail();" id="registerMailBtn">Registrati</button>
       </ion-col>
     </ion-row>
   </ion-grid>
+  
+  <button ion-button block color="danger" *ngIf="forgotLogin" id="loginForgotBtn" (click)="forgotPassword();">Ho dimenticato la password.</button>
+
+  <button ion-button icon-end
+    full (click)="loginFacebook();" id="loginFacebookBtn">
+    Entra con <ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
+    </button>
 </ion-content>

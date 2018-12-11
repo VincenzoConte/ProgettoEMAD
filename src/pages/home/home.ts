@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, IonicPage } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
