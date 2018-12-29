@@ -6,43 +6,39 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title style="text-align: center;">Conosciamoci meglio</ion-title>
+    <ion-toolbar >
+      <ion-title>Prima di iniziare</ion-title>
+    </ion-toolbar>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h6>Compila questo questionario prima di iniziare ad allenarti.</h6>
+  <h5 id="fillform">Riempi i seguenti campi:</h5>
   
-  <ion-item>
-    <ion-label floating>Nome</ion-label>
-    <ion-input type="text" [(ngModel)]="userData.name" required></ion-input>
-  </ion-item>
+  <form [formGroup]="formgroup" (ngSubmit)="userDataAdded();" style="margin-top: 0px;">
+    <ion-item>
+      <ion-label floating>Età</ion-label>
+      <ion-input type="text" pattern="\d*" formControlName="age" required></ion-input>
+    </ion-item>
+ 
+    <ion-item>
+      <ion-label floating>Altezza (in centimetri)</ion-label>
+      <ion-input type="text" pattern="\d*" formControlName="height" required></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label floating>Età</ion-label>
-    <ion-input type="text" [(ngModel)]="userData.age" required></ion-input>
-  </ion-item>
+    <ion-item>
+      <ion-label floating>Peso</ion-label>
+      <ion-input type="text" pattern="\d*" formControlName="weight" required></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label floating>Altezza (in centimetri)</ion-label>
-    <ion-input type="text" [(ngModel)]="userData.height" required></ion-input>
-  </ion-item>
+  </form>
 
-  <ion-item>
-    <ion-label floating>Peso (sincero!)</ion-label>
-    <ion-input type="text" [(ngModel)]="userData.weight" required></ion-input>
-  </ion-item>
-
-   <div style="margin-top: 10%; margin-left: 4%;">
-        <label id="label">
-          <ion-checkbox [(ngModel)]="privacyPolicy" (ionChange)="updatePrivacyPolicy()"style="margin-right: 2px;width: 10px;height: 12px;"></ion-checkbox> 
-          <a href="https://termsfeed.com/privacy-policy/495ac511fc5b2ff73a32d8a01276d564" style="margin-left: 5%;">Accetto i termini e le condizioni d'uso</a> 
-        </label>
-    </div>
-    
-
+  <div style="margin-top: 25px; margin-left: 4%;">
+    <label id="label">
+      <ion-checkbox color="secondary" [ngModel]="privacyPolicy" (ionChange)="updatePrivacyPolicy()"></ion-checkbox> 
+      <a href="https://termsfeed.com/privacy-policy/495ac511fc5b2ff73a32d8a01276d564" style="margin-left: 5%;" id="privacy-policy">Accetto i termini e le condizioni d'uso</a> 
+    </label>
+  </div>
   
+  <button ion-button block id="registerbtn" (click)="userDataAdded();" [disabled]="!isenabled">Avanti</button>
 </ion-content>
-<ion-footer padding>
- <button ion-button block (click)="userDataAdded(userData);" [disabled]="!isenabled">Avanti</button>
-</ion-footer>

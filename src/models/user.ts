@@ -1,7 +1,8 @@
 export interface User{
     email: string;
-    password: string;
+    name: string;
     age: number;
     weight: number;
     height: number;
+    password: string;
 }

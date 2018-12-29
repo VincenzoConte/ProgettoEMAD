@@ -14,28 +14,48 @@
 
 
 <ion-content padding>
-  <p style="text-align: center;">Completa i campi per registrarti su Capgemini Personal Fitness</p>
-  <ion-item>
-    <ion-label floating>Email</ion-label>
-    <ion-input type="text" [(ngModel)]="user.email"></ion-input>
-  </ion-item>
+  <h5 id="registertext" >Completa i campi per registrarti:</h5>
 
-  <ion-item>
-    <ion-label floating>Password</ion-label>
-    <ion-input type="password" [(ngModel)]="user.password"></ion-input>
-  </ion-item>
+  <form [formGroup]="formgroup" (ngSubmit)="register();">
+    <ion-item>
+      <ion-label floating>Email</ion-label>
+      <ion-input type="text" required formControlName="mail"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label floating>Età</ion-label>
-    <ion-input type="tel" [(ngModel)]="user.age"></ion-input>
-  </ion-item>
+    <ion-item>
+      <ion-label floating>Password</ion-label>
+      <ion-input type="password" required formControlName="password"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label floating>Peso</ion-label>
-    <ion-input type="tel" [(ngModel)]="user.weight"></ion-input>
-  </ion-item>
+    <ion-item>
+      <ion-label floating>Nome</ion-label>
+      <ion-input type="text" required formControlName="name"></ion-input>
+    </ion-item>
 
+    <ion-item>
+      <ion-label floating>Età</ion-label>
+      <ion-input type="tel" required formControlName="age"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Altezza (in centimetri)</ion-label>
+      <ion-input type="tel" required formControlName="height" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Peso</ion-label>
+      <ion-input type="tel" required formControlName="weight"></ion-input>
+    </ion-item>    
+  </form>
+
+  <div style="margin-top: 10%; margin-left: 4%;">
+      <label id="label">
+        <ion-checkbox color="secondary" [ngModel]="privacyPolicy" (ionChange)="updatePrivacyPolicy()"></ion-checkbox> 
+        <a href="https://termsfeed.com/privacy-policy/495ac511fc5b2ff73a32d8a01276d564" style="margin-left: 5%;" id="privacy-policy">
+          Accetto i termini e le condizioni d'uso
+        </a> 
+      </label>
+    </div>
+
+  <button ion-button id="registerbtn" block (click)="register();">Registrati</button>  
 </ion-content>
-<ion-footer padding>
-  <button ion-button block (click)="registerUser(user);">Registrati</button>
-</ion-footer>

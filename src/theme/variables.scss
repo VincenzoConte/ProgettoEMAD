@@ -86,3 +86,56 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+//====Open Sans==============================================
+@font-face{
+  font-family: "Prod Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url('../assets/fonts/prodsans/prodsans-regular.ttf');
+}
+
+@font-face{
+  font-family: "Prod Sans";
+  font-style: bold;
+  font-weight: 700;
+  src: url('../assets/fonts/prodsans/prodsans-bold.ttf');
+}
+
+@font-face{
+  font-family: "Prod Sans";
+  font-style: italic;
+  font-weight: 300;
+  src: url('../assets/fonts/prodsans/prodsans-italic.ttf');
+}
+
+//====Open Sans===============================================
+@font-face{
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url('../assets/fonts/opensans/OpenSans-Regular.ttf');
+}
+
+@font-face{
+  font-family: "Open Sans";
+  font-style: bold;
+  font-weight: 700;
+  src: url('../assets/fonts/opensans/OpenSans-Bold.ttf');
+}
+
+@font-face{
+  font-family: "Open Sans";
+  font-style: italic;
+  font-weight: 300;
+  src: url('../assets/fonts/opensans/OpenSans-Italic.ttf');
+}
+
+@font-face{
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 100;
+  src: url('../assets/fonts/opensans/OpenSans-Light.ttf');
+}
+
+ 

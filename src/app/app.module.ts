@@ -15,6 +15,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { IonicStorageModule } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook';
+import { TrainingListPage } from '../pages/training-list/training-list';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -31,7 +32,8 @@ const firebaseConfig = {
     HomePage,
     LoginPage,
     RegisterPage,
-    FirstAccessPage
+    FirstAccessPage,
+    TrainingListPage
   ],
   imports: [
     BrowserModule,
@@ -48,7 +50,8 @@ const firebaseConfig = {
     HomePage,
     LoginPage,
     RegisterPage,
-    FirstAccessPage
+    FirstAccessPage,
+    TrainingListPage
   ],
   providers: [
     StatusBar,

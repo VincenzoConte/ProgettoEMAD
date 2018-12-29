@@ -1,0 +1,22 @@
+page-training-list {
+    #title{
+        font-family: "Prod Sans" !important;
+        font-weight: 400 !important;
+    }
+    
+    .trainingItem {
+    margin-bottom: 16px;
+    height: 50px;
+    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    border-radius: 5px; 
+    background-color: #0066ff;
+    text-align:center;   
+    font-family: "Prod Sans" !important;
+    font-weight: 700 !important;
+    color:white;
+    }
+
+    #itemlist{
+        margin-top : 30px;
+    }
+}

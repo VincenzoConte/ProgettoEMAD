@@ -1,21 +1,39 @@
 page-login {
+    #apptitle{
+        font-family: "Prod Sans" !important;
+        font-weight: 700 !important;
+        text-align: center;
+    }
 
-    #capperfitLogo{
-        height:30%; 
-        width: auto; 
+    #capperfitlogo{
+        height:150px; 
+        width: 150px; 
         display:block;
         margin-left: auto; 
         margin-right: auto;
     }
-    
-    #mailAccessDiv{
-        margin-top: 7px;
+
+    ion-label{
+        font-family: 'Open Sans' !important; 
+        font-weight: 100 !important;
     }
 
-    #loginFacebookBtn {
-        margin-top: 10px;           
+    ion-item, button{
+        font-family: "Prod Sans" !important;
+        font-weight: 400 !important;
+    }
+        
+    #mailaccess{
+        margin-top: 16px;
+    }
+
+    #fbaccess {
+        margin-top: 16px;           
         background: #3b5998 !important;
     }
 
 
+    .item-md{
+        padding-left: 0px !important;
+    }
 }

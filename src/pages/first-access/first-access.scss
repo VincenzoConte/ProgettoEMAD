@@ -1,3 +1,80 @@
 page-first-access {
+     ion-item, ion-title, #registerbtn, #privacy-policy, #fillform{
+        font-family: "Prod Sans" !important;
+        font-weight: 400 !important;
+    }
+
+    #registerbtn{
+        background: #009688 !important;
+        border-radius: 4px;
+        margin-top: 50px;
+    }
+
+    .toolbar-background {
+        background-color: #009688;
+        
+    }
+    .toolbar-title{
+        color:white;
+    }
+
+    //elementi toolbar
+    .toolbar-background {
+        background-color: #009688;        
+    }
+
+    .toolbar-title{
+        color:white;
+    }
+
+    .item-md{
+        padding-left: 0px !important;
+    }
+
+    .back-button, .back-button:hover, .back-button:focus {
+        color: white !important;
+    }
+
+
+    //
+    #privacy-policy {
+        color: #009688 !important;
+        border-color: #009688 !important;
+    }
+ 
+    ion-checkbox{
+        margin-right: 2px;
+        width: 10px;
+        height: 12px;
+    }    
+
+    //input cliccato 
+    .item-md.item-input.item-input-has-focus .item-inner,
+    .item-md.item-input.input-has-focus .item-inner {
+        border-bottom-color: #00695c;
+        -webkit-box-shadow: inset 0 -1px 0 0 #00695c;
+        box-shadow: inset 0 -1px 0 0 #00695c;
+    }
+    
+    //label dell'input
+    item-input-has-focus .label-md[floating], .input-has-focus .label-md[floating]{
+        color: #00695c; 
+    }
+
+    //input valido
+    .item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
+    .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+        border-bottom-color: red;
+        -webkit-box-shadow: inset 0 -1px 0 0 red;
+        box-shadow: inset 0 -1px 0 0 red;
+    }
+
+    //input non valido
+    .item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+        border-bottom-color: #d50000;
+        -webkit-box-shadow: inset 0 -1px 0 0 #d50000;
+        box-shadow: inset 0 -1px 0 0 #d50000;
+    }
+    
 
 }

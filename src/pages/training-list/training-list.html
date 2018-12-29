@@ -1,0 +1,21 @@
+<!--
+  Generated template for the TrainingListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+</ion-header>
+
+
+<ion-content padding>
+  <h5 style="text-align: center;" id="title">Seleziona un tipo di allenamento:</h5>
+
+  <ion-list id="itemlist">
+    <ion-item no-lines *ngFor="let training of trainings | async" class="trainingItem" (click)="trainingClicked(training.trainingID);">      
+        {{training.name}}            
+    </ion-item>
+  </ion-list>
+  
+</ion-content>
