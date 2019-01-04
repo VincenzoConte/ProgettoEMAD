@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { HomePage } from './../home/home';
 import { Training } from './../../models/training';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -25,22 +26,16 @@ export class TrainingListPage {
   userID:string;
   trainings:Observable<any[]>;
 
-  constructor(public navCtrl: NavController, public afDatabase: AngularFireDatabase, private afAuth: AngularFireAuth, public firestore: AngularFirestore, public navParams: NavParams) {
-    let self = this;
-    this.afAuth.authState.take(1).subscribe(user =>{
-      user ? self.userID = user.uid : self.navCtrl.setRoot(LoginPage); 
-     });
+  constructor(public navCtrl: NavController, public afDatabase: AngularFireDatabase, public storage: Storage,
+  private afAuth: AngularFireAuth, public firestore: AngularFirestore, public navParams: NavParams) {
+    
   }
 
-  ionViewDidLoad() {
+  ionViewDidLoad() {    
+    this.afAuth.authState.subscribe(user =>{
+     user ? this.userID = user.uid : this.navCtrl.setRoot(LoginPage); 
+    }); 
     this.getTrainings();
-  }
-
-  checkConnection(){
-    let self = this;
-    this.afAuth.authState.take(1).subscribe(user =>{
-      user ? self.userID = user.uid : self.navCtrl.setRoot(LoginPage); 
-     });
   }
 
   getTrainings(){
@@ -56,14 +51,15 @@ export class TrainingListPage {
       });
       //momentaneamente la selezione dell'allenatore è completamente randomica
       var mailPicked = trainerList[this.getTrainer(0, (trainerList.length-1))];
-      console.log("email presa: "+mailPicked);
+      //console.log("email presa: "+mailPicked);
 
       //inserisce la mail dell'allenatore
       this.afDatabase.object(`/profile/user/${this.userID}/`).update({
         trainer: mailPicked,
         training: trainingID
-        });
-      this.navCtrl.setRoot(HomePage);
+        }).then(() =>{
+          this.navCtrl.setRoot(HomePage);
+        });             
     });
   }
 
@@ -71,6 +67,6 @@ export class TrainingListPage {
    * Restituisce l'indirizzo mail di un personal trainer con cui allenarsi
    */
   getTrainer(min, max) {
-  return Math.floor(min + Math.random()*(max + 1 - min))
+    return Math.floor(min + Math.random()*(max + 1 - min))
   }
 }

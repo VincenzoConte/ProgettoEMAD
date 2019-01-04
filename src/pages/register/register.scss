@@ -55,17 +55,19 @@ page-register {
     //input valido
     .item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
     .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
-        border-bottom-color: red;
-        -webkit-box-shadow: inset 0 -1px 0 0 red;
-        box-shadow: inset 0 -1px 0 0 red;
+        border-bottom-color: #a5d6a7;
+        -webkit-box-shadow: inset 0 -1px 0 0 #a5d6a7;
+        box-shadow: inset 0 -1px 0 0 #a5d6a7;
     }
 
+    /*
     //input non valido
     .item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
         border-bottom-color: #d50000;
         -webkit-box-shadow: inset 0 -1px 0 0 #d50000;
         box-shadow: inset 0 -1px 0 0 #d50000;
     }
+    */
 
     //trovato in main.css / editor stili
     /*

@@ -9,8 +9,53 @@
 <ion-content padding>
   <h4 id="apptitle">Capgemini Personal Fitness</h4>
 
-  <img id="capperfitlogo" src="../../assets/imgs/capperfit_logo.png"/>
+  <div class="login-logo">
+    <img id="capperfitlogo" src="../../assets/imgs/capperfit_logo.png" alt="Capperfit logo"/>
+  </div>
 
+  <form #loginForm="ngForm" novalidate>
+    <ion-list>  
+      <ion-item>
+        <ion-label floating color="primary">e-mail</ion-label>
+        <ion-input [(ngModel)]="user.email" name="email" type="text" #username="ngModel" spellcheck="false" autocapitalize="off" 
+        required>
+        </ion-input>
+      </ion-item>
+
+      <ion-item style="margin: 13px 8x 13px 0; height:2%;" color="danger" *ngIf="!username.valid && submitted == true" padding-left>
+        <p ion-text padding-left>Indirizzo mail richiesto</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating color="primary">Password</ion-label>
+        <ion-input [(ngModel)]="user.password" name="password" type="password" #password="ngModel" required>          
+        </ion-input>
+      </ion-item>
+
+      <ion-item color="danger" *ngIf="!password.valid && submitted == true" padding-left>
+        <p ion-text padding-left>Password richiesta</p>
+      </ion-item>
+
+      <ion-row >
+        <ion-col>
+          <button ion-button (click)="onLogin(loginForm)" type="submit" block>Login</button>
+        </ion-col>
+        <ion-col>
+          <button ion-button (click)="onRegister()" outline block>Registrati</button>          
+        </ion-col>
+      </ion-row>
+
+      <button ion-button block color="danger" *ngIf="forgotLogin" id="forgotpwd" (click)="helpLogin();">
+        Problemi con il login?
+      </button>
+    
+      <button ion-button icon-end full (click)="loginFacebook();" id="fbaccess">
+        Entra con <ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
+      </button>
+    </ion-list>
+  </form>
+
+<!--
   <ion-item>
     <ion-label floating>Email</ion-label>
     <ion-input id="inputmail" type="text" [(ngModel)]="user.email" required></ion-input>
@@ -32,12 +77,10 @@
     </ion-row>
   </ion-grid>
   
-  <button ion-button block color="danger" *ngIf="forgotLogin" id="forgotpwd" (click)="forgotPassword();">
-    Ho dimenticato la password.
-  </button>
+ 
 
   <button style="border-radius: 4px;" ion-button icon-end full (click)="loginFacebook();" id="fbaccess">
     Entra con <ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
   </button>
-
+-->
 </ion-content>

@@ -15,30 +15,36 @@
 <ion-content padding>
   <h5 id="fillform">Riempi i seguenti campi:</h5>
   
-  <form [formGroup]="formgroup" (ngSubmit)="userDataAdded();" style="margin-top: 0px;">
-    <ion-item>
-      <ion-label floating>Età</ion-label>
-      <ion-input type="text" pattern="\d*" formControlName="age" required></ion-input>
-    </ion-item>
- 
-    <ion-item>
-      <ion-label floating>Altezza (in centimetri)</ion-label>
-      <ion-input type="text" pattern="\d*" formControlName="height" required></ion-input>
-    </ion-item>
+  <form #firstAccessForm="ngForm" novalidate>
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Età</ion-label>
+        <ion-input [(ngModel)]="user.age" name="age" type="number" pattern="[0-9]*" #age="ngModel" required>
+        </ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Peso</ion-label>
-      <ion-input type="text" pattern="\d*" formControlName="weight" required></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label floating>Altezza (in centimetri)</ion-label>
+        <ion-input [(ngModel)]="user.height" name="height" type="number" pattern="[0-9]*" #height="ngModel" required>
+        </ion-input>
+      </ion-item>
 
-  </form>
+      <ion-item>
+        <ion-label floating color="">Peso</ion-label>
+        <ion-input [(ngModel)]="user.weight" name="weight" type="number" pattern="[0-9]*" #weight="ngModel" required>
+        </ion-input>
+      </ion-item>
+    </ion-list>
 
-  <div style="margin-top: 25px; margin-left: 4%;">
-    <label id="label">
-      <ion-checkbox color="secondary" [ngModel]="privacyPolicy" (ionChange)="updatePrivacyPolicy()"></ion-checkbox> 
-      <a href="https://termsfeed.com/privacy-policy/495ac511fc5b2ff73a32d8a01276d564" style="margin-left: 5%;" id="privacy-policy">Accetto i termini e le condizioni d'uso</a> 
-    </label>
-  </div>
-  
-  <button ion-button block id="registerbtn" (click)="userDataAdded();" [disabled]="!isenabled">Avanti</button>
+    <div style="margin-top: 20px;">
+      <label id="label">
+        <ion-checkbox color="secondary" (ionChange)="updatePrivacyPolicy()"></ion-checkbox> 
+        <a href="https://termsfeed.com/privacy-policy/495ac511fc5b2ff73a32d8a01276d564" style="margin-left: 5%;" id="privacy-policy">
+          Accetto i termini e le condizioni d'uso
+        </a> 
+      </label>
+    </div>
+    
+    <button ion-button id="registerbtn" block (click)="register(firstAccessForm);"  [disabled]="!privacyPolicy && !firstAccessForm.valid">Registrati</button>  
+  </form>  
 </ion-content>

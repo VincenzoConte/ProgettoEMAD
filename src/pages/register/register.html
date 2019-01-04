@@ -16,46 +16,58 @@
 <ion-content padding>
   <h5 id="registertext" >Completa i campi per registrarti:</h5>
 
-  <form [formGroup]="formgroup" (ngSubmit)="register();">
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="text" required formControlName="mail"></ion-input>
-    </ion-item>
+  <form #signupForm="ngForm" novalidate lines="none">
+    <ion-list>
+      <ion-item>
+        <ion-label floating>e-mail</ion-label>
+        <ion-input [(ngModel)]="user.email" name="email" #email="ngModel" spellcheck="false" autocapitalize="off"
+        required>
+        </ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password" required formControlName="password"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label floating>Password</ion-label>
+        <ion-input [(ngModel)]="user.password" name="password" type="password" #password="ngModel" spellcheck="false" autocapitalize="off" 
+        required>
+        </ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Nome</ion-label>
-      <ion-input type="text" required formControlName="name"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label floating>Nome</ion-label>
+        <ion-input [(ngModel)]="user.name" name="name" type="text" #name="ngModel" spellcheck="false" autocapitalize="off"
+        required>
+        </ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Età</ion-label>
-      <ion-input type="tel" required formControlName="age"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label floating>Età</ion-label>
+        <ion-input [(ngModel)]="user.age" name="age" type="number" pattern="[0-9]*" #age="ngModel" required>
+        </ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Altezza (in centimetri)</ion-label>
-      <ion-input type="tel" required formControlName="height" required></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label floating>Altezza (in centimetri)</ion-label>
+        <ion-input [(ngModel)]="user.height" name="height" type="number" pattern="[0-9]*" #height="ngModel" required>
+        </ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Peso</ion-label>
-      <ion-input type="tel" required formControlName="weight"></ion-input>
-    </ion-item>    
-  </form>
+      <ion-item>
+        <ion-label floating>Peso</ion-label>
+        <ion-input [(ngModel)]="user.weight" name="weight" type="number" pattern="[0-9]*" #weight="ngModel" required>
+        </ion-input>
+      </ion-item>
+    </ion-list>
 
-  <div style="margin-top: 10%; margin-left: 4%;">
+    <div style="margin-top: 20px;">
       <label id="label">
-        <ion-checkbox color="secondary" [ngModel]="privacyPolicy" (ionChange)="updatePrivacyPolicy()"></ion-checkbox> 
+        <ion-checkbox color="secondary" (ionChange)="updatePrivacyPolicy()"></ion-checkbox> 
         <a href="https://termsfeed.com/privacy-policy/495ac511fc5b2ff73a32d8a01276d564" style="margin-left: 5%;" id="privacy-policy">
           Accetto i termini e le condizioni d'uso
         </a> 
       </label>
     </div>
 
-  <button ion-button id="registerbtn" block (click)="register();">Registrati</button>  
+    <button ion-button id="registerbtn" block (click)="register(signupForm);"  [disabled]="!privacyPolicy && !signupForm.valid">Registrati</button>  
+  </form>
+
 </ion-content>

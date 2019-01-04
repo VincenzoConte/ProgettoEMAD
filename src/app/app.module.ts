@@ -6,7 +6,6 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AngularFireModule} from '@angular/fire';
@@ -16,6 +15,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { IonicStorageModule } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook';
 import { TrainingListPage } from '../pages/training-list/training-list';
+import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -33,7 +33,9 @@ const firebaseConfig = {
     LoginPage,
     RegisterPage,
     FirstAccessPage,
+    TrainerhomePage,
     TrainingListPage
+    
   ],
   imports: [
     BrowserModule,
@@ -51,7 +53,9 @@ const firebaseConfig = {
     LoginPage,
     RegisterPage,
     FirstAccessPage,
+    TrainerhomePage,
     TrainingListPage
+    
   ],
   providers: [
     StatusBar,
