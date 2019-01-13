@@ -9,24 +9,27 @@ import { LoginPage } from '../pages/login/login';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 
+import { ChatPage } from '../pages/chat/chat';
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any;
 
-  constructor(platform: Platform, statusBar: StatusBar, public afDatabase: AngularFireDatabase, 
+  constructor(platform: Platform, statusBar: StatusBar, public afDatabase: AngularFireDatabase,
     splashScreen: SplashScreen, private afAuth: AngularFireAuth, private storage: Storage) {
-    this.keepLogin(); 
+    this.keepLogin();
+    //this.rootPage=ChatPage;
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.      
+      // Here you can do any higher level native things you might need.
       //statusBar.styleDefault();
-      splashScreen.hide();    
+      splashScreen.hide();
       if(platform.is('android') || platform.is('ios')) {
         statusBar.backgroundColorByHexString('#757575');
-      }     
-    }); 
+      }
+    });
   }
 
   /**
@@ -48,7 +51,7 @@ export class MyApp {
           console.log("Fatal error! "+error);
           this.rootPage = LoginPage;
         });
-      }  
+      }
     });
   }
 

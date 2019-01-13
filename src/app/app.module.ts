@@ -16,6 +16,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook';
 import { TrainingListPage } from '../pages/training-list/training-list';
 import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
+import { ChatPage } from '../pages/chat/chat';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -34,8 +35,9 @@ const firebaseConfig = {
     RegisterPage,
     FirstAccessPage,
     TrainerhomePage,
-    TrainingListPage
-    
+    TrainingListPage,
+    ChatPage
+
   ],
   imports: [
     BrowserModule,
@@ -54,8 +56,9 @@ const firebaseConfig = {
     RegisterPage,
     FirstAccessPage,
     TrainerhomePage,
-    TrainingListPage
-    
+    TrainingListPage,
+    ChatPage
+
   ],
   providers: [
     StatusBar,
