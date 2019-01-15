@@ -9,8 +9,6 @@ import { LoginPage } from '../pages/login/login';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 
-import { ChatPage } from '../pages/chat/chat';
-
 @Component({
   templateUrl: 'app.html'
 })
