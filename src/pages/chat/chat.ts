@@ -16,33 +16,57 @@ import * as firebase from 'firebase';
 })
 export class ChatPage {
 
-  private uid: string;
+  public uid: string;
+  messages=[];
+  message = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
+
+    /*uid=this.storage.get("userLoggedID");
+    if(uid==null){
+      this.navCtrl.setRoot(LoginPage);
+    }*/
+    this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
+    let chat = firebase.database().ref(`/chat/${this.uid}`);
+    let self=this;
+    /*chat.push().set({
+      author: self.uid,
+      msg: 'ciao'
+    });*/
+    chat.orderByKey().limitToLast(5).on('value', resp => {
+      self.messages = [];
+      self.messages = snapshotToArray(resp);
+    });
+
+  }
+
+  sendMessage() {
+    let newData = firebase.database().ref(`/chat/${this.uid}`).push();
+    newData.set({
+      author:this.uid,
+      msg:this.message,
+      //sendDate:Date()
+    });
+    this.message='';
   }
 
 
 
   ionViewDidLoad() {
-    /*uid=this.storage.get("userLoggedID");
-    if(uid==null){
-      this.navCtrl.setRoot(LoginPage);
-    }*/
-      this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
-      let chat = firebase.database().ref(`/chat/${this.uid}`);
-      let self=this;
-      chat.push().set({
-        author: self.uid,
-        msg: 'ciao'
-      });
-      chat.orderByKey().limitToLast(5).once('value', function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
-          console.log(childSnapshot.val().msg)
-        });
-      });
-      chat.on('child_added', function(data) {
-        console.log(data.val().msg);
-      });
-    }
+
+  }
 
 }
+
+
+export const snapshotToArray = snapshot => {
+    let returnArr = [];
+
+    snapshot.forEach(childSnapshot => {
+        let item = childSnapshot.val();
+        item.key = childSnapshot.key;
+        returnArr.push(item);
+    });
+
+    return returnArr;
+};
