@@ -10,25 +10,23 @@
   <ion-list>
 
     <ion-item *ngFor="let msg of messages" no-lines>
-      <div class="chat-status" text-center *ngIf="uid==='';else message">
-        no
-      </div>
-      <ng-template #message>
+
+      <div>
         <div class="chat-message" text-right *ngIf="msg.author === uid">
           <div class="right-bubble">
             <span class="msg-name">Me</span>
-            <!--span class="msg-date">{{chat.sendDate | date:'short'}}</span-->
+            <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
             <p text-wrap>{{msg.msg}}</p>
           </div>
         </div>
         <div class="chat-message" text-left *ngIf="msg.author !== uid">
           <div class="left-bubble">
             <span class="msg-name">Personal trainer</span>
-            <!--span class="msg-date">{{chat.sendDate | date:'short'}}</span-->
+            <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
             <p text-wrap>{{msg.msg}}</p>
           </div>
         </div>
-      </ng-template>
+      </div>
     </ion-item>
   </ion-list>
 </ion-content>
@@ -37,7 +35,7 @@
   <ion-grid>
     <ion-row>
       <ion-col col-10>
-        <ion-input type="text" placeholder="Type a message" [(ngModel)]="message" name="message"></ion-input>
+        <ion-input type="text" placeholder="Type a message" [(ngModel)]="message" (keyup.enter)="sendMessage()" name="message"></ion-input>
       </ion-col>
       <ion-col col-2 (click)="sendMessage()">
         <ion-icon name="paper-plane"></ion-icon>

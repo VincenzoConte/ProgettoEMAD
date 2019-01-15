@@ -33,7 +33,7 @@ export class ChatPage {
       author: self.uid,
       msg: 'ciao'
     });*/
-    chat.orderByKey().limitToLast(5).on('value', resp => {
+    chat.orderByKey().limitToLast(20).on('value', resp => {
       self.messages = [];
       self.messages = snapshotToArray(resp);
     });
@@ -41,11 +41,13 @@ export class ChatPage {
   }
 
   sendMessage() {
+    if(this.message.trim() === '')
+      return;
     let newData = firebase.database().ref(`/chat/${this.uid}`).push();
     newData.set({
       author:this.uid,
       msg:this.message,
-      //sendDate:Date()
+      sendDate:Date()
     });
     this.message='';
   }
