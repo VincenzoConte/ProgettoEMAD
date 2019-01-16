@@ -5,4 +5,5 @@ export interface User{
     weight: number;
     height: number;
     password: string;
+  BMI: number;
 }
