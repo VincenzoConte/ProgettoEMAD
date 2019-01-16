@@ -56,6 +56,12 @@
         <ion-input [(ngModel)]="user.weight" name="weight" type="number" pattern="[0-9]*" #weight="ngModel" required>
         </ion-input>
       </ion-item>
+      
+      <ion-item>
+        <ion-label floating>Inserisci 1 se sei Maschio 0 se sei Femmina</ion-label>
+        <ion-input [(ngModel)]="user.gender" name="gender" type="number" pattern="[0-1]" #gender="ngModel" required>
+        </ion-input>
+      </ion-item>
     </ion-list>
 
     <div style="margin-top: 20px;">
