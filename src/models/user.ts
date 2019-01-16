@@ -6,4 +6,5 @@ export interface User{
     height: number;
     password: string;
     BMI: number;
+    gender: number;
 }
