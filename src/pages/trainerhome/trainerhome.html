@@ -8,11 +8,20 @@
 
   <ion-navbar>
     <ion-title>Home del Personal Trainer</ion-title>
+    <ion-buttons end>
+      <button ion-button block (click)="logout();">Logout</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
 
-  <button ion-button block (click)="logout();">Test Logout</button>
+  <ion-list>
+    <ion-item *ngFor="let user of myUsers">
+      {{user}}
+      <ion-icon name="chatboxes" item-end></ion-icon>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 
+import { LoginPage } from '../login/login';
+
 /**
  * Generated class for the ChatPage page.
  *
@@ -22,20 +24,22 @@ export class ChatPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
 
-    /*uid=this.storage.get("userLoggedID");
-    if(uid==null){
-      this.navCtrl.setRoot(LoginPage);
-    }*/
-    this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
-    let chat = firebase.database().ref(`/chat/${this.uid}`);
-    let self=this;
-    /*chat.push().set({
-      author: self.uid,
-      msg: 'ciao'
-    });*/
-    chat.orderByKey().limitToLast(20).on('value', resp => {
-      self.messages = [];
-      self.messages = snapshotToArray(resp);
+    this.storage.get("userLoggedID").then(result => {
+      this.uid=result;
+      if(this.uid === null){
+        this.navCtrl.setRoot(LoginPage);
+      }
+      //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
+      let chat = firebase.database().ref(`/chat/${this.uid}`);
+      let self=this;
+      /*chat.push().set({
+        author: self.uid,
+        msg: 'ciao'
+      });*/
+      chat.orderByKey().limitToLast(20).on('value', resp => {
+        self.messages = [];
+        self.messages = snapshotToArray(resp);
+      });
     });
 
   }
