@@ -39,7 +39,10 @@ export class RegisterPage {
      this.submitted = true;
     console.log("utente: "+this.user.email+", pwd: "+this.user.password);
      if(form.valid && this.privacyPolicy){       
-       console.log("form valido");      
+       console.log("form valido");  
+       console.log("Altezza: "+this.user.height+", peso: "+this.user.weight);
+       this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
+       console.log("BMI: "+this.user.BMI);
        await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
         .then(() =>{
           let user = firebase.auth().currentUser;
