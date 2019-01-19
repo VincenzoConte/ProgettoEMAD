@@ -46,12 +46,12 @@ export class HomePage {
   }
 
   checkTraining(){  
-    console.log("check training for ID: "+this.userID);  
     let self = this;
+    console.log("check training for ID: "+this.userID);  
     firebase.database().ref(`/profile/user/${this.userID}`)
       .child(`/training`).once('value', function(snapshot){
         if(!snapshot.exists()){
-          this.presentAlert(); 
+          self.presentAlert(); 
         }        
     });
   }
