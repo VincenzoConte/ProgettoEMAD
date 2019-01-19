@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
-import { ChatPage } from '../pages/chat/chat';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 
@@ -18,8 +17,8 @@ export class MyApp {
 
   constructor(platform: Platform, statusBar: StatusBar, public afDatabase: AngularFireDatabase,
     splashScreen: SplashScreen, private afAuth: AngularFireAuth, private storage: Storage) {
-    //this.keepLogin();
-    this.rootPage=ChatPage;
+    this.keepLogin();
+    //this.rootPage=ChatPage;
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

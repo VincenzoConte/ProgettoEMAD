@@ -35,16 +35,16 @@ export class ChatPage {
 
       firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
         var email = resp.val().trainer;
-        self.tid= email.substr(0, email.indexOf('@'));
-      });
-      let chat = firebase.database().ref(`/chat/${this.uid}/${this.tid}`);
-      /*chat.push().set({
-        author: self.uid,
-        msg: 'ciao'
-      });*/
-      chat.orderByKey().limitToLast(20).on('value', resp => {
-        self.messages = [];
-        self.messages = snapshotToArray(resp);
+        self.tid = email.substr(0, email.indexOf('@'));
+        let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
+        /*chat.push().set({
+          author: self.uid,
+          msg: 'ciao'
+        });*/
+        chat.orderByKey().limitToLast(20).on('value', resp => {
+          self.messages = [];
+          self.messages = snapshotToArray(resp);
+        });
       });
     });
 
@@ -57,7 +57,8 @@ export class ChatPage {
     newData.set({
       author:this.uid,
       msg:this.message,
-      sendDate:Date()
+      sendDate:Date(),
+      read: false
     });
     this.message='';
   }
@@ -73,7 +74,6 @@ export class ChatPage {
 
 export const snapshotToArray = snapshot => {
     let returnArr = [];
-    console.log("snap");
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
         item.key = childSnapshot.key;
