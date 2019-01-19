@@ -28,13 +28,13 @@ export class TrainingListPage {
 
   constructor(public navCtrl: NavController, public afDatabase: AngularFireDatabase, public storage: Storage,
   private afAuth: AngularFireAuth, public firestore: AngularFirestore, public navParams: NavParams) {
-    
+
   }
 
-  ionViewDidLoad() {    
+  ionViewDidLoad() {
     this.afAuth.authState.subscribe(user =>{
-     user ? this.userID = user.uid : this.navCtrl.setRoot(LoginPage); 
-    }); 
+     user ? this.userID = user.uid : this.navCtrl.setRoot(LoginPage);
+    });
     this.getTrainings();
   }
 
@@ -59,7 +59,10 @@ export class TrainingListPage {
         training: trainingID
         }).then(() =>{
           this.navCtrl.setRoot(HomePage);
-        });             
+        });
+
+      var trainerID = mailPicked.substr(0, mailPicked.indexOf('@'));
+      this.afDatabase.list(`/profile/trainer/${trainerID}/users`).push({uid: this.userID});
     });
   }
 

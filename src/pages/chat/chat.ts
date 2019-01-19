@@ -19,6 +19,7 @@ import { LoginPage } from '../login/login';
 export class ChatPage {
 
   public uid: string;
+  public tid: string;
   messages=[];
   message = '';
 
@@ -30,8 +31,13 @@ export class ChatPage {
         this.navCtrl.setRoot(LoginPage);
       }
       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
-      let chat = firebase.database().ref(`/chat/${this.uid}`);
       let self=this;
+
+      firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
+        var email = resp.val().trainer;
+        self.tid= email.substr(0, email.indexOf('@'));
+      });
+      let chat = firebase.database().ref(`/chat/${this.uid}/${this.tid}`);
       /*chat.push().set({
         author: self.uid,
         msg: 'ciao'
@@ -47,7 +53,7 @@ export class ChatPage {
   sendMessage() {
     if(this.message.trim() === '')
       return;
-    let newData = firebase.database().ref(`/chat/${this.uid}`).push();
+    let newData = firebase.database().ref(`/chat/${this.uid}/${this.tid}`).push();
     newData.set({
       author:this.uid,
       msg:this.message,
@@ -67,10 +73,11 @@ export class ChatPage {
 
 export const snapshotToArray = snapshot => {
     let returnArr = [];
-
+    console.log("snap");
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
         item.key = childSnapshot.key;
+        console.log("1 "+item);
         returnArr.push(item);
     });
 
