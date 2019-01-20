@@ -17,6 +17,7 @@ import { Facebook } from '@ionic-native/facebook';
 import { TrainingListPage } from '../pages/training-list/training-list';
 import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
 import { ChatPage } from '../pages/chat/chat';
+import { TrainerChatPage } from '../pages/trainer-chat/trainer-chat';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -36,7 +37,8 @@ const firebaseConfig = {
     FirstAccessPage,
     TrainerhomePage,
     TrainingListPage,
-    ChatPage
+    ChatPage,
+    TrainerChatPage
 
   ],
   imports: [
@@ -57,7 +59,8 @@ const firebaseConfig = {
     FirstAccessPage,
     TrainerhomePage,
     TrainingListPage,
-    ChatPage
+    ChatPage,
+    TrainerChatPage
 
   ],
   providers: [

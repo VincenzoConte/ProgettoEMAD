@@ -20,12 +20,12 @@ export class ChatPage {
 
   public uid: string;
   public tid: string;
-  messages=[];
+  messages = [];
   message = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
 
-    this.storage.get("userLoggedID").then(result => {
+    /*this.storage.get("userLoggedID").then(result => {
       this.uid=result;
       if(this.uid === null){
         this.navCtrl.setRoot(LoginPage);
@@ -37,16 +37,14 @@ export class ChatPage {
         var email = resp.val().trainer;
         self.tid = email.substr(0, email.indexOf('@'));
         let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
-        /*chat.push().set({
-          author: self.uid,
-          msg: 'ciao'
-        });*/
+
         chat.orderByKey().limitToLast(20).on('value', resp => {
           self.messages = [];
           self.messages = snapshotToArray(resp);
         });
       });
-    });
+    });*/
+
 
   }
 
@@ -64,6 +62,34 @@ export class ChatPage {
   }
 
 
+  ionViewCanEnter(): Promise<any>{
+   return new Promise((resolve, reject) => {
+     this.storage.get("userLoggedID").then(result => {
+       if(result === undefined || result == "" || result == null){
+         resolve(false);
+       }
+       this.uid=result;
+       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
+       let self=this;
+
+       firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
+         var email = resp.val().trainer;
+         self.tid = email.substr(0, email.indexOf('@'));
+         let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
+         /*chat.push().set({
+           author: self.uid,
+           msg: 'ciao'
+         });*/
+         chat.orderByKey().limitToLast(10).on('value', resp => {
+           self.messages = [];
+           self.messages = snapshotToArray(resp);
+           resolve(true);
+         });
+       });
+     });
+   });
+  }
+
 
   ionViewDidLoad() {
 
@@ -76,8 +102,6 @@ export const snapshotToArray = snapshot => {
     let returnArr = [];
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
-        item.key = childSnapshot.key;
-        console.log("1 "+item);
         returnArr.push(item);
     });
 

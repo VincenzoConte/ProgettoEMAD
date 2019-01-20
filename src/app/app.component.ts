@@ -17,8 +17,10 @@ export class MyApp {
 
   constructor(platform: Platform, statusBar: StatusBar, public afDatabase: AngularFireDatabase,
     splashScreen: SplashScreen, private afAuth: AngularFireAuth, private storage: Storage) {
+
+    //this.storage.set("trainerLoggedID", "trainer12");
     this.keepLogin();
-    //this.rootPage=ChatPage;
+    //this.rootPage=TrainerhomePage;
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
