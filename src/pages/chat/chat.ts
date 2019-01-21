@@ -25,11 +25,11 @@ export class ChatPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
 
-    /*this.storage.get("userLoggedID").then(result => {
-      this.uid=result;
-      if(this.uid === null){
+    this.storage.get("userLoggedID").then(result => {
+      if(result === undefined || result == "" || result == null){
         this.navCtrl.setRoot(LoginPage);
       }
+      this.uid=result;
       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
       let self=this;
 
@@ -38,12 +38,19 @@ export class ChatPage {
         self.tid = email.substr(0, email.indexOf('@'));
         let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
 
-        chat.orderByKey().limitToLast(20).on('value', resp => {
+        chat.orderByKey().limitToLast(10).on('value', resp => {
           self.messages = [];
           self.messages = snapshotToArray(resp);
+          self.messages.forEach(msg => {
+            if(msg.author != self.uid && !msg.read){
+              firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
+                read: true
+              });
+            }
+          });
         });
       });
-    });*/
+    });
 
 
   }
@@ -62,7 +69,7 @@ export class ChatPage {
   }
 
 
-  ionViewCanEnter(): Promise<any>{
+  /*ionViewCanEnter(): Promise<any>{
    return new Promise((resolve, reject) => {
      this.storage.get("userLoggedID").then(result => {
        if(result === undefined || result == "" || result == null){
@@ -76,10 +83,7 @@ export class ChatPage {
          var email = resp.val().trainer;
          self.tid = email.substr(0, email.indexOf('@'));
          let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
-         /*chat.push().set({
-           author: self.uid,
-           msg: 'ciao'
-         });*/
+
          chat.orderByKey().limitToLast(10).on('value', resp => {
            self.messages = [];
            self.messages = snapshotToArray(resp);
@@ -88,11 +92,18 @@ export class ChatPage {
        });
      });
    });
-  }
+ }*/
 
 
   ionViewDidLoad() {
-
+    this.messages.forEach(msg => {
+      if(msg.author != this.uid && msg.read == false){
+        console.log("update");
+        firebase.database().ref(`/chat/${this.uid}/${this.tid}/${msg.key}`).update({
+          read: true
+        });
+      }
+    });
   }
 
 }
@@ -102,6 +113,7 @@ export const snapshotToArray = snapshot => {
     let returnArr = [];
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
+        item.key = childSnapshot.key;
         returnArr.push(item);
     });
 

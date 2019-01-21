@@ -48,6 +48,13 @@ export class TrainerChatPage {
       chat.orderByKey().limitToLast(10).on('value', resp => {
         self.messages = [];
         self.messages = snapshotToArray(resp);
+        self.messages.forEach(msg => {
+          if(msg.author != self.tid && !msg.read){
+            firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
+              read: true
+            });
+          }
+        });
       });
     });
   }
