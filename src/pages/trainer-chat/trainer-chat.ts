@@ -24,6 +24,7 @@ export class TrainerChatPage {
   tid: string;
   messages = [];
   message = '';
+  limit = 10;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
 
@@ -45,7 +46,7 @@ export class TrainerChatPage {
         author: self.uid,
         msg: 'ciao'
       });*/
-      chat.orderByKey().limitToLast(10).on('value', resp => {
+      chat.orderByKey().limitToLast(self.limit).on('value', resp => {
         self.messages = [];
         self.messages = snapshotToArray(resp);
         self.messages.forEach(msg => {
@@ -70,6 +71,24 @@ export class TrainerChatPage {
       read: false
     });
     this.message='';
+  }
+
+  loadMessages(){
+    this.limit += 10;
+    let self = this;
+    let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
+    chat.off('value');
+    chat.orderByKey().limitToLast(self.limit).on('value', resp => {
+      self.messages = [];
+      self.messages = snapshotToArray(resp);
+      self.messages.forEach(msg => {
+        if(msg.author != self.uid && !msg.read){
+          firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
+            read: true
+          });
+        }
+      });
+    });
   }
 
   ionViewDidLoad() {

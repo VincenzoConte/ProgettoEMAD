@@ -1,7 +1,5 @@
 page-chat {
   ion-content {
-    background: url(../assets/imgs/chat-back.png) no-repeat center center fixed;
-    background-size: cover;
     height: 100%;
     overflow: hidden;
     .item-md, .item-ios {
@@ -15,6 +13,10 @@ page-chat {
       font-size: 20px;
       color: green;
     }
+  }
+  div.load{
+    text-align: center;
+    padding-top: 1%;
   }
   .chat-status {
     min-height: 49px;

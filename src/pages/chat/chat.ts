@@ -22,14 +22,17 @@ export class ChatPage {
   public tid: string;
   messages = [];
   message = '';
+  limit = 10;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
 
-    this.storage.get("userLoggedID").then(result => {
+
+    this.storage.get('userLoggedID').then(result => {
       if(result === undefined || result == "" || result == null){
         this.navCtrl.setRoot(LoginPage);
       }
       this.uid=result;
+      this.message=this.uid;
       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
       let self=this;
 
@@ -38,7 +41,7 @@ export class ChatPage {
         self.tid = email.substr(0, email.indexOf('@'));
         let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
 
-        chat.orderByKey().limitToLast(10).on('value', resp => {
+        chat.orderByKey().limitToLast(self.limit).on('value', resp => {
           self.messages = [];
           self.messages = snapshotToArray(resp);
           self.messages.forEach(msg => {
@@ -66,6 +69,24 @@ export class ChatPage {
       read: false
     });
     this.message='';
+  }
+
+  loadMessages(){
+    this.limit += 10;
+    let self = this;
+    let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
+    chat.off('value');
+    chat.orderByKey().limitToLast(self.limit).on('value', resp => {
+      self.messages = [];
+      self.messages = snapshotToArray(resp);
+      self.messages.forEach(msg => {
+        if(msg.author != self.uid && !msg.read){
+          firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
+            read: true
+          });
+        }
+      });
+    });
   }
 
 

@@ -7,7 +7,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-list #list>
+  <div class="load">
+    <button ion-button round outline (click)="loadMessages()">Mostra altri</button>
+  </div>
+  <ion-list>
 
     <ion-item *ngFor="let msg of messages" no-lines>
 

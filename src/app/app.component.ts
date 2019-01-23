@@ -20,7 +20,7 @@ export class MyApp {
   constructor(platform: Platform, statusBar: StatusBar, public afDatabase: AngularFireDatabase,
     splashScreen: SplashScreen, private afAuth: AngularFireAuth, private storage: Storage) {
 
-    //this.storage.set("userLoggedID", "tvq2DppxfiVWq78CobleOX21wOu1");
+    //this.storage.set('userLoggedID', 'tvq2DppxfiVWq78CobleOX21wOu1');
     this.keepLogin();
     //this.rootPage=ChatPage;
     platform.ready().then(() => {
