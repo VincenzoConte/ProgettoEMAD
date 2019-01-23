@@ -1,3 +1,4 @@
+import { UserProfilePage } from './../pages/user-profile/user-profile';
 import { FirstAccessPage } from './../pages/first-access/first-access';
 import { RegisterPage } from './../pages/register/register';
 import { LoginPage } from './../pages/login/login';
@@ -18,6 +19,8 @@ import { TrainingListPage } from '../pages/training-list/training-list';
 import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
 import { ChatPage } from '../pages/chat/chat';
 import { TrainerChatPage } from '../pages/trainer-chat/trainer-chat';
+import { TabsPage } from '../pages/tabs/tabs';
+import { UserInfoPage } from '../pages/user-info/user-info';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -38,6 +41,9 @@ const firebaseConfig = {
     TrainerhomePage,
     TrainingListPage,
     ChatPage,
+    TabsPage,
+    UserProfilePage,
+    UserInfoPage,
     TrainerChatPage
 
   ],
@@ -60,6 +66,9 @@ const firebaseConfig = {
     TrainerhomePage,
     TrainingListPage,
     ChatPage,
+    TabsPage,
+    UserProfilePage,
+    UserInfoPage,
     TrainerChatPage
 
   ],
