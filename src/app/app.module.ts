@@ -1,4 +1,3 @@
-import { UserProfilePage } from './../pages/user-profile/user-profile';
 import { FirstAccessPage } from './../pages/first-access/first-access';
 import { RegisterPage } from './../pages/register/register';
 import { LoginPage } from './../pages/login/login';
@@ -42,7 +41,6 @@ const firebaseConfig = {
     TrainingListPage,
     ChatPage,
     TabsPage,
-    UserProfilePage,
     UserInfoPage,
     TrainerChatPage
 
@@ -67,7 +65,6 @@ const firebaseConfig = {
     TrainingListPage,
     ChatPage,
     TabsPage,
-    UserProfilePage,
     UserInfoPage,
     TrainerChatPage
 

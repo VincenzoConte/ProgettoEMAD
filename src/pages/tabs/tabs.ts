@@ -2,7 +2,6 @@ import { ChatPage } from './../chat/chat';
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
 import { HomePage } from '../home/home';
-import { UserProfilePage } from '../user-profile/user-profile';
 import { UserInfoPage } from '../user-info/user-info';
 
 /**
