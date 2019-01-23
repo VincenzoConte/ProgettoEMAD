@@ -18,6 +18,8 @@ import { TrainingListPage } from '../pages/training-list/training-list';
 import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
 import { ChatPage } from '../pages/chat/chat';
 import { TrainerChatPage } from '../pages/trainer-chat/trainer-chat';
+import { TabsPage } from '../pages/tabs/tabs';
+import { UserInfoPage } from '../pages/user-info/user-info';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -38,6 +40,8 @@ const firebaseConfig = {
     TrainerhomePage,
     TrainingListPage,
     ChatPage,
+    TabsPage,
+    UserInfoPage,
     TrainerChatPage
 
   ],
@@ -60,6 +64,8 @@ const firebaseConfig = {
     TrainerhomePage,
     TrainingListPage,
     ChatPage,
+    TabsPage,
+    UserInfoPage,
     TrainerChatPage
 
   ],

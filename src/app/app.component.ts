@@ -4,10 +4,10 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
+import { TabsPage } from '../pages/tabs/tabs';
 
 //import { ChatPage } from '../pages/chat/chat';
 
@@ -38,22 +38,26 @@ export class MyApp {
    * Metodo per conservare il login
    */
   keepLogin(){
+    console.log("keepLogin called");
     this.storage.get("userLoggedID").then(result =>{
       console.log("(appComponent) userLoggedID stauts: "+result);
       if(result !== undefined && result != "" && result != null){
-        this.rootPage = HomePage;
+        this.rootPage = TabsPage;
       } else {
         this.storage.get("trainerLoggedID").then(result =>{
           console.log("(appComponent) trainerLoggedID stauts: "+result);
           if(result !== undefined && result != "" && result != null){
             this.rootPage = TrainerhomePage;
           } else this.rootPage = LoginPage;
-        }).catch((error) =>{
+        }).catch(error =>{
           //userLoggedID completely empty
-          console.log("Fatal error! "+error);
+          console.log("Errore durante il recupero di trainerLoggedID! "+error);
           this.rootPage = LoginPage;
         });
       }
+    }).catch(error =>{
+        console.log("Errore durante il recupero di userLoggedID! "+error);
+        this.rootPage = LoginPage;
     });
   }
 
