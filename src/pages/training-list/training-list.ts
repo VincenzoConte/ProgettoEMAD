@@ -50,7 +50,7 @@ export class TrainingListPage {
         trainerList.push(snapshot);
       });
       //momentaneamente la selezione dell'allenatore è completamente randomica
-      var mailPicked = trainerList[this.getTrainer(0, (trainerList.length-1))];
+      var mailPicked = trainerList[this.getTrainer(trainerList)];
       //console.log("email presa: "+mailPicked);
 
       //inserisce la mail dell'allenatore
@@ -69,7 +69,14 @@ export class TrainingListPage {
   /**
    * Restituisce l'indirizzo mail di un personal trainer con cui allenarsi
    */
-  getTrainer(min, max) {
-    return Math.floor(min + Math.random()*(max + 1 - min))
+  getTrainer(trainerList) {
+    if(trainerList.lenght==0){
+      throw new Error("La lista di allenatori disponibili per l'allenamento è vuota!");
+    }else if(trainerList.lenght==1){
+      return 0;
+    }else{
+      //implementare algoritmo di selezione
+      return Math.floor(0 + Math.random()*(trainerList.lenght + 1 - 0))
+    }
   }
 }
