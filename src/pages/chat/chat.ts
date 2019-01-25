@@ -1,16 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 
 import { LoginPage } from '../login/login';
+import { ChatHistoryPage } from '../chat-history/chat-history';
 
-/**
- * Generated class for the ChatPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @Component({
   selector: 'page-chat',
@@ -20,11 +15,13 @@ export class ChatPage {
 
   public uid: string;
   public tid: string;
+  trainerName: string;
   messages = [];
   message = '';
   limit = 10;
+  intervalID: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private changeRef: ChangeDetectorRef) {
 
 
     this.storage.get('userLoggedID').then(result => {
@@ -32,13 +29,35 @@ export class ChatPage {
         this.navCtrl.setRoot(LoginPage);
       }
       this.uid=result;
-      this.message=this.uid;
+      this.intervalID = setInterval(() => {
+        this.changeRef.detectChanges();
+      }, 1000);
       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
       let self=this;
+      this.tid = navParams.get("trainerID");
+      if(this.tid === undefined || this.tid == null || this.tid.trim() == ""){
+        firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
+          var email = resp.val().trainer;
+          self.tid = email.substr(0, email.indexOf('@'));
+          firebase.database().ref(`/profile/trainer/${self.tid}`).once('value', resp =>{
+            self.trainerName = resp.val().name;
+          });
+          let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
 
-      firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
-        var email = resp.val().trainer;
-        self.tid = email.substr(0, email.indexOf('@'));
+          chat.orderByKey().limitToLast(self.limit).on('value', resp => {
+            self.messages = [];
+            self.messages = snapshotToArray(resp);
+            self.messages.forEach(msg => {
+              if(msg.author != self.uid && !msg.read){
+                firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
+                  read: true
+                });
+              }
+            });
+          });
+        });
+      } else {
+        this.trainerName = navParams.get("trainerName");
         let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
 
         chat.orderByKey().limitToLast(self.limit).on('value', resp => {
@@ -52,7 +71,7 @@ export class ChatPage {
             }
           });
         });
-      });
+      }
     });
 
 
@@ -89,6 +108,10 @@ export class ChatPage {
     });
   }
 
+  openChatHistory(){
+    this.navCtrl.push(ChatHistoryPage);
+  }
+
 
   /*ionViewCanEnter(): Promise<any>{
    return new Promise((resolve, reject) => {
@@ -117,14 +140,11 @@ export class ChatPage {
 
 
   ionViewDidLoad() {
-    this.messages.forEach(msg => {
-      if(msg.author != this.uid && msg.read == false){
-        console.log("update");
-        firebase.database().ref(`/chat/${this.uid}/${this.tid}/${msg.key}`).update({
-          read: true
-        });
-      }
-    });
+
+  }
+
+  ionViewDidLeave(){
+    clearInterval(this.intervalID);
   }
 
 }

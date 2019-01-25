@@ -18,6 +18,7 @@ import { TrainingListPage } from '../pages/training-list/training-list';
 import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
 import { ChatPage } from '../pages/chat/chat';
 import { TrainerChatPage } from '../pages/trainer-chat/trainer-chat';
+import { ChatHistoryPage } from '../pages/chat-history/chat-history';
 import { TabsPage } from '../pages/tabs/tabs';
 import { UserInfoPage } from '../pages/user-info/user-info';
 
@@ -42,7 +43,8 @@ const firebaseConfig = {
     ChatPage,
     TabsPage,
     UserInfoPage,
-    TrainerChatPage
+    TrainerChatPage,
+    ChatHistoryPage
 
   ],
   imports: [
@@ -66,7 +68,8 @@ const firebaseConfig = {
     ChatPage,
     TabsPage,
     UserInfoPage,
-    TrainerChatPage
+    TrainerChatPage,
+    ChatHistoryPage
 
   ],
   providers: [

@@ -1,8 +1,11 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Chat
+      {{trainerName}}
     </ion-title>
+    <ion-buttons end>
+      <button ion-button block (click)="openChatHistory();">History</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -24,7 +27,7 @@
         </div>
         <div class="chat-message" text-left *ngIf="msg.author !== uid">
           <div class="left-bubble">
-            <span class="msg-name">Personal trainer</span>
+            <span class="msg-name">{{trainerName}}</span>
             <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
             <p class="msg" text-wrap>{{msg.msg}}</p>
           </div>

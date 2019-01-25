@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 
@@ -25,8 +25,9 @@ export class TrainerChatPage {
   messages = [];
   message = '';
   limit = 10;
+  intervalID: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private changeRef: ChangeDetectorRef) {
 
     this.uid = navParams.get("userID");
     if(this.uid === undefined || this.uid == null || this.uid.trim() == ""){
@@ -38,6 +39,9 @@ export class TrainerChatPage {
         navCtrl.setRoot(LoginPage);
       }
       this.tid = result;
+      this.intervalID = setInterval(() => {
+        this.changeRef.detectChanges();
+      }, 1000);
 
       let self = this;
 
@@ -94,6 +98,10 @@ export class TrainerChatPage {
   ionViewDidLoad() {
   }
 
+  ionViewDidLeave(){
+    clearInterval(this.intervalID);
+  }
+
 }
 
 
@@ -101,6 +109,7 @@ export const snapshotToArray = snapshot => {
     let returnArr = [];
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
+        item.key = childSnapshot.key;
         returnArr.push(item);
     });
 

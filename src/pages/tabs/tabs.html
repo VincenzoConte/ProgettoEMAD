@@ -1,5 +1,5 @@
 <ion-tabs #navTabs>
-    <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home" tabsHideOnSubPages="true"></ion-tab>
-    <ion-tab [root]="tab2Root" tabTitle="Chat" tabIcon="chatboxes" tabsHideOnSubPages="true"></ion-tab>
-    <ion-tab [root]="tab3Root" tabTitle="Profilo" tabIcon="contact" tabsHideOnSubPages="true"></ion-tab>
+    <ion-tab [root]="tab1Root" (ionSelect)="changePage()" tabTitle="Home" tabIcon="home" tabsHideOnSubPages="true"></ion-tab>
+    <ion-tab [root]="tab2Root" (ionSelect)="chatSelected()" tabTitle="Chat" tabIcon="chatboxes" tabsHideOnSubPages="true" tabBadge={{notify}} tabBadgeStyle="danger"></ion-tab>
+    <ion-tab [root]="tab3Root" (ionSelect)="changePage()" tabTitle="Profilo" tabIcon="contact" tabsHideOnSubPages="true"></ion-tab>
 </ion-tabs>
