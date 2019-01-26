@@ -1,6 +1,6 @@
 import { ChatPage } from './../chat/chat';
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Tabs, Events } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { UserInfoPage } from '../user-info/user-info';
 import { Storage } from '@ionic/storage';
@@ -23,12 +23,10 @@ export class TabsPage {
   tab2Root = ChatPage;
   tab3Root = UserInfoPage;
   notify = "";
-  first = true;
-  onChatPage= false;
   uid: string;
   tid: string;
 
-  constructor(public storage: Storage){
+  constructor(public storage: Storage, public events: Events){
     this.storage.get('userLoggedID').then(result => {
       if(result !== undefined && result != "" && result != null){
         this.uid=result;
@@ -38,14 +36,18 @@ export class TabsPage {
           self.tid = email.substr(0, email.indexOf('@'));
           let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
 
-          chat.limitToLast(1).on('value', resp => {
-            if(!self.onChatPage){
-              if(self.first)
-                self.first = false;
-              else if(self.notify == "")
-                self.notify = "1";
-              else
-                self.notify = String(1 + Number(self.notify));
+          chat.orderByKey().limitToLast(10).on('value', resp => {
+            let notRead = 0;
+            resp.forEach(childSnapshot => {
+              if(!childSnapshot.val().read && childSnapshot.val().author != self.uid)
+              notRead = notRead + 1;
+            });
+            if(notRead == 0){
+              self.notify = "";
+            } else if(notRead == 10){
+              self.notify = "10+"
+            } else{
+              self.notify = String(notRead);
             }
           });
         });
@@ -54,12 +56,10 @@ export class TabsPage {
   }
 
   chatSelected(){
-    this.notify = "";
-    this.onChatPage= true;
-    this.first = true;
+    this.events.publish('functionCall:chatSelected');
   }
 
-  changePage(){
-    this.onChatPage= false;
+  changeTab(){
+    this.events.publish('functionCall:changeTab');
   }
 }

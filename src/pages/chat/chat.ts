@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 
@@ -21,8 +21,7 @@ export class ChatPage {
   limit = 10;
   intervalID: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private changeRef: ChangeDetectorRef) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private changeRef: ChangeDetectorRef, public events: Events) {
 
     this.storage.get('userLoggedID').then(result => {
       if(result === undefined || result == "" || result == null){
@@ -33,6 +32,7 @@ export class ChatPage {
         this.changeRef.detectChanges();
       }, 1000);
       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
+      console.log ("carico messaggi");
       let self=this;
       this.tid = navParams.get("trainerID");
       if(this.tid === undefined || this.tid == null || this.tid.trim() == ""){
@@ -43,33 +43,29 @@ export class ChatPage {
             self.trainerName = resp.val().name;
           });
           let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
-
-          chat.orderByKey().limitToLast(self.limit).on('value', resp => {
-            self.messages = [];
-            self.messages = snapshotToArray(resp);
-            self.messages.forEach(msg => {
-              if(msg.author != self.uid && !msg.read){
-                firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
-                  read: true
-                });
-              }
-            });
+          chat.orderByKey().limitToLast(self.limit).on('value', self.messagesCallback, this);
+          this.events.subscribe('functionCall:chatSelected', eventData => {
+            this.limit = 0;
+            this.loadMessages();
+          });
+          this.events.subscribe('functionCall:changeTab', eventData => {
+            firebase.database().ref(`/chat/${self.uid}/${self.tid}`).off('value', this.messagesCallback, this);
           });
         });
       } else {
         this.trainerName = navParams.get("trainerName");
         let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
-
-        chat.orderByKey().limitToLast(self.limit).on('value', resp => {
-          self.messages = [];
-          self.messages = snapshotToArray(resp);
-          self.messages.forEach(msg => {
-            if(msg.author != self.uid && !msg.read){
-              firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
-                read: true
-              });
-            }
-          });
+        chat.orderByKey().limitToLast(self.limit).on('value', self.messagesCallback, this);
+        this.events.subscribe('functionCall:chatSelected', eventData => {
+          this.intervalID = setInterval(() => {
+            this.changeRef.detectChanges();
+          }, 1000);
+          this.limit = 0;
+          this.loadMessages();
+        });
+        this.events.subscribe('functionCall:changeTab', eventData => {
+          firebase.database().ref(`/chat/${self.uid}/${self.tid}`).off('value', this.messagesCallback, this);
+          clearInterval(this.intervalID);
         });
       }
     });
@@ -94,17 +90,20 @@ export class ChatPage {
     this.limit += 10;
     let self = this;
     let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
-    chat.off('value');
-    chat.orderByKey().limitToLast(self.limit).on('value', resp => {
-      self.messages = [];
-      self.messages = snapshotToArray(resp);
-      self.messages.forEach(msg => {
-        if(msg.author != self.uid && !msg.read){
-          firebase.database().ref(`/chat/${self.uid}/${self.tid}/${msg.key}`).update({
-            read: true
-          });
-        }
-      });
+    chat.off('value', this.messagesCallback, this);
+    chat.orderByKey().limitToLast(self.limit).on('value', self.messagesCallback, this);
+  }
+
+  messagesCallback(resp){
+    console.log("callback");
+    this.messages = [];
+    this.messages = snapshotToArray(resp);
+    this.messages.forEach(msg => {
+      if(msg.author != this.uid && !msg.read){
+        firebase.database().ref(`/chat/${this.uid}/${this.tid}/${msg.key}`).update({
+          read: true
+        });
+      }
     });
   }
 
@@ -144,7 +143,7 @@ export class ChatPage {
   }
 
   ionViewDidLeave(){
-    clearInterval(this.intervalID);
+
   }
 
 }
