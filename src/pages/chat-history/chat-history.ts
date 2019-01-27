@@ -20,9 +20,19 @@ export class ChatHistoryPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef) {
 
+  }
+
+  openChat(tid: string, name: string){
+    this.navCtrl.push(ChatPage, {
+      trainerID: tid,
+      trainerName: name
+    });
+  }
+
+  ionViewWillEnter() {
     this.storage.get("userLoggedID").then(result => {
       if(result === undefined || result == "" || result == null){
-        navCtrl.setRoot(LoginPage);
+        this.navCtrl.setRoot(LoginPage);
       }
       this.uid=result;
       this.intervalID = setInterval(() => {
@@ -36,24 +46,12 @@ export class ChatHistoryPage {
         let chats = snapshotToArray(resp);
         chats.reverse();
         chats.forEach(child => {
-          console.log(child.key);
           firebase.database().ref(`/profile/trainer/${child.key}`).once('value', trainer => {
             self.myChats.push({name: trainer.val().name, tid: trainer.key});
           });
         });
       });
     });
-  }
-
-  openChat(tid: string, name: string){
-    this.navCtrl.push(ChatPage, {
-      trainerID: tid,
-      trainerName: name
-    });
-  }
-
-  ionViewDidLoad() {
-
   }
 
   ionViewDidLeave(){

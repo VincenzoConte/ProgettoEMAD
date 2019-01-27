@@ -1,6 +1,6 @@
 import { ChatPage } from './../chat/chat';
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Tabs, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { UserInfoPage } from '../user-info/user-info';
 import { Storage } from '@ionic/storage';
@@ -26,7 +26,7 @@ export class TabsPage {
   uid: string;
   tid: string;
 
-  constructor(public storage: Storage, public events: Events){
+  constructor(public storage: Storage){
     this.storage.get('userLoggedID').then(result => {
       if(result !== undefined && result != "" && result != null){
         this.uid=result;
@@ -53,13 +53,5 @@ export class TabsPage {
         });
       }
     });
-  }
-
-  chatSelected(){
-    this.events.publish('functionCall:chatSelected');
-  }
-
-  changeTab(){
-    this.events.publish('functionCall:changeTab');
   }
 }

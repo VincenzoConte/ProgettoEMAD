@@ -24,9 +24,14 @@ export class TrainerhomePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef) {
 
+
+  }
+
+  ionViewWillEnter() {
+
     this.storage.get("trainerLoggedID").then(result => {
       if(result === undefined || result == "" || result == null){
-        navCtrl.setRoot(LoginPage);
+        this.navCtrl.setRoot(LoginPage);
       }
       this.tid=result;
       this.intervalID = setInterval(() => {
@@ -44,10 +49,6 @@ export class TrainerhomePage {
         });
       });
     });
-
-  }
-
-  ionViewDidLoad() {
   }
 
   ionViewDidLeave(){
