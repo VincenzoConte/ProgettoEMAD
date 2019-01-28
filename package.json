@@ -37,13 +37,19 @@
     "cordova-plugin-background-fetch": "^5.4.1",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-facebook4": "4.0.0",
+    "cordova-plugin-facebook4": "^4.0.0",
+    "cordova-plugin-googleplus": "^5.3.2",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
+<<<<<<< HEAD
     "cordova-plugin-ionic-webview": "^2.2.5",
     "cordova-plugin-pedometer": "0.4.1",
+=======
+    "cordova-plugin-ionic-webview": "^2.3.2",
+>>>>>>> 7abd6661250cbed3cce0c916ab1edc937585b85f
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
-    "cordova-sqlite-storage": "2.6.0",
+    "cordova-sqlite-storage": "^2.6.0",
     "firebase": "^5.6.0",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
@@ -63,7 +69,9 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
