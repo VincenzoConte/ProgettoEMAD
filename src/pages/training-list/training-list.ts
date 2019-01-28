@@ -26,8 +26,12 @@ export class TrainingListPage {
   userID:string;
   trainings:Observable<any[]>;
 
-  constructor(public navCtrl: NavController, public afDatabase: AngularFireDatabase, public storage: Storage,
-  private afAuth: AngularFireAuth, public firestore: AngularFirestore, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, 
+  public afDatabase: AngularFireDatabase, 
+  public storage: Storage,
+  private afAuth: AngularFireAuth, 
+  public firestore: AngularFirestore, 
+  public navParams: NavParams) {
 
   }
 

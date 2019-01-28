@@ -24,7 +24,9 @@
     "@angular/platform-browser-dynamic": "^6.0.0",
     "@firebase/database": "^0.2.1",
     "@ionic-native/core": "^4.18.0",
+    "@ionic-native/device": "^5.0.0",
     "@ionic-native/facebook": "^4.18.0",
+    "@ionic-native/pedometer": "^5.0.0",
     "@ionic-native/splash-screen": "^4.18.0",
     "@ionic-native/status-bar": "^4.18.0",
     "@ionic/storage": "^2.2.0",
@@ -37,6 +39,7 @@
     "cordova-plugin-facebook4": "4.0.0",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^2.2.5",
+    "cordova-plugin-pedometer": "0.4.1",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
@@ -75,7 +78,8 @@
         "LICENSE": "YOUR_LICENSE_KEY",
         "GOOGLE_API_VERSION": "16.0.0",
         "APPCOMPAT_VERSION": "27.1.1"
-      }
+      },
+      "cordova-plugin-pedometer": {}
     },
     "platforms": [
       "browser",

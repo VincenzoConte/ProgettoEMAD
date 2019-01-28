@@ -134,6 +134,8 @@ export class LoginPage {
     this.navCtrl.push(RegisterPage);
   }
 
+  hasSexBool:boolean;
+
   loginFacebook(){
     console.log("facebook login");
     return this.fb.login(['email']).then(response =>{
@@ -142,31 +144,74 @@ export class LoginPage {
       
       firebase.auth().signInWithCredential(facebookCredential).then(success =>{
         let self = this;        
-        let dbFacebook = firebase.database().ref(`/profile/user/${success.uid}`);
-        //salva il login
-        self.storage.set("userLoggedID", success.uid);
+        let dbFacebook = firebase.database().ref(`/profile/user/${success.uid}`);        
+        self.storage.set("userLoggedID", success.uid);  //salva il login
 
         //controlla se esiste un utente con questo ID
         dbFacebook.once('value', function(snapshot){
+          let self2 = self;
           if(snapshot.exists()){
-            console.log("(login) profilo Facebook già esistente");            
-            //controlla se ha già un allenamento
-            dbFacebook.child(`/training`).once('value', function(snapshot){
+            console.log("(login) profilo Facebook già esistente, controllo peso"); 
+            dbFacebook.child(`/weight`).once('value', function(snapshot){
               if(snapshot.exists()){
-                self.navCtrl.setRoot(HomePage);
-              } else self.navCtrl.setRoot(TrainingListPage);
+                console.log("(login) peso esistente, controllo allenamento"); 
+                dbFacebook.child(`/training`).once('value', function(snapshot){
+                  if(snapshot.exists()){
+                    console.log("(login) allenamento esistente"); 
+                    self2.navCtrl.setRoot(HomePage);
+                  } else self2.navCtrl.setRoot(TrainingListPage);
+                });
+              } else{
+                console.log("peso non presente nel database");
+                self.navCtrl.setRoot(FirstAccessPage);
+              } 
             });
+            /*
+            self.hasSex(success).then(() => {
+              console.log("has sex: "+self.hasSexBool);
+            });                    */
+            
+
+            //se esiste, controlla se il peso è impostato (bugfix se si chiude l'app)
+            /*
+            dbFacebook.child(`/weight`).once('value', function(snapshot){
+              if(snapshot.exists()){
+                dbFacebook.child(`/training`).once('value', function(snapshot){
+                if(snapshot.exists()){
+                  self2.navCtrl.setRoot(HomePage);
+                } else self2.navCtrl.setRoot(TrainingListPage);
+                });
+              }
+            });
+            */
+            
           } else {
             console.log("(login) creazione nuovo profilo da Facebook");
             //se non esiste, porta alla creazione di un nuovo profilo
             self.user.name = success.displayName;
-            self.user.email = success.email;
+            self.user.email = success.email;            
             self.afdatabase.object(`/profile/user/${success.uid}`).update(self.user);
             self.navCtrl.setRoot(FirstAccessPage);
           }
         });
       }).catch((error) => console.log(error));
     });
+  }
+
+  hasSex(success:any):Boolean{
+    let self = this;  
+    var haveSex:boolean;      
+    let dbFacebook = firebase.database().ref(`/profile/user/${success.uid}`);
+    dbFacebook.child(`/weight`).once('value', function(snapshot){
+      if(snapshot.exists()){
+        haveSex = true;
+        console.log("hassexbool"+haveSex);
+      } else{
+        haveSex = false;
+        console.log("hassexbool"+haveSex);
+      } 
+    });
+    return haveSex;    
   }
 
   helpLogin(){

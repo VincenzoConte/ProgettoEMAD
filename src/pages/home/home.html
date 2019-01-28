@@ -1,90 +1,83 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Home
-    </ion-title>
-		<!--
-    <ion-buttons end>
-    	<ion-toggle [(ngModel)]="enabled" (ionChange)="onToggleEnabled()" style="display:block;"></ion-toggle>
-    </ion-buttons>
-		-->
-  </ion-navbar>  
+<ion-header>  
 </ion-header>
 
 <ion-content>
-	<!--
-	<ion-fab top left edge>    
-   		<button ion-fab color="gold" (click)="onClickMainMenu()">
-          <ion-icon color="dark" name="arrow-dropdown-circle"></ion-icon>
-      </button>
-   		<ion-fab-list side="bottom" style="width:250px">   			
-        <ion-item>
-          <button ion-button full round color="primary" (click)="onClickHome()"><ion-icon name="home"></ion-icon>&nbsp;Home</button>
-        </ion-item>
-     	  <ion-item>
-     			<button ion-button color="primary" (click)="onClickSync()"><ion-icon name="ios-cloud-upload"></ion-icon>&nbsp;Sync</button>
-     			<button ion-button color="danger" (click)="onClickDestroy()">Destroy</button>
-     		</ion-item>
-     		<ion-item>
-  				<ion-label>autoSync</ion-label>
-  				<ion-toggle [(ngModel)]="autoSync" (ionChange)="onSetConfig('autoSync')"></ion-toggle>
-        </ion-item>
-        <ion-item>
-  				<ion-label>distanceFilter</ion-label>
-  				<ion-input [(ngModel)]="distanceFilter" (blur)="onSetConfig('distanceFilter')" type="number"></ion-input>
-  		  </ion-item>
-  			<ion-item>
-    		  <ion-label>stopTimeout</ion-label>
-    			<ion-input [(ngModel)]="stopTimeout" (blur)="onSetConfig('stopTimeout')" type="number"></ion-input>
-  			</ion-item>
-  			<ion-item>
-    			<ion-label>stopOnTerminate</ion-label>
-    			<ion-toggle [(ngModel)]="stopOnTerminate" (ionChange)="onSetConfig('stopOnTerminate')"></ion-toggle>
-  			</ion-item>
-  			<ion-item>
-    			<ion-label>startOnBoot</ion-label>
-    			<ion-toggle [(ngModel)]="startOnBoot" (ionChange)="onSetConfig('startOnBoot')"></ion-toggle>
-  			</ion-item>
-  			<ion-item>
-    			<ion-label>debug</ion-label>
-    			<ion-toggle [(ngModel)]="debug" (ionChange)="onSetConfig('debug')"></ion-toggle>
-  			</ion-item>
-  			<ion-item>
-       		<button ion-button color="primary" (click)="onClickEmailLog()">Email Log</button>
-       		<button ion-button color="danger" (click)="onClickDestroyLog()">Destroy</button>
-       	</ion-item>        
-     	</ion-fab-list>
-    </ion-fab>
-		-->
+	<div id="infoContainer">								
+  		<div class="box a">				  
+		  <h1 id="time">{{timerTime}}</h1>
+		</div>
+  		<div class="box b">
+		  <p id="distance">{{odometer}}</p>
+		</div>
+  		<div class="box c">
+  		<button ion-button block style="width:100%; height:50%;">
+		  Scheda</button></div>
+  		<div class="box d">
+		  <p id="calories">{{calories}}</p>
+		</div>
+	</div>	
 
-	<!-- Google Map Element -->
-  <div #map id="map"></div>
-
-</ion-content>
-
-<ion-footer padding>	
-	<ion-buttons end>
-			<button ion-button solid (click)="onClickRunning()" color="{{isMoving ? 'danger' : 'secondary'}}">
-				<ion-icon name="{{isMoving ? 'pause' : 'play'}}"></ion-icon>
-				Inizia workout
-			</button>		
-	</ion-buttons>
-	<!--
-	<ion-toolbar mode="ios" color="gold">
-		<ion-buttons start>
-			<button ion-button solid (click)="onClickGetCurrentPosition()" color="primary" style="width:50px">
-				<ion-icon name="md-navigate" color=""></ion-icon>
+	<div id="mapContainer">
+		<ion-fab style="vertical-align: top;" end>
+			<button ion-fab mini color="primary" (click)="onClickGetCurrentPosition()">
+				<ion-icon name="locate"></ion-icon>
 			</button>
-		</ion-buttons>
-		<ion-title>
-			<span [innerHTML]="motionActivity">Activity</span>&nbsp;&middot;&nbsp;<span [innerHTML]="odometer"></span>      
-		</ion-title>
-		<ion-buttons end>
-			<button ion-button solid (click)="onClickChangePace()" style="width:50px" color="{{isMoving ? 'danger' : 'secondary'}}">
-				<ion-icon name="{{isMoving ? 'pause' : 'play'}}"></ion-icon>
-			</button>
-		</ion-buttons>
+		</ion-fab>
 
-	</ion-toolbar>
-	-->
-</ion-footer>
+		<ion-fab center bottom>
+			<button ion-fab (click)="onClickRunning()" color="{{isRunning ? 'danger' : 'secondary'}}">
+				<ion-icon style="margin-start: 50%;" name="{{isRunning ? 'pause' : 'play'}}"></ion-icon>
+			</button>						
+		</ion-fab>
+
+		<ion-fab center bottom style="margin-left: 10%;">
+			<button ion-fab mini [hidden]="!isRunning" (click)="stopTrainingAlert()" color="danger">
+				<ion-icon name="square"></ion-icon>
+			</button>
+		</ion-fab>
+		
+		<div #map id="map"></div>			
+	</div>	
+</ion-content>	
+
+
+
+<!--
+	<ion-header>  
+</ion-header>
+
+<ion-content>
+	<div id="infoContainer" padding>								
+		<div style="text-align: center; display: block; vertical-align: bottom;">			
+			
+		</div>
+		Tempo trascorso: {{timer}} <br>
+		Distanza percorsa: {{odometer}} <br>
+		Timer: {{timerTime}}
+		Calorie/m: {{calories}}
+	</div>	
+
+	<div id="mapContainer">
+		<ion-fab style="vertical-align: top;" end>
+			<button ion-fab mini color="primary" (click)="onClickGetCurrentPosition()">
+				<ion-icon name="locate"></ion-icon>
+			</button>
+		</ion-fab>
+
+		<ion-fab center bottom>
+			<button ion-fab (click)="onClickRunning()" color="{{isRunning ? 'danger' : 'secondary'}}">
+				<ion-icon style="margin-start: 50%;" name="{{isRunning ? 'pause' : 'play'}}"></ion-icon>
+			</button>						
+		</ion-fab>
+
+		<ion-fab center bottom style="margin-left: 10%;">
+			<button ion-fab mini [hidden]="!isRunning" (click)="onClickStop()" color="danger">
+				<ion-icon name="square"></ion-icon>
+			</button>
+		</ion-fab>
+		
+		<div #map id="map"></div>			
+	</div>	
+</ion-content>	
+
+-->
