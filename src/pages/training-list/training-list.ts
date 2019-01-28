@@ -1,3 +1,4 @@
+import { TabsPage } from './../tabs/tabs';
 import { Storage } from '@ionic/storage';
 import { HomePage } from './../home/home';
 import { Training } from './../../models/training';
@@ -49,34 +50,27 @@ export class TrainingListPage {
         //console.log("ID allenamento: "+trainingID+", mail: "+snapshot);
         trainerList.push(snapshot);
       });
-      //momentaneamente la selezione dell'allenatore è completamente randomica
-      var mailPicked = trainerList[this.getTrainer(trainerList)];
-      //console.log("email presa: "+mailPicked);
+      //momentaneamente la selezione dell'allenatore è completamente randomica      
+      var mailPicked = trainerList[this.getTrainer(0, (trainerList.length-1))];
+      console.log("email presa: "+mailPicked);
 
       //inserisce la mail dell'allenatore
       this.afDatabase.object(`/profile/user/${this.userID}/`).update({
         trainer: mailPicked,
         training: trainingID
         }).then(() =>{
-          this.navCtrl.setRoot(HomePage);
+          this.navCtrl.setRoot(TabsPage);
         });
 
       var trainerID = mailPicked.substr(0, mailPicked.indexOf('@'));
-      this.afDatabase.list(`/profile/trainer/${trainerID}/users`).push({uid: this.userID});
+      this.afDatabase.list(`/profile/trainer/${trainerID}/users/`).push({uid: this.userID});
     });
   }
 
   /**
    * Restituisce l'indirizzo mail di un personal trainer con cui allenarsi
    */
-  getTrainer(trainerList) {
-    if(trainerList.lenght==0){
-      throw new Error("La lista di allenatori disponibili per l'allenamento è vuota!");
-    }else if(trainerList.lenght==1){
-      return 0;
-    }else{
-      //implementare algoritmo di selezione
-      return Math.floor(0 + Math.random()*(trainerList.lenght + 1 - 0))
-    }
+  getTrainer(min, max) {
+    return Math.floor(min + Math.random()*(max + 1 - min));
   }
 }

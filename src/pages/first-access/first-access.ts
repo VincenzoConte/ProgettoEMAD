@@ -41,6 +41,7 @@ export class FirstAccessPage {
   async register(form: NgForm){
     this.submitted = true;
     if(form.valid && this.privacyPolicy){
+      this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
       console.log("(first-access) form valido");
       this.afDatabase.object(`profile/user/${this.fbUserID}`).update(this.user)
         .then(() => {

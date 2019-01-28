@@ -34,6 +34,20 @@
         <ion-input [(ngModel)]="user.weight" name="weight" type="number" pattern="[0-9]*" #weight="ngModel" required>
         </ion-input>
       </ion-item>
+
+      <ion-list radio-group [(ngModel)]="user.gender" name="gender" #gender="ngModel" required>
+        <ion-list-header>
+          Seleziona il tuo genere:
+        </ion-list-header>
+        <ion-item>
+          <ion-label>Maschile</ion-label>
+          <ion-radio value="1"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Femminile</ion-label>
+          <ion-radio value="0"></ion-radio>
+        </ion-item>
+      </ion-list>  
     </ion-list>
 
     <div style="margin-top: 20px;">
@@ -45,6 +59,6 @@
       </label>
     </div>
     
-    <button ion-button id="registerbtn" block (click)="register(firstAccessForm);"  [disabled]="!privacyPolicy && !firstAccessForm.valid">Registrati</button>  
+    <button ion-button id="registerbtn" block (click)="register(firstAccessForm);">Registrati</button>  
   </form>  
 </ion-content>

@@ -37,12 +37,16 @@ export class RegisterPage {
    */
   async register(form :NgForm){
      this.submitted = true;
-    console.log("utente: "+this.user.email+", pwd: "+this.user.password);
+   
+
      if(form.valid && this.privacyPolicy){       
        console.log("form valido");  
+       console.log("utente: "+this.user.email+", pwd: "+this.user.password);
+       console.log("genere utente: "+this.user.gender);
        console.log("Altezza: "+this.user.height+", peso: "+this.user.weight);
        this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
        console.log("BMI: "+this.user.BMI);
+      
        await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
         .then(() =>{
           let user = firebase.auth().currentUser;
@@ -62,7 +66,7 @@ export class RegisterPage {
                 message: "Sicuro di aver messo una mail valida?",
                 duration: 3000
               }).present();
-        });
+        });        
      } else if(!this.privacyPolicy){
        this.toast.create({
                 message: "Accetta i termini e le condizioni per continuare",
@@ -74,8 +78,7 @@ export class RegisterPage {
                 message: "Ricontrolla i tuoi dati",
                 duration: 3000
         }).present();        
-     }
-     
+     }     
   }
 
   /**

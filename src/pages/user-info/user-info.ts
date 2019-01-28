@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, App } from 'ionic-angular';
 import { Subscription } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TrainingListPage } from '../training-list/training-list';
@@ -26,6 +26,7 @@ export class UserInfoPage {
   constructor(
     private afAuth: AngularFireAuth,
     private storage: Storage, 
+    private app: App,
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private alertCtrl: AlertController) {
@@ -90,7 +91,8 @@ export class UserInfoPage {
       firebase.auth().signOut();
       this.storage.set("userLoggedID", "").then(() =>{
         console.log("logging out...");
-        this.navCtrl.setRoot(LoginPage);
+        //this.navCtrl.setRoot(LoginPage); //genera un bug nel tabbed layout        
+        window.location.reload();          //workaround
       });    
     });
   }
