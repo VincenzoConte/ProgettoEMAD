@@ -165,26 +165,7 @@ export class LoginPage {
                 console.log("peso non presente nel database");
                 self.navCtrl.setRoot(FirstAccessPage);
               } 
-            });
-            /*
-            self.hasSex(success).then(() => {
-              console.log("has sex: "+self.hasSexBool);
-            });                    */
-            
-
-            //se esiste, controlla se il peso è impostato (bugfix se si chiude l'app)
-            /*
-            dbFacebook.child(`/weight`).once('value', function(snapshot){
-              if(snapshot.exists()){
-                dbFacebook.child(`/training`).once('value', function(snapshot){
-                if(snapshot.exists()){
-                  self2.navCtrl.setRoot(HomePage);
-                } else self2.navCtrl.setRoot(TrainingListPage);
-                });
-              }
-            });
-            */
-            
+            });           
           } else {
             console.log("(login) creazione nuovo profilo da Facebook");
             //se non esiste, porta alla creazione di un nuovo profilo
@@ -196,22 +177,6 @@ export class LoginPage {
         });
       }).catch((error) => console.log(error));
     });
-  }
-
-  hasSex(success:any):Boolean{
-    let self = this;  
-    var haveSex:boolean;      
-    let dbFacebook = firebase.database().ref(`/profile/user/${success.uid}`);
-    dbFacebook.child(`/weight`).once('value', function(snapshot){
-      if(snapshot.exists()){
-        haveSex = true;
-        console.log("hassexbool"+haveSex);
-      } else{
-        haveSex = false;
-        console.log("hassexbool"+haveSex);
-      } 
-    });
-    return haveSex;    
   }
 
   helpLogin(){
