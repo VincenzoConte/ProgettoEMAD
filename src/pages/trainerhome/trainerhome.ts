@@ -45,28 +45,37 @@ export class TrainerhomePage {
         resp.forEach(child => {
           firebase.database().ref(`/profile/user/${child.val().uid}`).once('value', user => {
             self.myUsers.push({name: user.val().name, uid: user.key, notRead: false});
-            firebase.database().ref(`/chat/${child.val().uid}/${self.tid}`).orderByKey().limitToLast(1).once('value', resp => {
-              if(resp.exists()){
-                resp.forEach(msg => {
-                  if(!msg.val().read && msg.val().author != self.tid){
-                    let userID = resp.ref.parent.key;
-                    self.myUsers.forEach(user => {
-                      if(userID == user.uid){
-                        user.notRead = true;
-                      }
-                    });
-                  }
-                });
-              }
-            });
+            firebase.database().ref(`/chat/${child.val().uid}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
           });
         });
       });
     });
   }
 
+  findUser(element, index, array){
+    return element.uid == this;
+  }
+
+  checkChat(resp){
+    if(resp.exists()){
+      resp.forEach(msg => {
+        if(!msg.val().read && msg.val().author != this.tid){
+          let userID = resp.ref.parent.key;
+          let curUserIndex = this.myUsers.findIndex(this.findUser, userID);
+          let curUser = this.myUsers[curUserIndex];
+          this.myUsers.splice(curUserIndex, 1);
+          curUser.notRead = true;
+          this.myUsers.unshift(curUser);
+        }
+      });
+    }
+  }
+
   ionViewDidLeave(){
     clearInterval(this.intervalID);
+    this.myUsers.forEach(user => {
+      firebase.database().ref(`/chat/${user.uid}/${this.tid}`).off('value', this.checkChat, this);
+    });
   }
 
 
