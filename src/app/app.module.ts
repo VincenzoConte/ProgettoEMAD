@@ -21,6 +21,7 @@ import { TrainerChatPage } from '../pages/trainer-chat/trainer-chat';
 import { ChatHistoryPage } from '../pages/chat-history/chat-history';
 import { TabsPage } from '../pages/tabs/tabs';
 import { UserInfoPage } from '../pages/user-info/user-info';
+import { StatsPage } from '../pages/stats/stats';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -44,7 +45,8 @@ const firebaseConfig = {
     TabsPage,
     UserInfoPage,
     TrainerChatPage,
-    ChatHistoryPage
+    ChatHistoryPage,
+    StatsPage
 
   ],
   imports: [
@@ -69,7 +71,8 @@ const firebaseConfig = {
     TabsPage,
     UserInfoPage,
     TrainerChatPage,
-    ChatHistoryPage
+    ChatHistoryPage,
+    StatsPage
 
   ],
   providers: [

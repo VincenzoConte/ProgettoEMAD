@@ -99,9 +99,7 @@ export class UserInfoPage {
   }
 
   loadStats(){
-    //TODO
-    //this.navCtrl.setRoot(StatsPage);
-    //this.navCtrl.push(StatsPage);
+    this.navCtrl.push(StatsPage);
   }
 
 }
