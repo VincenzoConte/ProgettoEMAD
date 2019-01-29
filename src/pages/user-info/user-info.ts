@@ -6,6 +6,7 @@ import { TrainingListPage } from '../training-list/training-list';
 import firebase from 'firebase';
 import { LoginPage } from '../login/login';
 import { Storage } from '@ionic/storage';
+import { StatsPage } from '../stats/stats';
 
 /**
  * Generated class for the UserInfoPage page.
@@ -95,6 +96,12 @@ export class UserInfoPage {
         window.location.reload();          //workaround
       });    
     });
+  }
+
+  loadStats(){
+    //TODO
+    //this.navCtrl.setRoot(StatsPage);
+    //this.navCtrl.push(StatsPage);
   }
 
 }
