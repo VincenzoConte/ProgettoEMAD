@@ -61,7 +61,7 @@ export class TrainerChatPage {
     this.messages = snapshotToArray(resp);
     let notRead = 0;
     this.messages.forEach(msg => {
-      if(msg.author != this.uid && !msg.read){
+      if(msg.author != this.tid && !msg.read){
         notRead = notRead + 1;
         firebase.database().ref(`/chat/${this.uid}/${this.tid}/${msg.key}`).update({
           read: true
