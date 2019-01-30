@@ -23,6 +23,14 @@ export class StatsPage {
   barChart: any;
   doughnutChart: any;
   lineChart: any;
+  labelkm: any;
+  datakm: any;
+  labelcal: any;
+  datacal: any;
+  labelbmi: any;
+  databmi: any;
+  labelkg: any;
+  datakg: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -30,14 +38,16 @@ export class StatsPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad StatsPage');
 
+    this.labelkm = ["25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
+    this.datakm = [10, 11, 12, 12, 12, 13];
     this.km = new Chart(this.km.nativeElement, {
 
       type: 'bar',
       data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+          labels: this.labelkm,
           datasets: [{
-              label: '# of Votes',
-              data: [12, 19, 3, 5, 2, 3],
+              label: 'KM Percorsi',
+              data: this.datakm,
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
@@ -69,14 +79,16 @@ export class StatsPage {
 
   });
 
+  this.labelcal = ["25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
+  this.datacal = [990, 1089, 1118, 1118, 1118, 1287];
   this.cal = new Chart(this.cal.nativeElement, {
 
     type: 'bar',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: this.labelcal,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Calorie bruciate',
+            data: this.datacal,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -108,14 +120,16 @@ export class StatsPage {
 
 });
 
+this.labelkg = ["24/01/2019", "25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
+this.datakg = [110, 110, 109, 109, 109, 105, 100];
 this.peso = new Chart(this.peso.nativeElement, {
 
     type: 'line',
     data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        labels: this.labelkg,
         datasets: [
             {
-                label: "KM Percorsi",
+                label: "Peso",
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: "rgba(75,192,192,0.4)",
@@ -133,7 +147,7 @@ this.peso = new Chart(this.peso.nativeElement, {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: [65, 59, 80, 81, 56, 55, 40],
+                data: this.datakg,
                 spanGaps: false,
             }
         ]
@@ -141,14 +155,16 @@ this.peso = new Chart(this.peso.nativeElement, {
 
 });
 
+this.labelbmi = ["24/01/2019", "25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
+this.databmi = [65, 59, 80, 81, 56, 55, 40];
 this.bmi = new Chart(this.bmi.nativeElement, {
 
     type: 'line',
     data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        labels: this.labelbmi,
         datasets: [
             {
-                label: "Calorie Bruciate",
+                label: "Body Mass index (BMI)",
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: "rgba(75,192,192,0.4)",
@@ -166,7 +182,7 @@ this.bmi = new Chart(this.bmi.nativeElement, {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: [65, 59, 80, 81, 56, 55, 40],
+                data: this.databmi,
                 spanGaps: false,
             }
         ]
