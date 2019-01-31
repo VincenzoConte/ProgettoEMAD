@@ -25,7 +25,6 @@ export class RegisterPage {
   formgroup:FormGroup;
   privacyPolicy = false;
   submitted = false;
-  EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 
   constructor(private angularAuth: AngularFireAuth, private storage: Storage, private afDatabase: AngularFireDatabase, 
               private toast: ToastController,  public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder) {      
@@ -47,7 +46,7 @@ export class RegisterPage {
        this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
        console.log("BMI: "+this.user.BMI);
       
-       await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
+       await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email.toLowerCase(), this.user.password)
         .then(() =>{
           let user = firebase.auth().currentUser;
           user.sendEmailVerification();
@@ -55,12 +54,12 @@ export class RegisterPage {
           this.angularAuth.authState.take(1).subscribe(auth=>{
             this.afDatabase.object(`profile/user/${auth.uid}`).update(this.user);
           });          
-        }).then(()=>{
-          this.navCtrl.setRoot(LoginPage);
+        }).then(()=>{          
           this.toast.create({
-                message: "Grande! Valida la mail per entrare.",
+                message: "Grande! Verifica la tua e-mail per entrare.",
                 duration: 3000
               }).present();
+          this.navCtrl.setRoot(LoginPage);    
         }).catch(()=>{
               this.toast.create({
                 message: "Sicuro di aver messo una mail valida?",
@@ -69,7 +68,7 @@ export class RegisterPage {
         });        
      } else if(!this.privacyPolicy){
        this.toast.create({
-                message: "Accetta i termini e le condizioni per continuare",
+                message: "Accetta i termini e le condizioni per continuare.",
                 duration: 3000
         }).present();
      } else {

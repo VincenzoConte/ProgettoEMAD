@@ -36,7 +36,7 @@
         <p ion-text padding-left>Password richiesta</p>
       </ion-item>
 
-      <ion-row >
+      <ion-row>
         <ion-col>
           <button ion-button (click)="onLogin(loginForm)" type="submit" block>Login</button>
         </ion-col>
@@ -49,38 +49,11 @@
         Problemi con il login?
       </button>
     
+      <!--
       <button ion-button icon-end full (click)="loginFacebook();" id="fbaccess">
         Entra con <ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
       </button>
+      -->
     </ion-list>
   </form>
-
-<!--
-  <ion-item>
-    <ion-label floating>Email</ion-label>
-    <ion-input id="inputmail" type="text" [(ngModel)]="user.email" required></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label floating>Password</ion-label>
-    <ion-input id="inputpwd" type="password" [(ngModel)]="user.password" required></ion-input>
-  </ion-item>
-
-  <ion-grid id="mailaccess"> 
-    <ion-row>
-      <ion-col col-6>
-      <button style="border-radius: 4px;" ion-button block (click)="loginMail(user);" id="loginMailBtn">Login</button>
-      </ion-col>
-      <ion-col col-6>
-      <button style="border-radius: 4px;" ion-button block outline (click)="registerMail();" id="registerMailBtn">Registrati</button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  
- 
-
-  <button style="border-radius: 4px;" ion-button icon-end full (click)="loginFacebook();" id="fbaccess">
-    Entra con <ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
-  </button>
--->
 </ion-content>

@@ -7,4 +7,6 @@ export interface User{
     password: string;
     BMI: number;
     gender: number;
+    trainer:string;
+    training:string;
 }

@@ -13,7 +13,7 @@
   <h5 style="text-align: center;" id="title">Seleziona un tipo di allenamento:</h5>
 
   <ion-list id="itemlist">
-    <ion-item no-lines *ngFor="let training of trainings | async" class="trainingItem" (click)="trainingClicked(training.trainingID);">      
+    <ion-item no-lines *ngFor="let training of trainings | async" class="trainingItem" (click)="onClickTraining(training.trainingID, training.name);">      
         {{training.name}}            
     </ion-item>
   </ion-list>
