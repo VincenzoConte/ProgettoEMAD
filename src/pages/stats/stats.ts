@@ -1,6 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, UrlSerializer } from 'ionic-angular';
 import { Chart } from 'chart.js';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireDatabase } from '@angular/fire/database';
+import firebase from 'firebase';
 
 /**
  * Generated class for the StatsPage page.
@@ -20,91 +23,48 @@ export class StatsPage {
   @ViewChild('bmi') bmi;
   @ViewChild('km') km;
   @ViewChild('cal') cal;
-  barChart: any;
-  doughnutChart: any;
-  lineChart: any;
-  labelkm: any;
   datakm: any;
-  labelcal: any;
   datacal: any;
-  labelbmi: any;
   databmi: any;
-  labelkg: any;
   datakg: any;
+  userID: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public afdatabase: AngularFireDatabase, private angAuth: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad StatsPage');
+    this.userID = this.angAuth.auth.currentUser.uid.toString(); //ID Utente corrente
 
-    this.labelkm = ["25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
-    this.datakm = [10, 11, 12, 12, 12, 13];
-    this.km = new Chart(this.km.nativeElement, {
-
-      type: 'bar',
-      data: {
-          labels: this.labelkm,
-          datasets: [{
-              label: 'KM Percorsi',
-              data: this.datakm,
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          }
-      }
-
+    var listkm = new Array;
+    var listkm2 = new Array;
+    this.datakm = [];
+    var j = 0;
+    var rootRefkm = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+    var urlRefkm =  rootRefkm.child("/Stats/"+this.userID+"/KM");
+    urlRefkm.once("value", function(snapshot) {
+        snapshot.forEach(function(child) {
+            listkm2.push(child.key.toString());
   });
+});
+this.afdatabase.list(`/Stats/${this.userID}/KM`).valueChanges().subscribe(snapshots =>{
+    snapshots.forEach(snapshot => {
+        listkm.push(snapshot);
+    });
+    while(j<listkm.length){
+        this.datakm[j] = listkm[j].Value;
+        j=j+1;
+  }
 
-  this.labelcal = ["25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
-  this.datacal = [990, 1089, 1118, 1118, 1118, 1287];
-  this.cal = new Chart(this.cal.nativeElement, {
+  this.km = new Chart(this.km.nativeElement, {
 
     type: 'bar',
     data: {
-        labels: this.labelcal,
+        labels: listkm2,
         datasets: [{
-            label: 'Calorie bruciate',
-            data: this.datacal,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
+            label: 'KM percorsi',
+            data: this.datakm,
+            backgroundColor: this.getColour(this.datakm.length, 'rgba(54, 162, 235, 0.2)'),
+            borderColor: this.getColour(this.datakm.length, 'rgba(54, 162, 235, 1)'),
             borderWidth: 1
         }]
     },
@@ -119,14 +79,78 @@ export class StatsPage {
     }
 
 });
+  });
+  
+  var listcal = new Array;
+  var listcal2 = new Array;
+  this.datacal = [];
+  var rootRefcal = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+  var urlRefcal =  rootRefcal.child("/Stats/"+this.userID+"/cal");
+  urlRefcal.once("value", function(snapshot) {
+      snapshot.forEach(function(child) {
+          listcal2.push(child.key.toString());
+  });
+});
+this.afdatabase.list(`/Stats/${this.userID}/cal`).valueChanges().subscribe(snapshots =>{
+    snapshots.forEach(snapshot => {
+        listcal.push(snapshot);
+    });
+    j = 0;
+    while(j<listcal.length){
+        this.datacal[j] = listcal[j].Value;
+        j=j+1;
+  }
 
-this.labelkg = ["24/01/2019", "25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
-this.datakg = [110, 110, 109, 109, 109, 105, 100];
-this.peso = new Chart(this.peso.nativeElement, {
+  this.cal = new Chart(this.cal.nativeElement, {
 
+    type: 'bar',
+    data: {
+        labels: listcal2,
+        datasets: [{
+            label: 'Calorie bruciate',
+            data: this.datacal,
+            backgroundColor: this.getColour( listcal2.length, 'rgba(255, 99, 132, 0.2)'),
+            borderColor: this.getColour(listcal2.length, 'rgba(255,99,132,1)'),
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+
+});
+  });
+
+var listkg = new Array;
+var listkg2 = new Array;
+this.datakg = [];
+var i = 0;
+var rootRefkg = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+var urlRefkg =  rootRefkg.child("/Stats/"+this.userID+"/Peso");
+urlRefkg.once("value", function(snapshot) {
+  snapshot.forEach(function(child) {
+    listkg2.push(child.key.toString());
+  });
+});
+this.afdatabase.list(`/Stats/${this.userID}/Peso`).valueChanges().subscribe(snapshots =>{
+    snapshots.forEach(snapshot => {
+      listkg.push(snapshot);
+    });
+    while(i<listkg.length){
+        this.datakg[i] = listkg[i].Value;
+        i=i+1;
+  }
+
+  this.peso = new Chart(this.peso.nativeElement, {
     type: 'line',
     data: {
-        labels: this.labelkg,
+        labels: listkg2,
         datasets: [
             {
                 label: "Peso",
@@ -153,15 +177,33 @@ this.peso = new Chart(this.peso.nativeElement, {
         ]
     }
 
-});
+  });
+  });
 
-this.labelbmi = ["24/01/2019", "25/01/2019", "26/01/2019", "27/01/2019", "28/01/2019", "29/01/2019", "30/01/2019"];
-this.databmi = [65, 59, 80, 81, 56, 55, 40];
-this.bmi = new Chart(this.bmi.nativeElement, {
+var list = new Array;
+var list2 = new Array;
+this.databmi = [];
+var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+var urlRef =  rootRef.child("/Stats/"+this.userID+"/BMI");
+urlRef.once("value", function(snapshot) {
+  snapshot.forEach(function(child) {
+    list2.push(child.key.toString());
+  });
+});
+this.afdatabase.list(`/Stats/${this.userID}/BMI`).valueChanges().subscribe(snapshots =>{
+    snapshots.forEach(snapshot => {
+      list.push(snapshot);
+    });
+    i = 0;
+    while(i<list.length){
+        this.databmi[i] = list[i].Value;
+        i=i+1;
+  }
+  this.bmi = new Chart(this.bmi.nativeElement, {
 
     type: 'line',
     data: {
-        labels: this.labelbmi,
+        labels: list2,
         datasets: [
             {
                 label: "Body Mass index (BMI)",
@@ -187,9 +229,20 @@ this.bmi = new Chart(this.bmi.nativeElement, {
             }
         ]
     }
-
 });
 
+  });
+
+  }
+
+  getColour(y: number, colorString: string){
+      var toReturn = new Array;
+      var k = 0;
+      while(k<y){
+          toReturn[k] = colorString;
+          k = k+1;
+      }
+      return toReturn;
   }
 
 }
