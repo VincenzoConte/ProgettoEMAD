@@ -21,7 +21,7 @@ export class MyApp {
     splashScreen: SplashScreen, private afAuth: AngularFireAuth, private storage: Storage) {
 
     //this.storage.set('userLoggedID', 'tvq2DppxfiVWq78CobleOX21wOu1');
-    //this.storage.set('trainerLoggedID', 'trainer12');
+    //this.storage.set('trainerLoggedID', 'trainer17');
     this.keepLogin();
     //this.rootPage=ChatPage;
     platform.ready().then(() => {

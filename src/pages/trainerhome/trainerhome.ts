@@ -43,10 +43,13 @@ export class TrainerhomePage {
       users.orderByKey().on('value', resp => {
         self.myUsers = [];
         resp.forEach(child => {
-          firebase.database().ref(`/profile/user/${child.val().uid}`).once('value', user => {
+          /*firebase.database().ref(`/profile/user/${child.val().uid}`).once('value', user => {
             self.myUsers.push({name: user.val().name, uid: user.key, notRead: false});
             firebase.database().ref(`/chat/${child.val().uid}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
-          });
+          });*/
+
+          self.myUsers.push({name: child.val().username, uid: child.key, training: child.val().training, notRead: false});
+          firebase.database().ref(`/chat/${child.key}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
         });
       });
     });

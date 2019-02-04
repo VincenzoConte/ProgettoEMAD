@@ -19,7 +19,10 @@
 
   <ion-list>
     <ion-item *ngFor="let user of myUsers" (click)="openUser(user.uid, user.name)">
-      {{user.name}}
+      <ion-label text-wrap>
+          <h3>{{user.name}}</h3>
+          <p>{{user.training}}</p>
+      </ion-label>
       <ion-icon *ngIf="user.notRead" name="chatboxes" color="danger" item-end></ion-icon>
       <ion-icon *ngIf="!user.notRead" name="chatboxes" item-end></ion-icon>
     </ion-item>

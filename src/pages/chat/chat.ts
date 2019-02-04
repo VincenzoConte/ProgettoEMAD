@@ -20,26 +20,33 @@ export class ChatPage {
   message = '';
   limit = 10;
   intervalID: number;
+  oldTrainer = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage,
     private changeRef: ChangeDetectorRef, public toast: ToastController) {
-
-
-
 
   }
 
   sendMessage() {
     if(this.message.trim() === '')
       return;
-    let newData = firebase.database().ref(`/chat/${this.uid}/${this.tid}`).push();
-    newData.set({
-      author:this.uid,
-      msg:this.message,
-      sendDate:Date(),
-      read: false
-    });
-    this.message='';
+
+    if(this.oldTrainer){
+      this.toast.create({
+          message: "Questa chat non è più attiva",
+          duration: 3000
+      }).present();
+    }
+    else{
+      let newData = firebase.database().ref(`/chat/${this.uid}/${this.tid}`).push();
+      newData.set({
+        author:this.uid,
+        msg:this.message,
+        sendDate:Date(),
+        read: false
+      });
+      this.message='';
+    }
   }
 
   loadMessages(){
@@ -58,7 +65,6 @@ export class ChatPage {
   }
 
   messagesCallback(resp){
-    console.log("callback");
     this.messages = [];
     this.messages = snapshotToArray(resp);
     let notRead = 0;
@@ -86,9 +92,6 @@ export class ChatPage {
         this.navCtrl.setRoot(LoginPage);
       }
       this.uid=result;
-      this.intervalID = setInterval(() => {
-        this.changeRef.detectChanges();
-      }, 1000);
       //this.uid='tvq2DppxfiVWq78CobleOX21wOu1';
       let self=this;
       this.tid = this.navParams.get("trainerID");
@@ -107,17 +110,28 @@ export class ChatPage {
         });
       } else {
         this.trainerName = this.navParams.get("trainerName");
-        let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
-        chat.orderByKey().limitToLast(self.limit).on('value', self.messagesCallback, this);
+        firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
+          var email = resp.val().trainer;
+          email = email.substr(0, email.indexOf('@'));
+          if(self.tid != email){
+            self.oldTrainer = true;
+          }
+          else{
+            self.oldTrainer = false;
+          }
+          let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
+          chat.orderByKey().limitToLast(self.limit).on('value', self.messagesCallback, this);
+        });
       }
     });
+
   }
 
   ionViewDidLeave(){
+    clearInterval(this.intervalID);
     firebase.database().ref(`/chat/${this.uid}/${this.tid}`).off('value', this.messagesCallback, this);
     this.messages = [];
     this.limit = 10;
-    clearInterval(this.intervalID);
   }
 
 }
