@@ -1,0 +1,26 @@
+<!--
+  Generated template for the TrainerCardsListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>TrainerCardsList</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>  
+  <ion-list>
+    <ion-item *ngFor="let user of usersList | async" (click)="onClickUser(user)">
+      {{user.username}} <br>
+      {{user.training}} <br>   
+      {{user.hasExercise}} <br>
+      {{user.UID}} <br>
+      <ion-icon ios="logo-facebook" md="logo-facebook" *ngIf="user.hasExercise" ></ion-icon>
+    </ion-item>
+  </ion-list>  
+</ion-content>

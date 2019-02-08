@@ -81,6 +81,22 @@ export class UserInfoPage {
   }
 
   /**
+   * Aggiorna il peso dell'utente
+   */
+  updateWeight(){
+    /*
+    let weightUpdateAlert = this.alertCtrl.create({
+      title: "Nuovo peso",
+      subTitle: "Aggiorna il tuo peso inserendolo nell'area sottostante",
+      buttons: [
+       
+      ],
+      enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
+    }).present();
+    */
+  }
+
+  /**
    * Controlla i dati sul login
    */
   /*

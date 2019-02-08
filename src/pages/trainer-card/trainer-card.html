@@ -1,0 +1,62 @@
+<!--
+  Generated template for the TrainerCardPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{user.username}}</ion-title>
+    <ion-buttons end>
+      <button ion-button block (click)="sendToUser()">
+        <ion-icon name="md-send"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-card>
+    <ion-list>
+        <ion-item-sliding *ngFor="let activity of card">
+            <ion-item>
+                {{activity}}
+            </ion-item>
+
+            <ion-item-options side="right">
+                <button ion-button color="danger" (click)="delete(activity)">
+                    <ion-icon name="trash"></ion-icon> Cancella
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+    </ion-card>
+
+<!--
+    <h4 [hidden]="card.length > 0">Inserisci la scheda del giorno per {{user.name}}</h4>
+-->
+     
+ 
+</ion-content>
+
+<ion-footer>
+
+  <ion-row>
+    <ion-col >
+      <ion-item>
+        <ion-input [(ngModel)]="todo" (keyup.enter)="add()" placeholder="Scrivi un'attività qui" type="text"></ion-input>
+    </ion-item>
+    </ion-col>
+    <ion-col col-2>
+      <!-- ion-fab mini -->
+       <button ion-button block style="width: 40px;border-radius: 50%;" (click)="add()" [hidden]="!todo || todo == ''">
+         <ion-icon name="add"></ion-icon>
+       </button>
+    </ion-col>
+  </ion-row>
+
+   
+</ion-footer>

@@ -1,5 +1,5 @@
 import {ViewController} from 'ionic-angular';
-import { FirstAccessPage } from './../first-access/first-access';
+import { SocialSharing } from '@ionic-native/social-sharing/';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from '@ionic/storage';
 import {
@@ -14,6 +14,8 @@ import {
   NavParams,
   ToastController,
   AlertController,
+  ActionSheetController,
+  ModalController,
   Platform,
   App
 } from 'ionic-angular';
@@ -32,6 +34,8 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../../models/user';
 import { LoginPage } from '../login/login';
 import { TrainingListPage } from '../training-list/training-list';
+import { Observable } from 'rxjs';
+import { CardModalPage } from '../card-modal/card-modal';
 
 //import { timer } from 'rxjs';
 
@@ -63,6 +67,7 @@ export class HomePage {
   debug: boolean;
   provider: any;
   isGPSenabled:boolean;
+ 
 
   //Elementi dell'UI
   menuActive: boolean;
@@ -93,6 +98,8 @@ export class HomePage {
   //vari
   userID:string;
   user = {} as User;
+  activityList:Observable<any>;
+  localStorage;
 
   constructor(
     private viewCtrl: ViewController,
@@ -103,11 +110,14 @@ export class HomePage {
     private platform:Platform,
     private alertCtrl: AlertController,
     private storage: Storage,
+    private aSheetCtrl: ActionSheetController,
+    private socialSharing: SocialSharing,
+    private modal: ModalController,
     private app: App,
     private afAuth: AngularFireAuth,
     public afDatabase: AngularFireDatabase, 
     ){
-      //Inizializzazione delle variabili
+      //Inizializzazione delle variabili      
       this.timer = 0;
       this.odometerNumber = 0;    
       this.caloriesNumber = 0;
@@ -132,12 +142,12 @@ export class HomePage {
           status: -1  //stato delle autorizzazioni
         }
       }  
-
-
   }
 
    ionViewDidLoad(){
     this.platform.ready().then(() => {
+      this.localStorage = (<any>window).localStorage; 
+      //this.localStorage.clear(); 
       this.checkWeight();      
       this.configureMap();
       this.configureBackgroundGeolocation().then(() =>{
@@ -158,10 +168,10 @@ export class HomePage {
         firebase.database().ref(`/profile/user/${result}/weight`)
           .once('value', function(snapshot){
             if(snapshot.exists()){
-              console.log("peso presente");
+              //console.log("peso presente");
               self.weight = snapshot.val();
             } else {
-              console.log("peso assente");
+              //console.log("peso assente");
               self.weightAlert();
               }  
           }).then(()=>{            
@@ -501,6 +511,240 @@ export class HomePage {
     alert.present();     
   }
 
+
+  /**
+   * L'utente ha cliccato per visualizzare la scheda
+   */
+  //this.activityList =  = this.afDatabase.list(`/profile/user/${this.userID}/card`).valueChanges();  
+  onClickCard(){  
+    //const cardModal = this.modal.create(CardModalPage, { userID: this.userID });
+    //cardModal.present();
+    
+    let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
+    cardAlert.setCssClass('custom-alert');
+    cardAlert.setTitle("Scheda di allenamento");    
+    this.loadCardList(cardAlert).then(resolve => cardAlert.present());    
+    
+  }
+
+  /**
+   * Carica le informazioni della scheda in un alert
+   * @param cardAlert 
+   */
+  loadCardList(cardAlert){  
+    console.log("cardlist caricata");    
+    return new Promise(resolve =>{
+      this.activityList = this.afDatabase.list(`/profile/user/${this.userID}/card`)
+          .snapshotChanges();
+      
+      var cardListSize;
+      var completedActivitiesList = [];
+      this.localStorage = (<any>window).localStorage; 
+
+      this.activityList.subscribe(res =>{
+          cardListSize = res.length;
+          if(cardListSize > 0){
+            res.map(action =>{
+              cardAlert.addInput({
+                type: 'checkbox',
+                label: ''+action.payload.val(),
+                value: action.key,
+                checked: this.localStorage.getItem(action.key),
+                handler: data => {
+                  /**
+                   * Per qualche motivo, una volta impostato a true non può
+                   * diventare false, quindi si è risolto cancellando
+                   * direttamente il valore dallo storage
+                   */
+                  if(this.localStorage.getItem(action.key) == null){
+                    console.log(action.key+" ha valore nullo");
+                    this.localStorage.setItem(action.key, data.checked);
+                  } else {
+                    console.log('rimosso valore per '+action.key);
+                    this.localStorage.removeItem(action.key);
+                  } 
+                }                       
+              });            
+              resolve(alert);
+            });
+            
+
+            cardAlert.addButton({
+              text: 'Condividi',
+              handler: data =>{
+                console.log("hai cliccato braaaav");
+              }
+            });
+
+            cardAlert.addButton({
+              text: 'Chiudi',
+              handler: data =>{
+                console.log("hai cliccato braaaav");
+              }
+            });
+
+            cardAlert.addButton({
+              text: 'Finito!',
+              handler: data =>{
+                data.forEach(element => {               
+                  completedActivitiesList.push(element);
+                });
+                //ha selezionato tutti gli elementi della lista
+                if(completedActivitiesList.length === cardListSize){
+                  var userData;
+                  firebase.database().ref(`/profile/user/${this.userID}/`)
+                    .once('value', function(snapshot){                    
+                      userData = snapshot.val();
+                      console.log("valore userData: "+JSON.stringify(userData));
+                    }).then(()=>{
+                      var day = new Date().toISOString().split('T')[0];
+                      //la aggiunge nella cronologia delle attività
+                      this.afDatabase.object(`/profile/user/${this.userID}/oldActivity/${day}`).update(userData.card);                    
+                      //rimuove la card
+                      this.afDatabase.object(`/profile/user/${this.userID}/card`).remove();
+                    }).then(()=>{
+                      var trainerID = userData.trainer.substr(0, userData.trainer.indexOf('@'));
+                      this.afDatabase.object(`/profile/user/${this.userID}/`).update({hasExercise: false});
+                      this.afDatabase.object(`/profile/trainer/${trainerID}/users/${this.userID}`).update({hasExercise: false});
+                    }).then(() =>{
+                      this.localStorage.clear();
+                      this.storage.get("showSharingAgain").then(result=>{
+                        if(result || result == null){
+                          this.showSharingAlert(); 
+                        } else {
+                          this.toastCtrl.create({
+                            message: "Complimenti, hai finito la scheda di allenamento!",
+                            duration: 2500
+                          }).present();
+                        }
+                      }).catch(error =>{
+                        console.log("errore: ", error);
+                        this.showSharingAlert();
+                      });                       
+                    });                                  
+                } else {         
+                  this.toastCtrl.create({
+                      message: "Completa la scheda per finire l'allenamento",
+                      duration: 2500,
+                  }).present();
+                }                
+              }
+            });        
+          } else {
+            cardAlert.setSubTitle("Non hai una scheda di allenamento, per ora.");
+            resolve(alert);
+          }   
+      });         
+    });
+  }
+
+  /**
+   * Mostra l'alert per la condivisione
+   */
+  showSharingAlert(){
+    let alert = this.alertCtrl.create({
+            title: "Complimenti!",    
+            subTitle: "Hai finito il tuo allenamento! Vuoi condividere il tuo risultato?",
+            buttons: [{
+                text: 'Si',
+                handler: () =>{
+                    this.shareResults();                       
+                }
+              },
+              {
+                text: 'No',
+                role: 'destructive'
+              }]
+          });
+        alert.addInput({
+              type: 'checkbox',
+              label: 'Non chiederlo più',
+              value: 'dontaskagain',
+              checked: false,
+                  handler: data => {
+                  console.log("Risultato check", data.checked);
+                    if(data.checked){
+                      this.storage.set("showSharingAgain", false);
+                    }
+                  }
+        });
+        alert.present(); 
+  }
+
+  shareResults(){    
+    let shareResults = this.aSheetCtrl.create({
+      title:"Condividi il tuo risultato",
+      buttons: [
+        {
+          text: "Facebook",
+          icon: "logo-facebook",
+          handler: () =>{
+            let URL = 'https://www.capgemini.com/it-it/';
+            this.socialSharing
+              .shareViaFacebook('Ho appena finito il mio allenamento di oggi! Grazie Capperfit!', null, URL).then(()=>{
+                this.showToast("Condivisione completata!");
+                console.log("fatto!");
+              }).catch(e=>{ //non trova l'app di Facebook
+                  this.showToast("Non è stata trovata l'app di Facebook sul tuo telefono");
+                  console.log("errore nella condivisione via Facebook: "+e);
+                });
+          }
+        },
+        {
+          text: "Twitter",
+          icon: "logo-twitter",
+          handler: () =>{
+            let sharingText = 'Ho appena finito il mio allenamento di oggi! Grazie Capperfit!';
+            let URL = 'https://www.capgemini.com/it-it/';
+            this.socialSharing
+              .shareViaTwitter(sharingText, null, URL).then(()=>{
+                this.showToast("Condivisione completata!");
+                console.log("fatto!");
+              }).catch((e)=>{
+                  this.showToast("Non è stata trovata l'app di Twitter sul tuo telefono");
+                  console.log("errore nella condivisione via twitter", e);
+                });
+          }
+        },
+        {
+          text: "Whatsapp",
+          icon: "logo-whatsapp",
+          handler: () =>{
+            let sharingText = 'Ho appena finito il mio allenamento di oggi! Grazie Capperfit!';
+            let URL = 'https://www.capgemini.com/it-it/';            
+            this.socialSharing
+                .shareViaWhatsApp(sharingText, null, URL).then(()=>{
+                  this.showToast("Condivisione completata!");
+                  console.log("fatto!");
+              }).catch(e=>{
+                  this.showToast("Non è stata trovata l'app di Whatsapp sul tuo telefono");
+                  console.log("errore nella condivisione via whatsapp",e);
+                });
+          }
+        },
+        {
+          text: "e-mail",
+          handler: () =>{
+            this.socialSharing.canShareViaEmail().then(()=>{
+              this.socialSharing.shareViaEmail("Ho fatto l'allenamento", "CAPPERFIT", ['sabdegregorio@gmail.com'])
+              .then(()=>{
+                  this.showToast("Condivisione completata!");
+              }).catch((e)=>{
+                  this.showToast("Errore nella condivisione via mail: nessun'app trovata");
+                  console.log("errore nella condivisione via mail",e);
+                });
+            }).catch((error2) =>{
+              this.showToast("Errore nella condivisione via mail: non è possibile condividere");
+              console.log("errore nel canShareViaEmail", error2);
+            })
+          }
+        }
+      ]
+    });
+
+    shareResults.present();
+  }
+
   /**
    * L'utente ha terminato la corsa
    */
@@ -739,5 +983,17 @@ export class HomePage {
             duration: 3500
         }).present();
     }
+  }
+
+  /**
+   * Mostra un toast del messaggio passato
+   * @param message
+   * @param time
+   */
+  showToast(message, time?){
+    this.toastCtrl.create({
+            message: message,
+            duration: time || 3500
+        }).present();
   }
 }

@@ -8,6 +8,7 @@ import { LoginPage } from '../pages/login/login';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 import { TabsPage } from '../pages/tabs/tabs';
+import { TrainerTabsPage } from '../pages/trainer-tabs/trainer-tabs';
 
 //import { ChatPage } from '../pages/chat/chat';
 
@@ -48,7 +49,8 @@ export class MyApp {
         this.storage.get("trainerLoggedID").then(result =>{
           console.log("(appComponent) trainerLoggedID stauts: "+result);
           if(result !== undefined && result != "" && result != null){
-            this.rootPage = TrainerhomePage;
+            //this.rootPage = TrainerhomePage;
+            this.rootPage = TrainerTabsPage;
           } else this.rootPage = LoginPage;
         }).catch(error =>{
           //userLoggedID completely empty
