@@ -35,9 +35,6 @@ import { User } from '../../models/user';
 import { LoginPage } from '../login/login';
 import { TrainingListPage } from '../training-list/training-list';
 import { Observable } from 'rxjs';
-import { CardModalPage } from '../card-modal/card-modal';
-
-//import { timer } from 'rxjs';
 
 // Cordova plugins Device & Dialogs
 //import { Device } from '@ionic-native/device';
@@ -671,6 +668,9 @@ export class HomePage {
         alert.present(); 
   }
 
+  /**
+   * Alert per condividere i propri risultati
+   */
   shareResults(){    
     let shareResults = this.aSheetCtrl.create({
       title:"Condividi il tuo risultato",
