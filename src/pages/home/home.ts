@@ -353,7 +353,7 @@ export class HomePage {
       this.odometer = location.odometer > 1000 ? ((location.odometer/1000).toFixed(1)+'km') : location.odometer+'m';
       this.odometerNumber = location.odometer;    
       this.caloriesNumber = 0.7 * location.odometer * this.weight;    //0.5 camminando, 0.9 in corsa = 0.7 di media
-      if(this.caloriesNumber == 0) this.calories = '0cal';
+      if(this.caloriesNumber == 0 || isNaN(this.caloriesNumber)) this.calories = '0cal';
       else if(this.caloriesNumber < 1000) this.calories = this.caloriesNumber.toFixed(2)+'cal';
       else {
         this.caloriesNumber = this.caloriesNumber / 1000;

@@ -96,7 +96,7 @@
         <variable name="GOOGLE_API_VERSION" value="16.0.0" />
         <variable name="APPCOMPAT_VERSION" value="27.1.1" />
     </plugin>
+    <plugin name="cordova-plugin-x-socialsharing" spec="5.3.2" />
     <engine name="browser" spec="5.0.4" />
     <engine name="android" spec="7.1.4" />
-    <plugin name="cordova-plugin-x-socialsharing" spec="5.3.2" />
 </widget>
