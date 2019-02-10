@@ -107,7 +107,7 @@ this.afdatabase.list(`/Stats/${this.userID}/cal`).valueChanges().subscribe(snaps
     data: {
         labels: listcal2,
         datasets: [{
-            label: 'Calorie bruciate',
+            label: 'Kilocalorie bruciate',
             data: this.datacal,
             backgroundColor: this.getColour( listcal2.length, 'rgba(255, 99, 132, 0.2)'),
             borderColor: this.getColour(listcal2.length, 'rgba(255,99,132,1)'),

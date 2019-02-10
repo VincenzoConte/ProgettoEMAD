@@ -96,7 +96,7 @@ export class HomePage {
   userID:string;
   user = {} as User;
   activityList:Observable<any>;
-  localStorage;
+  localStorage: any;
 
   constructor(
     private viewCtrl: ViewController,
@@ -754,6 +754,41 @@ export class HomePage {
     this.state.isMoving = false;   
 
     //prima salva il tracking nello storage, poi pulisce la mappa 
+    var cal = this.caloriesNumber/1000;
+    var km = this.odometerNumber/1000;
+    var userID = this.afAuth.auth.currentUser.uid.toString(); //ID Utente corrente
+    var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+    var date = new Date().toISOString().split('T')[0];
+    var urlRefcal =  rootRef.child("/Stats/"+userID+"/cal/"+date+"/Value");
+    var urlRefkm =  rootRef.child("/Stats/"+userID+"/KM/"+date+"/Value");
+    var check1 = 0;
+    var check2 = 0;
+    this.afDatabase.list(`/Stats/${this.userID}/KM/${date}/`).valueChanges().subscribe(snapshots =>{
+      if(snapshots.length==0){
+        check1 = 1;
+        urlRefkm.set(km);
+      }else{
+      snapshots.forEach(snapshot => {
+        if(check1==0){
+          urlRefkm.set(km+parseFloat(snapshot.toString()));
+          check1 = 1;
+        }
+      });
+    }
+  });
+  this.afDatabase.list(`/Stats/${this.userID}/cal/${date}/`).valueChanges().subscribe(snapshots =>{
+    if(snapshots.length==0){
+      check2 = 1;
+      urlRefcal.set(cal);
+    }else{
+    snapshots.forEach(snapshot => {
+      if(check2==0){
+        urlRefcal.set((cal+parseFloat(snapshot.toString())));
+        check2 = 1;
+      }
+    });
+  }
+});
     BackgroundGeolocation.stop().then(()=>{
       let newRoute =  { finished: new Date().getTime(), path: this.locationMarkers };
       this.previousTracks.push(newRoute);
