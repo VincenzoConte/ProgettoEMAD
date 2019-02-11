@@ -38,13 +38,15 @@ export class RegisterPage {
      this.submitted = true;
    
 
-     if(form.valid && this.privacyPolicy){       
+     if(form.valid && this.privacyPolicy){      
        console.log("form valido");  
        console.log("utente: "+this.user.email+", pwd: "+this.user.password);
        console.log("genere utente: "+this.user.gender);
        console.log("Altezza: "+this.user.height+", peso: "+this.user.weight);
        this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
+       this.user.hasExercise = false;
        console.log("BMI: "+this.user.BMI);
+       console.log("Has Exercise: "+this.user.hasExercise);
       
        await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email.toLowerCase(), this.user.password)
         .then(() =>{
@@ -53,6 +55,13 @@ export class RegisterPage {
           this.user.password = null;
           this.angularAuth.authState.take(1).subscribe(auth=>{
             this.afDatabase.object(`profile/user/${auth.uid}`).update(this.user);
+            //Salva il Peso e il BMI nel database delle Statistiche
+            var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+            var date = new Date().toISOString().split('T')[0];
+            var urlRefBMI =  rootRef.child("/Stats/"+auth.uid+"/BMI/"+date+"/Value");
+            var urlRefPeso =  rootRef.child("/Stats/"+auth.uid+"/Peso/"+date+"/Value");
+            urlRefPeso.set(this.user.weight);
+            urlRefBMI.set(this.user.BMI);
           });          
         }).then(()=>{          
           this.toast.create({

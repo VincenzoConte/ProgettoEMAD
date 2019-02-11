@@ -6,6 +6,7 @@ export interface User{
     height: number;
     password: string;
     BMI: number;
+    hasExercise: boolean;
     gender: number;
     trainer:string;
     training:string;
