@@ -4,7 +4,7 @@ import { NavController, NavParams, AlertController, ToastController } from 'ioni
 import { Subscription } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TrainingListPage } from '../training-list/training-list';
-import firebase from 'firebase';
+import firebase, { database } from 'firebase';
 import { LoginPage } from '../login/login';
 import { Storage } from '@ionic/storage';
 import { StatsPage } from '../stats/stats';
@@ -84,16 +84,43 @@ export class UserInfoPage {
    * Aggiorna il peso dell'utente
    */
   updateWeight(){
-    /*
     let weightUpdateAlert = this.alertCtrl.create({
       title: "Nuovo peso",
       subTitle: "Aggiorna il tuo peso inserendolo nell'area sottostante",
+      inputs: [{
+        name: 'Weight',
+        type: 'number',
+        value: this.user.weight.toString(),
+        placeholder: this.user.weight.toString()
+      }],
       buttons: [
-       
-      ],
+        {
+          text: 'Annulla',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Aggiorna',
+          handler: data => {
+            if(data.Weight){
+              let newWeight = data.Weight;
+              let newBMI = newWeight/((this.user.height/100)*(this.user.height/100));
+              this.user.weight = newWeight;
+              this.user.BMI = newBMI;
+              this.afDatabase.object(`profile/user/${this.userID}`).update(this.user);
+              var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+              var date = new Date().toISOString().split('T')[0];
+              var urlRefBMI =  rootRef.child("/Stats/"+this.userID+"/BMI/"+date+"/Value");
+              var urlRefPeso =  rootRef.child("/Stats/"+this.userID+"/Peso/"+date+"/Value");
+              urlRefPeso.set(newWeight);
+              urlRefBMI.set(newBMI);
+          }
+        }
+      }
+    ],
       enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
     }).present();
-    */
   }
 
   /**

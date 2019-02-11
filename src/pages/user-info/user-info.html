@@ -16,7 +16,7 @@
     <ion-card-content>
       <ion-list>
         <ion-item>BMI:
-          <p item-end>{{userBMI}}</p>
+          <p item-end>{{user.BMI}}</p>
         </ion-item>
         <ion-item>Peso:
           <p item-end>{{user.weight}}</p>
@@ -36,7 +36,7 @@
   <ion-list>
     <button ion-button (click)="onClickChangeTraining()">Cambia allenamento</button>
     <button ion-button (click)="onClickChangeTrainer()">Cambia allenatore</button>
-    <button ion-button (click)="loadStats()">La tua attività</button>
+    <button ion-button (click)="loadStats()">Statistiche</button>
     <button ion-button full color="danger" (click)="logout();">Test logout</button>
   </ion-list>
  
