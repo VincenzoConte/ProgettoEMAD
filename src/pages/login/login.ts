@@ -13,6 +13,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 
 import * as firebase from 'firebase';
 import { TrainerhomePage } from '../trainerhome/trainerhome';
+import { TrainerTabsPage } from '../trainer-tabs/trainer-tabs';
 
 @Component({
   selector: 'page-login',
@@ -83,7 +84,7 @@ export class LoginPage {
               }).then(()=>{                
                 if(self.user.password === pwd){
                   self.storage.set("trainerLoggedID", trainerMail);
-                  self.navCtrl.setRoot(TrainerhomePage);
+                  self.navCtrl.setRoot(TrainerTabsPage);
                 } else {                  
                   self.toast.create({
                     message: "Errore durante il login, riprova",

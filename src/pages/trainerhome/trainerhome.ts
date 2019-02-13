@@ -1,6 +1,6 @@
 import { Storage } from '@ionic/storage';
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import firebase from 'firebase';
 import { LoginPage } from '../login/login';
 import { TrainerChatPage } from '../trainer-chat/trainer-chat';
@@ -22,7 +22,7 @@ export class TrainerhomePage {
   tid: string;
   intervalID: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef) {
+  constructor(public navCtrl: NavController, private toastCtrl: ToastController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef) {
 
 
   }
@@ -89,13 +89,25 @@ export class TrainerhomePage {
     });
   }
 
+  /**
+   * Mostra un toast del messaggio passato
+   * @param message
+   * @param time
+   */
+  showToast(message, time?){
+    this.toastCtrl.create({
+            message: message,
+            duration: time || 3500
+        }).present();
+  }
+
   logout(){
     this.storage.ready().then(() => {
-      this.storage.set("userLogin", "NOT_LOGGED").then(() =>{
-        this.storage.set("trainerLoggedID", "");
+      this.storage.set("trainerLoggedID", "").then(() =>{
         console.log("logging out...");
         firebase.auth().signOut();
-        this.navCtrl.setRoot(LoginPage);
+        this.showToast("Alla prossima!", 3500);
+        window.location.reload();
       });
     });
   }

@@ -7,20 +7,21 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>TrainerCardsList</ion-title>
+    <ion-title>Schede</ion-title>
+    <ion-buttons end>
+      <button ion-button block (click)="logout()">Logout</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>  
-  <ion-list>
-    <ion-item *ngFor="let user of usersList | async" (click)="onClickUser(user)">
-      {{user.username}} <br>
-      {{user.training}} <br>   
-      {{user.hasExercise}} <br>
-      {{user.UID}} <br>
-      <ion-icon ios="logo-facebook" md="logo-facebook" *ngIf="user.hasExercise" ></ion-icon>
-    </ion-item>
+  <ion-list  *ngFor="let user of usersList | async" (click)="onClickUser(user)">
+      <ion-card padding>
+          <h2>{{user.username}}</h2>
+          <p>{{user.training}}</p>      
+        <ion-icon name="md-done-all" *ngIf="user.hasExercise"></ion-icon>
+      </ion-card>      
   </ion-list>  
 </ion-content>

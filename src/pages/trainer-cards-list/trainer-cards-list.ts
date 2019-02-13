@@ -13,7 +13,6 @@ import { TrainerCardPage } from '../trainer-card/trainer-card';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-trainer-cards-list',
   templateUrl: 'trainer-cards-list.html',
@@ -116,6 +115,17 @@ export class TrainerCardsListPage {
         }
       ],
     }).present();
+  } 
+
+  logout(){
+    this.storage.ready().then(() => {
+      this.storage.set("trainerLoggedID", "").then(() =>{
+        console.log("logging out...");
+        firebase.auth().signOut();
+        this.showToast("Alla prossima!", 3500);
+        window.location.reload();
+      });
+    });
   }
 
 }

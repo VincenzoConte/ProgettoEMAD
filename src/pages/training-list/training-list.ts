@@ -115,11 +115,12 @@ export class TrainingListPage {
       this.getRandomTrainer(trainerList).then(result =>{
         console.log("result: "+result);
         var resultID = result.substr(0, result.indexOf('@'));
-
+ 
         //aggiorna il nodo utente
         this.afDatabase.object(`/profile/user/${this.userID}/`).update({
           trainer: result,
-          training: trainingID
+          training: trainingID,
+          trainingName: trainingName
         }).then(() =>{
             //rimuove l'utente dal precedente personal trainer
             if(this.userPersonalTrainerID){   
@@ -163,7 +164,8 @@ export class TrainingListPage {
     console.log("modifyTraining");
     //aggiorna il nodo utente
     this.afDatabase.object(`/profile/user/${this.userID}/`).update({
-      training: trainingID
+      training: trainingID,
+      trainingName: trainingName
     }).then(() =>{
   
       //aggiorna il personal trainer

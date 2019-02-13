@@ -15,7 +15,37 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 .custom-alert button.alert-button-group {
-    width: 44.44%;
+    width: 44.44%;        
+}
+
+button {
+  text-transform: none !important;
+}
+
+.tabs {
+    .tab-button {
+        .tab-button-text {
+            text-transform: none;
+            font-family: "Prod Sans" !important;
+            font-weight: 700 !important;
+        }
+    }
+}
+
+.custom-alert, .custom-alert .alert-head {
+    font-family: "Prod Sans" !important;
+    font-weight: 700 !important;
+}
+
+.custom-alert-btn{
+    text-transform: none !important;
+    font-family: "Prod Sans" !important;
+    font-weight: 700 !important;
+}
+
+.alert-message {
+    font-family: "Prod Sans" !important;
+    font-weight: 700 !important;
 }
 
 .custom-alert .alert-button-group .button-inner {

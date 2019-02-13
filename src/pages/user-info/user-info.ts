@@ -9,6 +9,7 @@ import { LoginPage } from '../login/login';
 import { Storage } from '@ionic/storage';
 import { StatsPage } from '../stats/stats';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { TrainingHistoryPage } from '../training-history/training-history';
 /**
  * Generated class for the UserInfoPage page.
  *
@@ -24,7 +25,7 @@ export class UserInfoPage {
   public userID:string;
   public userName:string;
   user = {} as User;
-  userBMI:string;
+  userBMI;
   subs: Subscription[] = [];
   userTrainerID:string;
   userTrainingID:string;
@@ -84,9 +85,10 @@ export class UserInfoPage {
    * Aggiorna il peso dell'utente
    */
   updateWeight(){
-    let weightUpdateAlert = this.alertCtrl.create({
+    this.alertCtrl.create({
       title: "Nuovo peso",
       subTitle: "Aggiorna il tuo peso inserendolo nell'area sottostante",
+      cssClass: 'custom-alert',
       inputs: [{
         name: 'Weight',
         type: 'number',
@@ -96,10 +98,7 @@ export class UserInfoPage {
       buttons: [
         {
           text: 'Annulla',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-          }
+          role: 'cancel'       
         }, {
           text: 'Aggiorna',
           handler: data => {
@@ -119,7 +118,6 @@ export class UserInfoPage {
         }
       }
     ],
-      enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
     }).present();
   }
 
@@ -237,6 +235,10 @@ export class UserInfoPage {
       enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
     }).present();
   }
+
+  onClickLoadHistory(){
+    this.navCtrl.push(TrainingHistoryPage);
+  }
   
   /**
    * Cambia l'allenatore
@@ -324,7 +326,7 @@ export class UserInfoPage {
       firebase.auth().signOut();
       this.storage.set("userLoggedID", "").then(() =>{
         console.log("logging out...");
-        this.showToast("Arrivederci!");
+        this.showToast("Alla prossima!", 3500);
         //this.navCtrl.setRoot(LoginPage); //genera un bug nel tabbed layout
         window.location.reload();          //workaround
       });

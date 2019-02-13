@@ -1,3 +1,21 @@
 page-user-info {
+    p, button{
+        font-family: "Prod Sans" !important;
+        font-weight: 400 !important;
+    }
 
+    ion-item, #userName {
+        font-family: "Prod Sans" !important;
+        font-weight: 700 !important;
+    }
+
+    #changeWeight{
+        border-radius: 20px !important;
+    }
+
+    button {
+        font-family: "Prod Sans" !important;
+        font-weight: 700 !important;
+        text-transform: none !important;
+    }
 }

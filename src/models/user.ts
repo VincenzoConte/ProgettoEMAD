@@ -10,4 +10,5 @@ export interface User{
     gender: number;
     trainer:string;
     training:string;
+    trainingName:string;
 }

@@ -26,6 +26,7 @@ import { TrainerTabsPage } from '../pages/trainer-tabs/trainer-tabs';
 import { TrainerCardsListPage } from '../pages/trainer-cards-list/trainer-cards-list';
 import { TrainerCardPage } from '../pages/trainer-card/trainer-card';
 import { SocialSharing } from '@ionic-native/social-sharing/';
+import { TrainingHistoryPage } from '../pages/training-history/training-history';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -51,7 +52,8 @@ const firebaseConfig = {
     UserInfoPage,
     TrainerChatPage,
     TrainerCardPage,
-    TrainerCardsListPage,    
+    TrainerCardsListPage,   
+    TrainingHistoryPage, 
     ChatHistoryPage,
     StatsPage
 
@@ -81,6 +83,7 @@ const firebaseConfig = {
     TrainerCardPage,
     TrainerCardsListPage,
     TrainerChatPage,
+    TrainingHistoryPage,
     ChatHistoryPage,
     StatsPage
 

@@ -1,3 +1,4 @@
+import { TrainingHistoryPage } from './../pages/training-history/training-history';
 import { TrainerhomePage } from './../pages/trainerhome/trainerhome';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Component } from '@angular/core';
@@ -24,7 +25,7 @@ export class MyApp {
     //this.storage.set('userLoggedID', 'tvq2DppxfiVWq78CobleOX21wOu1');
     //this.storage.set('trainerLoggedID', 'trainer17');
     this.keepLogin();
-    //this.rootPage=ChatPage;
+    //this.rootPage = TrainingHistoryPage; 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

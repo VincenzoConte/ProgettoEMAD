@@ -32,7 +32,6 @@ import BackgroundGeolocation, {
 import firebase from 'firebase';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../../models/user';
-import { LoginPage } from '../login/login';
 import { TrainingListPage } from '../training-list/training-list';
 import { Observable } from 'rxjs';
 
@@ -65,7 +64,6 @@ export class HomePage {
   provider: any;
   isGPSenabled:boolean;
  
-
   //Elementi dell'UI
   menuActive: boolean;
   isTimeTicking:boolean;
@@ -184,119 +182,6 @@ export class HomePage {
       }
     });   
   }
-
-  /**
-   * Manca l'allenamento: mostra un alert e porta ad inserirne uno
-   */
-  trainingAlert(){
-    let alert = this.alertCtrl.create({
-      title: "E l'allenamento?",    
-      subTitle: 'Seleziona un allenamento per poter proseguire.',
-      buttons: [{
-        text: 'OK',
-        handler: () =>{
-          this.navCtrl.push(TrainingListPage);
-        }
-      }],
-      enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso    
-    });
-    alert.present();  
-  }
-
-  /**
-   * Manca il peso: mostra un alert per inserirne uno
-   */
-  weightAlert(){
-    this.alertCtrl.create({
-      title: "Un'ultima cosa",
-      subTitle: 'Non sono state trovate queste informazioni, cortesemente aggiungile',
-      inputs: [
-        {
-          name: 'age',
-          placeholder: 'Età',
-          type: 'tableNumber'
-        },
-        {
-          name: 'height',
-          placeholder: 'Altezza (in centimetri)',
-          type: 'tableNumber'
-        },
-        {
-          name: 'weight',
-          placeholder: 'Peso',
-          type: 'tableNumber'
-        },
-        {
-          name: 'genderM',
-          type: 'radio',
-          label: 'Maschio',
-          value: '1',
-          checked: true
-        },
-        {
-          name: 'genderF',
-          type: 'radio',
-          label: 'Femmina',
-          value: '0',
-          checked: false
-        }
-      ],
-      buttons: [
-        {
-          text: 'Conferma',
-          handler: data =>{
-            this.user.weight = data.weight;
-            this.user.age = data.age;
-            this.user.height = data.height;
-            this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
-            this.afDatabase.object(`/profile/user/${this.userID}/`).update(this.user);
-          }
-        }
-      ],
-      enableBackdropDismiss: false
-    }).present().then(()=>{
-      this.genderAlert();
-    });
-  }
-
-   /**
-   * Alert per impostare il genere della persona
-   * NB: è stato necessario un secondo alert in quanto gli alert di Ionic
-   * NON permettono di usare input e radio buttons insieme
-   */
-  genderAlert(){
-    this.alertCtrl.create({
-      title: 'Specifica il tuo genere',
-      subTitle: 'Necessitiamo sapere del tuo genere per poter calcolare correttamente i tuoi parametri fisici',
-      inputs: [    
-        {
-          name: 'genderM',
-          type: 'radio',
-          label: 'Maschile',
-          value: '1',
-          checked: true
-        },
-        {
-          name: 'genderF',
-          type: 'radio',
-          label: 'Femminile',
-          value: '0',
-          checked: false
-        }
-      ],
-      buttons: [
-         {
-          text: 'Conferma',
-          handler: data =>{
-            this.user.gender = data;
-            this.afDatabase.object(`/profile/user/${this.userID}/`).update(this.user);  
-          }
-        }
-      ],
-      enableBackdropDismiss: false      
-      }).present();
-  }
-  
   /**
    * Configura il plugin
    */
@@ -512,16 +397,11 @@ export class HomePage {
   /**
    * L'utente ha cliccato per visualizzare la scheda
    */
-  //this.activityList =  = this.afDatabase.list(`/profile/user/${this.userID}/card`).valueChanges();  
-  onClickCard(){  
-    //const cardModal = this.modal.create(CardModalPage, { userID: this.userID });
-    //cardModal.present();
-    
+  onClickCard(){      
     let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
     cardAlert.setCssClass('custom-alert');
     cardAlert.setTitle("Scheda di allenamento");    
-    this.loadCardList(cardAlert).then(resolve => cardAlert.present());    
-    
+    this.loadCardList(cardAlert).then(() => cardAlert.present());        
   }
 
   /**
@@ -568,6 +448,7 @@ export class HomePage {
 
             cardAlert.addButton({
               text: 'Condividi',
+              cssClass: 'custom-alert-btn',
               handler: data =>{
                 console.log("hai cliccato braaaav");
               }
@@ -575,6 +456,7 @@ export class HomePage {
 
             cardAlert.addButton({
               text: 'Chiudi',
+              cssClass: 'custom-alert-btn',
               handler: data =>{
                 console.log("hai cliccato braaaav");
               }
@@ -582,6 +464,7 @@ export class HomePage {
 
             cardAlert.addButton({
               text: 'Finito!',
+              cssClass: 'custom-alert-btn',
               handler: data =>{
                 data.forEach(element => {               
                   completedActivitiesList.push(element);
@@ -672,6 +555,7 @@ export class HomePage {
    * Alert per condividere i propri risultati
    */
   shareResults(){    
+    let sharingText = 'Ho appena finito il mio allenamento di oggi con Capperfit!';
     let shareResults = this.aSheetCtrl.create({
       title:"Condividi il tuo risultato",
       buttons: [
@@ -681,7 +565,7 @@ export class HomePage {
           handler: () =>{
             let URL = 'https://www.capgemini.com/it-it/';
             this.socialSharing
-              .shareViaFacebook('Ho appena finito il mio allenamento di oggi! Grazie Capperfit!', null, URL).then(()=>{
+              .shareViaFacebook(sharingText, null, URL).then(()=>{
                 this.showToast("Condivisione completata!");
                 console.log("fatto!");
               }).catch(e=>{ //non trova l'app di Facebook
@@ -694,7 +578,7 @@ export class HomePage {
           text: "Twitter",
           icon: "logo-twitter",
           handler: () =>{
-            let sharingText = 'Ho appena finito il mio allenamento di oggi! Grazie Capperfit!';
+            
             let URL = 'https://www.capgemini.com/it-it/';
             this.socialSharing
               .shareViaTwitter(sharingText, null, URL).then(()=>{
@@ -710,7 +594,6 @@ export class HomePage {
           text: "Whatsapp",
           icon: "logo-whatsapp",
           handler: () =>{
-            let sharingText = 'Ho appena finito il mio allenamento di oggi! Grazie Capperfit!';
             let URL = 'https://www.capgemini.com/it-it/';            
             this.socialSharing
                 .shareViaWhatsApp(sharingText, null, URL).then(()=>{
@@ -726,7 +609,7 @@ export class HomePage {
           text: "e-mail",
           handler: () =>{
             this.socialSharing.canShareViaEmail().then(()=>{
-              this.socialSharing.shareViaEmail("Ho fatto l'allenamento", "CAPPERFIT", ['sabdegregorio@gmail.com'])
+              this.socialSharing.shareViaEmail(sharingText, "CAPPERFIT", ['sabdegregorio@gmail.com'])
               .then(()=>{
                   this.showToast("Condivisione completata!");
               }).catch((e)=>{
@@ -741,7 +624,6 @@ export class HomePage {
         }
       ]
     });
-
     shareResults.present();
   }
 
@@ -764,35 +646,46 @@ export class HomePage {
     var check1 = 0;
     var check2 = 0;
     this.afDatabase.list(`/Stats/${this.userID}/KM/${date}/`).valueChanges().subscribe(snapshots =>{
-      if(snapshots.length==0){
-        check1 = 1;
-        urlRefkm.set(km);
-      }else{
-      snapshots.forEach(snapshot => {
-        if(check1==0){
-          urlRefkm.set(km+parseFloat(snapshot.toString()));
+        if(snapshots.length==0){
           check1 = 1;
-        }
-      });
-    }
-  });
-  this.afDatabase.list(`/Stats/${this.userID}/cal/${date}/`).valueChanges().subscribe(snapshots =>{
-    if(snapshots.length==0){
-      check2 = 1;
-      urlRefcal.set(cal);
-    }else{
-    snapshots.forEach(snapshot => {
-      if(check2==0){
-        urlRefcal.set((cal+parseFloat(snapshot.toString())));
-        check2 = 1;
+          urlRefkm.set(km);
+        }else{
+        snapshots.forEach(snapshot => {
+          if(check1==0){
+            urlRefkm.set(km+parseFloat(snapshot.toString()));
+            check1 = 1;
+          }
+        });
       }
     });
-  }
-});
+    this.afDatabase.list(`/Stats/${this.userID}/cal/${date}/`).valueChanges().subscribe(snapshots =>{
+        if(snapshots.length==0){
+          check2 = 1;
+          urlRefcal.set(cal);
+        }else{
+        snapshots.forEach(snapshot => {
+          if(check2==0){
+            urlRefcal.set((cal+parseFloat(snapshot.toString())));
+            check2 = 1;
+          }
+        });
+      }
+    });
+
+
     BackgroundGeolocation.stop().then(()=>{
-      let newRoute =  { finished: new Date().getTime(), path: this.locationMarkers };
-      this.previousTracks.push(newRoute);
-      this.storage.set('routes', this.previousTracks);
+      //let newRoute =  { finished: new Date().getTime(), path: this.locationMarkers };
+      var day = new Date().getDay();
+      var month = new Date().toLocaleString('it-it', {month:'long'});
+      var dateTxt = day+' '+month;
+      //this.previousTracks.push(newRoute);
+      //this.storage.set('routes', this.previousTracks);
+      //aggiorna il nodo della corsa
+        this.afDatabase.object(`/oldActivities/${this.userID}/${dateTxt}`).update({
+          card: this.activityList,
+          date: dateTxt,
+          maps: this.locationMarkers
+        });
     }).then(()=>{
       this.stopTimer();
       this.clearMarkers();
@@ -1031,4 +924,120 @@ export class HomePage {
             duration: time || 3500
         }).present();
   }
+
+  //NB: questi metodi venivano invocati solo in caso di problemi
+  //in seguito alla registrazione tramite facebook
+  
+  /**
+   * Manca l'allenamento: mostra un alert e porta ad inserirne uno
+   */
+  trainingAlert(){
+    let alert = this.alertCtrl.create({
+      title: "E l'allenamento?",    
+      subTitle: 'Seleziona un allenamento per poter proseguire.',
+      buttons: [{
+        text: 'OK',
+        handler: () =>{
+          this.navCtrl.push(TrainingListPage);
+        }
+      }],
+      enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso    
+    });
+    alert.present();  
+  }
+
+  /**
+   * Manca il peso: mostra un alert per inserirne uno
+   */
+  weightAlert(){
+    this.alertCtrl.create({
+      title: "Un'ultima cosa",
+      subTitle: 'Non sono state trovate queste informazioni, cortesemente aggiungile',
+      inputs: [
+        {
+          name: 'age',
+          placeholder: 'Età',
+          type: 'tableNumber'
+        },
+        {
+          name: 'height',
+          placeholder: 'Altezza (in centimetri)',
+          type: 'tableNumber'
+        },
+        {
+          name: 'weight',
+          placeholder: 'Peso',
+          type: 'tableNumber'
+        },
+        {
+          name: 'genderM',
+          type: 'radio',
+          label: 'Maschio',
+          value: '1',
+          checked: true
+        },
+        {
+          name: 'genderF',
+          type: 'radio',
+          label: 'Femmina',
+          value: '0',
+          checked: false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Conferma',
+          handler: data =>{
+            this.user.weight = data.weight;
+            this.user.age = data.age;
+            this.user.height = data.height;
+            this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
+            this.afDatabase.object(`/profile/user/${this.userID}/`).update(this.user);
+          }
+        }
+      ],
+      enableBackdropDismiss: false
+    }).present().then(()=>{
+      this.genderAlert();
+    });
+  }
+
+   /**
+   * Alert per impostare il genere della persona
+   * NB: è stato necessario un secondo alert in quanto gli alert di Ionic
+   * NON permettono di usare input e radio buttons insieme
+   */
+  genderAlert(){
+    this.alertCtrl.create({
+      title: 'Specifica il tuo genere',
+      subTitle: 'Necessitiamo sapere del tuo genere per poter calcolare correttamente i tuoi parametri fisici',
+      inputs: [    
+        {
+          name: 'genderM',
+          type: 'radio',
+          label: 'Maschile',
+          value: '1',
+          checked: true
+        },
+        {
+          name: 'genderF',
+          type: 'radio',
+          label: 'Femminile',
+          value: '0',
+          checked: false
+        }
+      ],
+      buttons: [
+         {
+          text: 'Conferma',
+          handler: data =>{
+            this.user.gender = data;
+            this.afDatabase.object(`/profile/user/${this.userID}/`).update(this.user);  
+          }
+        }
+      ],
+      enableBackdropDismiss: false      
+      }).present();
+  }
+  
 }

@@ -16,29 +16,33 @@
     <ion-card-content>
       <ion-list>
         <ion-item>BMI:
-          <p item-end>{{user.BMI}}</p>
+          <p item-end>{{userBMI}}</p>
         </ion-item>
+
         <ion-item>Peso:
-          <p item-end>{{user.weight}}</p>
+          <p item-end>{{user.weight}}kg</p>
         </ion-item>
-        
-        <ion-item>Allenatore:
-          <p item-end>{{user.trainer}}</p>
-        </ion-item>
+
         <ion-item>Allenamento:
-          <p item-end>{{user.training}}</p>
+          <p item-end>{{user.trainingName}}</p>
         </ion-item>      
-        <button ion-button full (click)="updateWeight()">Aggiorna il tuo peso</button>
+
+        <button ion-button block id="changeWeight" (click)="updateWeight()">Aggiorna il tuo peso</button>
+
       </ion-list>
     </ion-card-content>
   </ion-card>
 
-  <ion-list>
-    <button ion-button (click)="onClickChangeTraining()">Cambia allenamento</button>
-    <button ion-button (click)="onClickChangeTrainer()">Cambia allenatore</button>
-    <button ion-button (click)="loadStats()">Statistiche</button>
-    <button ion-button full color="danger" (click)="logout();">Test logout</button>
+  <div>
+    <ion-list padding>
+      <button ion-button block (click)="onClickChangeTraining()" style="margin-bottom: 10px;">Cambia allenamento</button> 
+      <button ion-button block (click)="onClickChangeTrainer()" style="margin-bottom: 10px;">Cambia allenatore</button> 
+      <button ion-button block (click)="onClickLoadHistory()" style="margin-bottom: 10px;">La tua attivit&agrave;</button> 
+      <button ion-button block (click)="loadStats()" style="margin-bottom: 10px;">Statistiche</button> <br>
+      <button ion-button block color="danger" (click)="logout();">Logout</button>
   </ion-list>
+  </div>
+  
  
 
 </ion-content>

@@ -7,9 +7,9 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Home del Personal Trainer</ion-title>
+    <ion-title>Chat</ion-title>
     <ion-buttons end>
-      <button ion-button block (click)="logout();">Logout</button>
+      <button ion-button block (click)="logout()">Logout</button>
     </ion-buttons>
   </ion-navbar>
 
@@ -20,7 +20,7 @@
   <ion-list>
     <ion-item *ngFor="let user of myUsers" (click)="openUser(user.uid, user.name)">
       <ion-label text-wrap>
-          <h3>{{user.name}}</h3>
+          <h2>{{user.name}}</h2>
           <p>{{user.training}}</p>
       </ion-label>
       <ion-icon *ngIf="user.notRead" name="chatboxes" color="danger" item-end></ion-icon>
