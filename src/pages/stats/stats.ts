@@ -61,7 +61,7 @@ this.afdatabase.list(`/Stats/${this.userID}/KM`).valueChanges().subscribe(snapsh
     data: {
         labels: listkm2,
         datasets: [{
-            label: 'KM percorsi',
+            label: 'Km', 
             data: this.datakm,
             backgroundColor: this.getColour(this.datakm.length, 'rgba(54, 162, 235, 0.2)'),
             borderColor: this.getColour(this.datakm.length, 'rgba(54, 162, 235, 1)'),
@@ -107,7 +107,7 @@ this.afdatabase.list(`/Stats/${this.userID}/cal`).valueChanges().subscribe(snaps
     data: {
         labels: listcal2,
         datasets: [{
-            label: 'Kilocalorie bruciate',
+            label: 'KCal',
             data: this.datacal,
             backgroundColor: this.getColour( listcal2.length, 'rgba(255, 99, 132, 0.2)'),
             borderColor: this.getColour(listcal2.length, 'rgba(255,99,132,1)'),
@@ -153,7 +153,7 @@ this.afdatabase.list(`/Stats/${this.userID}/Peso`).valueChanges().subscribe(snap
         labels: listkg2,
         datasets: [
             {
-                label: "Peso",
+                label: "Kg",
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: "rgba(75,192,192,0.4)",
@@ -206,7 +206,7 @@ this.afdatabase.list(`/Stats/${this.userID}/BMI`).valueChanges().subscribe(snaps
         labels: list2,
         datasets: [
             {
-                label: "Body Mass index (BMI)",
+                label: "BMI",
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: "rgba(75,192,192,0.4)",

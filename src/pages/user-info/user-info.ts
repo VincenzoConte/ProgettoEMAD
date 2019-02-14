@@ -69,6 +69,7 @@ export class UserInfoPage {
   presentAlert() {
     let alert = this.alertCtrl.create({
       title: "E l'allenamento?",
+      cssClass: 'custom-alert',
       subTitle: 'Seleziona un allenamento per proseguire',
       buttons: [{
         text: 'OK',
@@ -176,7 +177,8 @@ export class UserInfoPage {
    */
   onClickChangeTraining(){
     this.alertCtrl.create({
-     title: "Sei sicuro?",
+      title: "Sei sicuro?",
+      cssClass: 'custom-alert',
       subTitle: 'Stai per cambiare il tuo allenamento, sei sicuro della tua decisione?',
       buttons: [
         {
@@ -216,7 +218,8 @@ export class UserInfoPage {
    */
   onClickChangeTrainer(){
     this.alertCtrl.create({
-     title: "Sei sicuro?",
+      title: "Sei sicuro?",
+      cssClass: 'custom-alert',
       subTitle: 'Stai per cambiare il tuo allenatore, sei sicuro della tua decisione?',
       buttons: [
         {

@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Le tue chat</ion-title>
   </ion-navbar>
 
@@ -17,7 +17,7 @@
   <ion-list>
     <ion-item *ngFor="let chat of myChats" (click)="openChat(chat.tid, chat.name)">
       {{chat.name}}
-      <ion-icon name="chatboxes" item-end></ion-icon>
+      <ion-icon id="chatboxes" name="chatboxes" item-end></ion-icon>
     </ion-item>
   </ion-list>
 

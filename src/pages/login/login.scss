@@ -6,8 +6,9 @@ page-login {
     }
 
     #capperfitlogo{
-        height:150px; 
-        width: 150px; 
+        margin-top: 20px;
+        height:180px; 
+        width: 180px; 
         display:block;
         margin-left: auto; 
         margin-right: auto;
@@ -18,13 +19,13 @@ page-login {
         font-weight: 100 !important;
     }
 
-    ion-item, button{
+    ion-item, button, h5{
         font-family: "Prod Sans" !important;
         font-weight: 400 !important;
     }
 
     button{
-        border-radius: 40px !important;
+        border-radius: 20px !important;
         text-transform: none !important;
     }
         

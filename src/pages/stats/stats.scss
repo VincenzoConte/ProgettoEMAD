@@ -1,15 +1,21 @@
 .ios, .md {
-
     page-stats {
-
         .scroll-content {
             background-color: map-get($colors, light);
         }
-
         ion-card-header {
             font-weight: bold;
         }
 
+        ion-title {
+            font-family: "Prod Sans" !important;
+            font-weight: 400 !important;
+        }
+
+        ion-card-header {
+            font-family: "Prod Sans" !important;
+            font-weight: 700 !important;
+        }
     }
 
 }

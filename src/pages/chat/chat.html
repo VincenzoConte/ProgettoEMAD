@@ -4,7 +4,7 @@
       {{trainerName}}
     </ion-title>
     <ion-buttons end>
-      <button ion-button block (click)="openChatHistory();">History</button>
+      <button ion-button block (click)="openChatHistory();">Cronologia</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -16,19 +16,16 @@
   <ion-list>
 
     <ion-item *ngFor="let msg of messages" no-lines>
-
       <div>
         <div class="chat-message" text-right *ngIf="msg.author === uid">
           <div class="right-bubble">
-            <span class="msg-name">Me</span>
-            <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
+            <span class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
             <p class="msg" text-wrap>{{msg.msg}}</p>
           </div>
         </div>
         <div class="chat-message" text-left *ngIf="msg.author !== uid">
           <div class="left-bubble">
-            <span class="msg-name">{{trainerName}}</span>
-            <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
+            <span class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
             <p class="msg" text-wrap>{{msg.msg}}</p>
           </div>
         </div>
@@ -41,7 +38,7 @@
   <ion-grid>
     <ion-row>
       <ion-col col-10>
-        <ion-input #text type="text" placeholder="Type a message" [(ngModel)]="message" (keyup.enter)="sendMessage()" name="message"></ion-input>
+        <ion-input #text type="text" id="textInput" placeholder="Scrivi un messaggio..." [(ngModel)]="message" (keyup.enter)="sendMessage()" name="message"></ion-input>
       </ion-col>
       <ion-col col-2 (click)="sendMessage()">
         <ion-icon name="paper-plane"></ion-icon>

@@ -22,10 +22,15 @@ button {
   text-transform: none !important;
 }
 
+.loginBtn button {
+    font-family: "Prod Sans" !important;
+    font-weight: 700 !important;
+}
+
 .tabs {
     .tab-button {
         .tab-button-text {
-            text-transform: none;
+            text-transform: none !important;
             font-family: "Prod Sans" !important;
             font-weight: 700 !important;
         }

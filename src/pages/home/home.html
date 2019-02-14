@@ -31,7 +31,7 @@
 		</ion-fab>
 
 		<ion-fab center bottom style="margin-left: 10%;">
-			<button ion-fab mini [hidden]="!isRunning" (click)="stopTrainingAlert()" color="danger">
+			<button ion-fab mini [hidden]="!isActivityRunning" (click)="stopTrainingAlert()" color="danger">
 				<ion-icon name="square"></ion-icon>
 			</button>
 		</ion-fab>
@@ -39,43 +39,3 @@
 		<div #map id="map"></div>			
 	</div>	
 </ion-content>	
-
-<!--
-	<ion-header>  
-</ion-header>
-
-<ion-content>
-	<div id="infoContainer" padding>								
-		<div style="text-align: center; display: block; vertical-align: bottom;">			
-			
-		</div>
-		Tempo trascorso: {{timer}} <br>
-		Distanza percorsa: {{odometer}} <br>
-		Timer: {{timerTime}}
-		Calorie/m: {{calories}}
-	</div>	
-
-	<div id="mapContainer">
-		<ion-fab style="vertical-align: top;" end>
-			<button ion-fab mini color="primary" (click)="onClickGetCurrentPosition()">
-				<ion-icon name="locate"></ion-icon>
-			</button>
-		</ion-fab>
-
-		<ion-fab center bottom>
-			<button ion-fab (click)="onClickRunning()" color="{{isRunning ? 'danger' : 'secondary'}}">
-				<ion-icon style="margin-start: 50%;" name="{{isRunning ? 'pause' : 'play'}}"></ion-icon>
-			</button>						
-		</ion-fab>
-
-		<ion-fab center bottom style="margin-left: 10%;">
-			<button ion-fab mini [hidden]="!isRunning" (click)="onClickStop()" color="danger">
-				<ion-icon name="square"></ion-icon>
-			</button>
-		</ion-fab>
-		
-		<div #map id="map"></div>			
-	</div>	
-</ion-content>	
-
--->

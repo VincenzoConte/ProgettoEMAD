@@ -48,9 +48,10 @@ declare var google;
 })
 export class HomePage {
   @ViewChild('map') mapElement: ElementRef;
-
+ 
   //Variabili per la geolocalizzazione in background
   isRunning: boolean;
+  isActivityRunning:boolean;
   hasStopped: boolean;
   state: any;
   enabled: boolean;
@@ -81,7 +82,8 @@ export class HomePage {
   calories:string;
   caloriesNumber:number;
   weight:number;
-  previousTracks = [];
+  //previousTracks = [];
+  currentCoords = [];
 
   //Riferimenti a Google Maps
   map: any;
@@ -121,6 +123,7 @@ export class HomePage {
       this.calories = "0cal";
       this.isTimeTicking = false;
       this.isRunning = false;  
+      this.isActivityRunning = false;
             
       //Stato iniziale del plugin
       this.state = {
@@ -337,6 +340,7 @@ export class HomePage {
         BackgroundGeolocation.start(state =>{
           console.log("start success!: ", state);
           this.isRunning = !this.isRunning;
+          this.isActivityRunning = !this.isActivityRunning;
           this.state.isChangingPace = true;
           this.state.isMoving = !this.state.isMoving;        
           BackgroundGeolocation.changePace(this.state.isMoving)
@@ -445,21 +449,17 @@ export class HomePage {
               resolve(alert);
             });
             
-
             cardAlert.addButton({
               text: 'Condividi',
               cssClass: 'custom-alert-btn',
-              handler: data =>{
-                console.log("hai cliccato braaaav");
+              handler: () =>{
+                this.shareResults('Ho un allenamento da fare oggi, chi si unisce a me?'); 
               }
             });
 
             cardAlert.addButton({
               text: 'Chiudi',
-              cssClass: 'custom-alert-btn',
-              handler: data =>{
-                console.log("hai cliccato braaaav");
-              }
+              cssClass: 'custom-alert-btn'
             });
 
             cardAlert.addButton({
@@ -477,9 +477,14 @@ export class HomePage {
                       userData = snapshot.val();
                       console.log("valore userData: "+JSON.stringify(userData));
                     }).then(()=>{
-                      var day = new Date().toISOString().split('T')[0];
+                      //var day = new Date().toISOString().split('T')[0];
+                      var date = new Date();
+                      var day = date.getDate();
+                      var month = date.getMonth()+1;
+                      var year = date.getFullYear();
+                      var dateFull = day+'-'+month+'-'+year;
                       //la aggiunge nella cronologia delle attività
-                      this.afDatabase.object(`/profile/user/${this.userID}/oldActivity/${day}`).update(userData.card);                    
+                      this.afDatabase.object(`/oldActivities/${this.userID}/${dateFull}/card`).update(userData.card);                    
                       //rimuove la card
                       this.afDatabase.object(`/profile/user/${this.userID}/card`).remove();
                     }).then(()=>{
@@ -528,7 +533,7 @@ export class HomePage {
             buttons: [{
                 text: 'Si',
                 handler: () =>{
-                    this.shareResults();                       
+                    this.shareResults('Ho appena finito il mio allenamento di oggi con Capperfit!');                       
                 }
               },
               {
@@ -554,10 +559,9 @@ export class HomePage {
   /**
    * Alert per condividere i propri risultati
    */
-  shareResults(){    
-    let sharingText = 'Ho appena finito il mio allenamento di oggi con Capperfit!';
+  shareResults(sharingText){        
     let shareResults = this.aSheetCtrl.create({
-      title:"Condividi il tuo risultato",
+      title: "Seleziona un'applicazione",
       buttons: [
         {
           text: "Facebook",
@@ -633,6 +637,7 @@ export class HomePage {
   onClickStop(){
     this.hasStopped = true;
     this.isRunning = false;  
+    this.isActivityRunning = false;
     this.state.isMoving = false;   
 
     //prima salva il tracking nello storage, poi pulisce la mappa 
@@ -675,17 +680,21 @@ export class HomePage {
 
     BackgroundGeolocation.stop().then(()=>{
       //let newRoute =  { finished: new Date().getTime(), path: this.locationMarkers };
-      var day = new Date().getDay();
-      var month = new Date().toLocaleString('it-it', {month:'long'});
-      var dateTxt = day+' '+month;
-      //this.previousTracks.push(newRoute);
-      //this.storage.set('routes', this.previousTracks);
-      //aggiorna il nodo della corsa
-        this.afDatabase.object(`/oldActivities/${this.userID}/${dateTxt}`).update({
-          card: this.activityList,
-          date: dateTxt,
-          maps: this.locationMarkers
-        });
+      var date = new Date();
+      var day = date.getDate();
+      var month = date.getMonth()+1;
+      var year = date.getFullYear();
+      var currHour = date.toLocaleTimeString('it-IT', { hour: 'numeric', minute: 'numeric' });
+      var monthTxt = date.toLocaleString('it-IT', {month:'long'} );
+      var dateTxt = day+' '+monthTxt;
+      var dateFull = day+'-'+month+'-'+year;          
+      
+      this.afDatabase.object(`/oldActivities/${this.userID}/${dateFull}`)
+        .update({date: dateTxt});  
+
+      this.afDatabase.object(`/oldActivities/${this.userID}/${dateFull}/maps/${currHour}`)
+        .update(this.currentCoords);         
+     
     }).then(()=>{
       this.stopTimer();
       this.clearMarkers();
@@ -701,10 +710,9 @@ export class HomePage {
           if(!this.isTimeTicking) return;
           else{            
             this.timer++;
-            this.timerTime = this.getSecondsAsDigitalClock(this.timer);
-            
+            this.timerTime = this.getSecondsAsDigitalClock(this.timer);            
           }
-          },1000);        
+        },1000);        
     } else {
       clearInterval(this.intervalRun);
       this.intervalRun = null;
@@ -843,15 +851,13 @@ export class HomePage {
     }
     if (this.lastLocation) {
       this.locationMarkers.push(this.buildLocationMarker(location));
+      this.currentCoords.push({lat: location.coords.latitude, lng: location.coords.longitude});
       //console.log("location: "+location.coords.latitude+", "+location.coords.longitude);
     }
     
     //Aggiunge un segnale per la posizione della polyline 
     this.polyline.getPath().push(latlng);
     this.lastLocation = location;
-    this.map.animateCamera({
-      target: latlng
-      });
   }
 
   /**
@@ -886,6 +892,7 @@ export class HomePage {
       marker.setMap(null);
     });
     this.locationMarkers = [];
+    this.currentCoords = [];
     //pulisce la mappa dal tracciamento precedente
     this.polyline.setMap(null);
     this.polyline.setPath([]);

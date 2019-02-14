@@ -15,20 +15,23 @@
 
     <ion-card-content>
       <ion-list>
+        <ion-item>Allenamento:
+          <p item-end>{{user.trainingName}}</p>
+        </ion-item>  
+
         <ion-item>BMI:
           <p item-end>{{userBMI}}</p>
-        </ion-item>
+        </ion-item>    
 
         <ion-item>Peso:
           <p item-end>{{user.weight}}kg</p>
         </ion-item>
-
-        <ion-item>Allenamento:
-          <p item-end>{{user.trainingName}}</p>
-        </ion-item>      
-
-        <button ion-button block id="changeWeight" (click)="updateWeight()">Aggiorna il tuo peso</button>
-
+        
+        <ion-row center>  
+          <ion-col text-center>   
+            <button ion-button id="changeWeight" style="align-content: center;" (click)="updateWeight()">Aggiorna il tuo peso</button>
+          </ion-col> 
+        </ion-row>
       </ion-list>
     </ion-card-content>
   </ion-card>

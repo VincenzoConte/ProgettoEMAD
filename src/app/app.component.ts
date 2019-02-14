@@ -32,7 +32,7 @@ export class MyApp {
       //statusBar.styleDefault();
       splashScreen.hide();
       if(platform.is('android') || platform.is('ios')) {
-        statusBar.backgroundColorByHexString('#757575');
+        statusBar.backgroundColorByHexString('#bdbdbd');
       }
     });
   }

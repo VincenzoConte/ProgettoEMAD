@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content padding>
-  <h4 id="apptitle">Capgemini Personal Fitness</h4>
+  <h2 id="apptitle">Capperfit</h2>
 
   <div class="login-logo">
     <img id="capperfitlogo" src="../../assets/imgs/capperfit_logo.png" alt="Capperfit logo"/>
@@ -16,15 +16,15 @@
   <form #loginForm="ngForm" novalidate>
     <ion-list>  
       <ion-item>
-        <ion-label floating color="primary">email</ion-label>
+        <ion-label floating color="primary">Email</ion-label>
         <ion-input [(ngModel)]="user.email" name="email" type="text" #username="ngModel" spellcheck="false" autocapitalize="off" 
         required>
         </ion-input>
       </ion-item>
 
-      <ion-item style="margin: 13px 8x 13px 0; height:2%;" color="danger" *ngIf="!username.valid && submitted == true" padding-left>
-        <p ion-text padding-left>Indirizzo mail richiesto</p>
-      </ion-item>
+      <div *ngIf="!username.valid && submitted == true" style="margin-top: 10px; border-radius: 16px; background: #34495e;">
+        <h5 ion-text style="text-align: center; color: white; padding:5px;">Errore nel campo mail!</h5>
+      </div>
 
       <ion-item>
         <ion-label floating color="primary">Password</ion-label>
@@ -32,19 +32,10 @@
         </ion-input>
       </ion-item>
 
-      <ion-item color="danger" *ngIf="!password.valid && submitted == true" padding-left>
-        <p ion-text padding-left>Password richiesta</p>
-      </ion-item>
-
-      <ion-row style="margin-top: 5%;">
-        <ion-col>
-          <button ion-button (click)="onLogin(loginForm)" type="submit" block>Login</button>
-        </ion-col>
-        <ion-col>
-          <button ion-button (click)="onRegister()" outline block>Registrati</button>          
-        </ion-col>
-      </ion-row>
-
+      <div *ngIf="!password.valid && submitted == true" style="margin-top: 10px; border-radius: 16px; background: #34495e;">
+        <h5 ion-text style="text-align: center; color: white; padding:5px;">Password richiesta</h5>
+      </div>
+  
       <button ion-button block color="danger" *ngIf="forgotLogin" id="forgotpwd" (click)="helpLogin();">
         Problemi con il login?
       </button>
@@ -57,3 +48,15 @@
     </ion-list>
   </form>
 </ion-content>
+
+<ion-footer>
+<ion-row>
+        <ion-col>
+          <button ion-button style='font-family: "Prod Sans" !important;font-weight: 700 !important;' clear  (click)="onLogin(loginForm)" type="submit" block>Entra</button>
+        </ion-col>
+        <ion-col>
+          <button ion-button style='font-family: "Prod Sans" !important;font-weight: 700 !important;' clear (click)="onRegister()" outline block>Registrati</button>          
+        </ion-col>
+      </ion-row>
+
+</ion-footer>

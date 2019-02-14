@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Registrazione</ion-title>
   </ion-navbar>
 
@@ -57,8 +57,8 @@
         </ion-input>
       </ion-item>
 
-      <ion-list radio-group [(ngModel)]="user.gender" name="gender" #gender="ngModel" required>
-        <ion-list-header>
+      <ion-list radio-group [(ngModel)]="user.gender" name="gender" #gender="ngModel" required style="margin-top: 25px;">
+        <ion-list-header style="font-family: 'Prod Sans' !important; font-weight: 400 !important;">
           Seleziona il tuo genere:
         </ion-list-header>
         <ion-item>
