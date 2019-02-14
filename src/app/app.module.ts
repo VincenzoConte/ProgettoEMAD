@@ -22,8 +22,6 @@ import { ChatHistoryPage } from '../pages/chat-history/chat-history';
 import { TabsPage } from '../pages/tabs/tabs';
 import { UserInfoPage } from '../pages/user-info/user-info';
 import { StatsPage } from '../pages/stats/stats';
-import { TrainerTabsPage } from '../pages/trainer-tabs/trainer-tabs';
-import { TrainerCardsListPage } from '../pages/trainer-cards-list/trainer-cards-list';
 import { TrainerCardPage } from '../pages/trainer-card/trainer-card';
 import { SocialSharing } from '@ionic-native/social-sharing/';
 import { TrainingHistoryPage } from '../pages/training-history/training-history';
@@ -48,12 +46,10 @@ const firebaseConfig = {
     TrainingListPage,
     ChatPage,
     TabsPage,
-    TrainerTabsPage,
     UserInfoPage,
     TrainerChatPage,
     TrainerCardPage,
-    TrainerCardsListPage,   
-    TrainingHistoryPage, 
+    TrainingHistoryPage,
     ChatHistoryPage,
     StatsPage
 
@@ -79,9 +75,7 @@ const firebaseConfig = {
     ChatPage,
     TabsPage,
     UserInfoPage,
-    TrainerTabsPage,
     TrainerCardPage,
-    TrainerCardsListPage,
     TrainerChatPage,
     TrainingHistoryPage,
     ChatHistoryPage,

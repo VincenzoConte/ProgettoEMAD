@@ -46,22 +46,19 @@ page-trainer-chat {
     min-height: 40px;
     .right-bubble {
         position: relative;
-        background: #dcf8c6;
+        background: #488aff;
         border-top-left-radius: .4em;
       border-bottom-left-radius: .4em;
       border-bottom-right-radius: .4em;
       padding: 5px 10px 10px;
       left: 15%;
-      span.msg-name {
-        font-size: 12px;
-        font-weight: bold;
-        color: green;
-      }
+      display: inline-block;
+      max-width: 100%;
       span.msg-date {
         font-size: 10px;
       }
       p.msg{
-        color: #000000;
+        color: white;
       }
     }
 
@@ -73,7 +70,7 @@ page-trainer-chat {
         width: 0;
         height: 0;
         border: 27px solid transparent;
-        border-left-color: #dcf8c6;
+        border-left-color: #488aff;
         border-right: 0;
         border-top: 0;
         margin-top: -13.5px;
@@ -82,17 +79,14 @@ page-trainer-chat {
 
     .left-bubble {
         position: relative;
-        background: #00d1ff;
+        background: #e0e0e0;
       border-top-right-radius: .4em;
       border-bottom-left-radius: .4em;
       border-bottom-right-radius: .4em;
       padding: 5px 10px 10px;
       left: 5%;
-      span.msg-name {
-        font-size: 12px;
-        font-weight: bold;
-        color: blue;
-      }
+      display: inline-block;
+      max-width: 100%;
       span.msg-date {
         font-size: 10px;
       }
@@ -110,7 +104,7 @@ page-trainer-chat {
         width: 0;
         height: 0;
         border: 27px solid transparent;
-        border-right-color: #00d1ff;
+        border-right-color: #e0e0e0;
         border-left: 0;
         border-top: 0;
         margin-top: -13.5px;

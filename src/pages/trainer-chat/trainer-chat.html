@@ -17,15 +17,13 @@
       <div>
         <div class="chat-message" text-right *ngIf="msg.author === tid">
           <div class="right-bubble">
-            <span class="msg-name">Me</span>
-            <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
+            <span class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
             <p class="msg" text-wrap>{{msg.msg}}</p>
           </div>
         </div>
         <div class="chat-message" text-left *ngIf="msg.author !== tid">
           <div class="left-bubble">
-            <span class="msg-name">{{userName}}</span>
-            <span class="msg-date"> {{msg.sendDate | date:"dd/MM/yyyy 'at' h:mma"}}</span>
+            <span class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
             <p class="msg" text-wrap>{{msg.msg}}</p>
           </div>
         </div>

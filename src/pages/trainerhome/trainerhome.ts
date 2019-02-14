@@ -1,9 +1,10 @@
 import { Storage } from '@ionic/storage';
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import { LoginPage } from '../login/login';
 import { TrainerChatPage } from '../trainer-chat/trainer-chat';
+import { TrainerCardPage } from '../trainer-card/trainer-card';
 
 /**
  * Generated class for the TrainerhomePage page.
@@ -22,7 +23,7 @@ export class TrainerhomePage {
   tid: string;
   intervalID: number;
 
-  constructor(public navCtrl: NavController, private toastCtrl: ToastController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef) {
+  constructor(public navCtrl: NavController, private toastCtrl: ToastController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef, public alertCtrl: AlertController) {
 
 
   }
@@ -48,7 +49,8 @@ export class TrainerhomePage {
             firebase.database().ref(`/chat/${child.val().uid}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
           });*/
 
-          self.myUsers.push({name: child.val().username, uid: child.key, training: child.val().training, notRead: false});
+          self.myUsers.push({username: child.val().username, uid: child.key, training: child.val().training, hasExercise: child.val().hasExercise, notRead: false});
+          console.log(child.val().hasExercise);
           firebase.database().ref(`/chat/${child.key}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
         });
       });
@@ -82,10 +84,10 @@ export class TrainerhomePage {
   }
 
 
-  openUser(uid: string, name: string){
+  openUserChat(user){
     this.navCtrl.push( TrainerChatPage, {
-      userID: uid,
-      name: name
+      userID: user.uid,
+      name: user.username
     });
   }
 
@@ -101,9 +103,59 @@ export class TrainerhomePage {
         }).present();
   }
 
+  onClickUser(userClicked){
+    /*
+    console.log("nome: "+userClicked.name);
+    console.log("training: "+userClicked.training);
+    console.log("ha la scheda?: "+userClicked.hasExercise);
+    console.log("UID: "+userClicked.UID);
+    */
+    if(!userClicked.hasExercise){
+      this.createCard(userClicked);
+    } else this.hasAlreadyAnExerciseAlert(userClicked);
+  }
+
+  /**
+   * Metodo per aprire la pagina per la creazione della scheda
+   * @param userClicked
+   */
+  createCard(userClicked){
+    this.navCtrl.push(TrainerCardPage, {
+        user: userClicked,
+        trainer: this.tid,
+        parentPage: this
+      });
+  }
+
+  /**
+   * Avvisa il personal trainer che l'utente selezionato
+   * Ha già una scheda, può decidere se annullare o sostituire
+   * con una scheda aggiornata
+   * @param userClicked
+   */
+  hasAlreadyAnExerciseAlert(userClicked){
+    this.alertCtrl.create({
+     title: "Gli hai già dato una scheda!",
+      subTitle: 'Sei sicuro di voler annullare la scheda corrente e mandargliene una nuova?',
+      buttons: [
+        {
+          text: 'Si',
+          handler: () =>{
+            this.createCard(userClicked);
+          }
+        },
+        {
+          text: 'No',
+          handler: () =>{
+          }
+        }
+      ],
+    }).present();
+  }
+
   logout(){
     this.storage.ready().then(() => {
-      this.storage.set("trainerLoggedID", "").then(() =>{
+      this.storage.remove("trainerLoggedID").then(() =>{
         console.log("logging out...");
         firebase.auth().signOut();
         this.showToast("Alla prossima!", 3500);

@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Chat</ion-title>
+    <ion-title>Home</ion-title>
     <ion-buttons end>
       <button ion-button block (click)="logout()">Logout</button>
     </ion-buttons>
@@ -18,13 +18,15 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item *ngFor="let user of myUsers" (click)="openUser(user.uid, user.name)">
-      <ion-label text-wrap>
-          <h2>{{user.name}}</h2>
+    <ion-item *ngFor="let user of myUsers">
+      <ion-icon name="man" *ngIf="!user.hasExercise" item-start></ion-icon>
+      <ion-icon name="walk" *ngIf="user.hasExercise" item-start></ion-icon>
+      <ion-label text-wrap (click)="onClickUser(user)">
+          <h2>{{user.username}}</h2>
           <p>{{user.training}}</p>
       </ion-label>
-      <ion-icon *ngIf="user.notRead" name="chatboxes" color="danger" item-end></ion-icon>
-      <ion-icon *ngIf="!user.notRead" name="chatboxes" item-end></ion-icon>
+      <ion-icon *ngIf="user.notRead" name="chatboxes" (click)="openUserChat(user)" color="danger" item-end></ion-icon>
+      <ion-icon *ngIf="!user.notRead" name="chatboxes" (click)="openUserChat(user)" item-end></ion-icon>
     </ion-item>
   </ion-list>
 

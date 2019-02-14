@@ -1,5 +1,5 @@
-import { TrainingHistoryPage } from './../pages/training-history/training-history';
-import { TrainerhomePage } from './../pages/trainerhome/trainerhome';
+import { TrainingHistoryPage } from '../pages/training-history/training-history';
+import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
@@ -9,7 +9,6 @@ import { LoginPage } from '../pages/login/login';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 import { TabsPage } from '../pages/tabs/tabs';
-import { TrainerTabsPage } from '../pages/trainer-tabs/trainer-tabs';
 
 //import { ChatPage } from '../pages/chat/chat';
 
@@ -25,7 +24,7 @@ export class MyApp {
     //this.storage.set('userLoggedID', 'tvq2DppxfiVWq78CobleOX21wOu1');
     //this.storage.set('trainerLoggedID', 'trainer17');
     this.keepLogin();
-    //this.rootPage = TrainingHistoryPage; 
+    //this.rootPage = TrainingHistoryPage;
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -51,7 +50,7 @@ export class MyApp {
           console.log("(appComponent) trainerLoggedID stauts: "+result);
           if(result !== undefined && result != "" && result != null){
             //this.rootPage = TrainerhomePage;
-            this.rootPage = TrainerTabsPage;
+            this.rootPage = TrainerhomePage;
           } else this.rootPage = LoginPage;
         }).catch(error =>{
           //userLoggedID completely empty
