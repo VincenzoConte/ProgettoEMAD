@@ -1,6 +1,6 @@
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 
 /**
  * Generated class for the TrainerCardPage page.
@@ -9,7 +9,6 @@ import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angu
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-trainer-card',
   templateUrl: 'trainer-card.html',
@@ -65,7 +64,8 @@ export class TrainerCardPage {
         }).then(()=>{
             this.toastCtrl.create({
               message: "Scheda inviata!",
-              duration: 3000
+              duration: 3000,
+              cssClass: 'cssToast'
             }).present();
             //aggiorna l'hasExercise nel nodo del personal trainer
             this.afDatabase.object(`/profile/trainer/${this.trainer}/users/${this.user.UID}/`)
@@ -75,7 +75,8 @@ export class TrainerCardPage {
       }).catch(error =>{
         this.toastCtrl.create({
           message: "Errore durante l'invio della scheda",
-          duration: 3000
+          duration: 3000,
+          cssClass: 'cssToast'
         }).present();
         console.log("Errore durante l'invio della scheda: "+error);
       });

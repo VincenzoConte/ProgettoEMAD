@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, UrlSerializer } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -12,7 +12,6 @@ import firebase from 'firebase';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-stats',
   templateUrl: 'stats.html',
@@ -29,7 +28,12 @@ export class StatsPage {
   datakg: any;
   userID: any;
 
-  constructor(public afdatabase: AngularFireDatabase, private angAuth: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+      public afdatabase: AngularFireDatabase, 
+      private angAuth: AngularFireAuth, 
+      public navCtrl: NavController, 
+      public navParams: NavParams
+    ){
   }
 
   ionViewDidLoad() {

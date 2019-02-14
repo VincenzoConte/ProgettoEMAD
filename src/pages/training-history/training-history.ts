@@ -1,13 +1,9 @@
 import { LoginPage } from './../login/login';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams, Platform, Content } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import firebase from 'firebase';
 import { Observable } from 'rxjs';
-import { HistoryTrainingItem } from '../../models/historyTrainingItem';
-import 'rxjs/add/operator/map';
-import { stringify } from '@angular/core/src/util';
 /**
  * Generated class for the TrainingHistoryPage page.
  *
@@ -15,6 +11,7 @@ import { stringify } from '@angular/core/src/util';
  * Ionic pages and navigation.
  */
 declare var google;
+
 @Component({
   selector: 'page-training-history',
   templateUrl: 'training-history.html',
@@ -41,7 +38,7 @@ export class TrainingHistoryPage {
     private storage: Storage, 
     public navParams: NavParams,
     private platform: Platform
-    ) {
+    ){
     this.infotext = this.infoString;
   }
 

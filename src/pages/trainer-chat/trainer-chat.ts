@@ -45,7 +45,8 @@ export class TrainerChatPage {
     if(this.messages.length < this.limit){
       this.toast.create({
           message: "Non ci sono altri messaggi",
-          duration: 3000
+          duration: 3000,
+          cssClass: 'cssToast'
       }).present();
     } else{
       this.limit += 10;

@@ -15,5 +15,10 @@ page-trainer-card {
     .list-md .item-input.ng-invalid.ng-touched:not(.input-has-focus):last-child .item-inner {
         box-shadow: none; 
     }
+
+    ion-item, ion-title, ion-input, button {
+        font-family: "Prod Sans" !important;
+        font-weight: 400 !important;
+    }
     
 }

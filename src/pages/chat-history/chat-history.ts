@@ -2,11 +2,8 @@ import { Storage } from '@ionic/storage';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
-
 import { LoginPage } from '../login/login';
 import { ChatPage } from '../chat/chat';
-
-
 
 @Component({
   selector: 'page-chat-history',
@@ -18,8 +15,12 @@ export class ChatHistoryPage {
   uid: string;
   intervalID: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef) {
-
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public storage: Storage,     
+    private changeRef: ChangeDetectorRef
+    ){
   }
 
   openChat(tid: string, name: string){

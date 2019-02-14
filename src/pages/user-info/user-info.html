@@ -7,12 +7,12 @@
 <ion-header>
 </ion-header>
 
-<ion-content >
+<ion-content>
+
   <ion-card>
     <ion-card-header>
     <h1 id="userName" style="text-align: center;">{{user.name}}</h1>
     </ion-card-header>
-
     <ion-card-content>
       <ion-list>
         <ion-item>Allenamento:
@@ -37,7 +37,7 @@
   </ion-card>
 
   <div>
-    <ion-list padding>
+    <ion-list style="padding-left: 25px; padding-right: 25px; padding-top: 10px;">
       <button ion-button block (click)="onClickChangeTraining()" style="margin-bottom: 10px;">Cambia allenamento</button> 
       <button ion-button block (click)="onClickChangeTrainer()" style="margin-bottom: 10px;">Cambia allenatore</button> 
       <button ion-button block (click)="onClickLoadHistory()" style="margin-bottom: 10px;">La tua attivit&agrave;</button> 

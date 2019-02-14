@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Toast, ToastController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 import { AngularFireDatabase } from '@angular/fire/database';
 import firebase from 'firebase';
@@ -44,14 +44,17 @@ export class TrainingListPage {
       this.userName = navParams.get('userName');
       this.parentPage = navParams.get('parentPage');
       console.log("userPTID ="+this.userPersonalTrainerID+", navParams: "+navParams.get('userTrainerID'));         
+
+      
   }
 
-  ionViewDidLoad() {
-    
+  ionViewDidLoad() {    
     this.afAuth.authState.subscribe(user =>{
      user ? this.userID = user.uid : this.navCtrl.setRoot(LoginPage);
+     //workaround per l'eliminazione della verifica della mail che causava un bug
+     this.storage.set("userLoggedID", this.userID); 
     });
-    this.getTrainings();
+    this.getTrainings();    
   }
 
   getTrainings(){
@@ -75,7 +78,8 @@ export class TrainingListPage {
     } else if(this.userPersonalTrainerID && this.userTrainingID === trainingID){
         this.toast.create({
             message: "Fai già questo allenamento!",
-            duration: 3500
+            duration: 3500,
+            cssClass: 'cssToast'
           }).present();
     } else this.chooseRandomTrainer(trainingID, trainingName);  
   }
@@ -104,7 +108,9 @@ export class TrainingListPage {
   }
 
   chooseRandomTrainer(trainingID, trainingName){
-    console.log("chooseRandomTrainer, trainer id: "+this.userPersonalTrainerID);
+    console.log("chooseRandomTrainer, userName", this.userName);
+    console.log("chooseRandomTrainer, trainingID", trainingID); 
+    console.log("chooseRandomTrainer, userPTID: "+this.userPersonalTrainerID);
     var trainerList= new Array();
     this.afDatabase.list(`/gym/trainings/${trainingID}/trainers`)
       .valueChanges().subscribe(snapshots =>{
@@ -130,18 +136,35 @@ export class TrainingListPage {
             }
 
             //aggiorna il nuovo personal trainer
+            let self = this;
+              firebase.database()
+                  .ref(`/profile/user/${this.userID}/name`)
+                  .on('value', function(snapshot){
+                    console.log("username preso da firebase", snapshot.val());
+                    self.afDatabase
+                      .object(`/profile/trainer/${resultID}/users/${self.userID}`)
+                      .update({
+                          UID: self.userID,
+                          username: snapshot.val(),
+                          training: trainingName
+                    }).then(() =>{
+                        if(self.parentPage){
+                          self.parentPage.loadUserData(); //aggiorna le informazioni nella schermata precedente
+                          self.navCtrl.pop();
+                        } else self.navCtrl.setRoot(TabsPage);                
+                      });  
+              }); /*                       
             this.afDatabase
-              .object(`/profile/trainer/${resultID}/users/${this.userID}`)
-              .update({
-                  UID: this.userID,
-                  username: this.userName,
-                  training: trainingName
-            }).then(() =>{
-                if(this.parentPage){
-                  this.parentPage.loadUserData(); //aggiorna le informazioni nella schermata precedente
-                  this.navCtrl.pop();
-                } else this.navCtrl.setRoot(TabsPage);                
-            });
+                .object(`/profile/trainer/${resultID}/users/${this.userID}`)
+                .update({
+                    UID: this.userID,
+                    training: trainingName
+                }).then(() =>{
+                    if(this.parentPage){
+                      this.parentPage.loadUserData(); //aggiorna le informazioni nella schermata precedente
+                      this.navCtrl.pop();
+                    } else this.navCtrl.setRoot(TabsPage);                
+                }); */           
         });
       });
     });  

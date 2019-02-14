@@ -6,12 +6,18 @@ page-trainer-chat {
       background: none;
     }
   }
+
+  .msg, #textInput {
+    font-family: "Prod Sans" !important;
+    font-weight: 400 !important;
+  }
+
   ion-footer {
     background: white;
     ion-icon {
       padding: 10px;
       font-size: 20px;
-      color: green;
+      color: #488aff;
     }
   }
   div.load{
@@ -55,6 +61,7 @@ page-trainer-chat {
       display: inline-block;
       max-width: 100%;
       span.msg-date {
+        color: white;
         font-size: 10px;
       }
       p.msg{

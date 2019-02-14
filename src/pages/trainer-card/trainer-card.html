@@ -5,8 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>{{user.username}}</ion-title>
     <ion-buttons end>
       <button ion-button block (click)="sendToUser()">
@@ -33,13 +32,7 @@
             </ion-item-options>
         </ion-item-sliding>
     </ion-list>
-    </ion-card>
-
-<!--
-    <h4 [hidden]="card.length > 0">Inserisci la scheda del giorno per {{user.name}}</h4>
--->
-     
- 
+    </ion-card> 
 </ion-content>
 
 <ion-footer>

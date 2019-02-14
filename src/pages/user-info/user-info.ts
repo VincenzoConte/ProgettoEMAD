@@ -2,9 +2,8 @@ import { User } from './../../models/user';
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { Subscription } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { TrainingListPage } from '../training-list/training-list';
-import firebase, { database } from 'firebase';
+import firebase from 'firebase';
 import { LoginPage } from '../login/login';
 import { Storage } from '@ionic/storage';
 import { StatsPage } from '../stats/stats';
@@ -31,14 +30,13 @@ export class UserInfoPage {
   userTrainingID:string;
 
   constructor(
-    private afAuth: AngularFireAuth,
     private storage: Storage,
     public afDatabase: AngularFireDatabase, 
     private toastCtrl: ToastController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    private alertCtrl: AlertController) {
-
+    private alertCtrl: AlertController
+    ){
   }
 
    ionViewDidLoad(){
@@ -317,7 +315,8 @@ export class UserInfoPage {
   showToast(message, time?){
     this.toastCtrl.create({
             message: message,
-            duration: time || 3500
+            duration: time || 3500,
+            cssClass: 'cssToast'
         }).present();
   }
 

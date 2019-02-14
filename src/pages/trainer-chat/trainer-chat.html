@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
       {{userName}}
     </ion-title>
@@ -36,7 +36,7 @@
   <ion-grid>
     <ion-row>
       <ion-col col-10>
-        <ion-input #text type="text" placeholder="Type a message" [(ngModel)]="message" (keyup.enter)="sendMessage()" name="message"></ion-input>
+        <ion-input #text type="text" id="textInput" placeholder="Scrivi un messaggio..." [(ngModel)]="message" (keyup.enter)="sendMessage()" name="message"></ion-input>
       </ion-col>
       <ion-col col-2 (click)="sendMessage()">
         <ion-icon name="paper-plane"></ion-icon>

@@ -23,9 +23,14 @@ export class TrainerhomePage {
   tid: string;
   intervalID: number;
 
-  constructor(public navCtrl: NavController, private toastCtrl: ToastController, public navParams: NavParams, public storage: Storage, private changeRef: ChangeDetectorRef, public alertCtrl: AlertController) {
-
-
+  constructor(
+    public navCtrl: NavController, 
+    private toastCtrl: ToastController, 
+    public navParams: NavParams, 
+    public storage: Storage, 
+    private changeRef: ChangeDetectorRef, 
+    public alertCtrl: AlertController
+    ){
   }
 
   ionViewWillEnter() {
@@ -99,7 +104,8 @@ export class TrainerhomePage {
   showToast(message, time?){
     this.toastCtrl.create({
             message: message,
-            duration: time || 3500
+            duration: time || 3500,
+            cssClass: 'cssToast'
         }).present();
   }
 
@@ -135,7 +141,8 @@ export class TrainerhomePage {
    */
   hasAlreadyAnExerciseAlert(userClicked){
     this.alertCtrl.create({
-     title: "Gli hai già dato una scheda!",
+      title: 'Ha già una scheda!',
+      cssClass: 'custom-alert',
       subTitle: 'Sei sicuro di voler annullare la scheda corrente e mandargliene una nuova?',
       buttons: [
         {

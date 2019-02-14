@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from 'firebase';
 import { LoginPage } from '../login/login';
-import { Storage } from '@ionic/storage';
-import {Validators, FormBuilder, FormGroup, NgForm } from '@angular/forms';
+import { FormGroup, NgForm } from '@angular/forms';
+import { TrainingListPage } from '../training-list/training-list';
 
 /**
  * Generated class for the RegisterPage page.
@@ -26,8 +26,13 @@ export class RegisterPage {
   privacyPolicy = false;
   submitted = false;
 
-  constructor(private angularAuth: AngularFireAuth, private storage: Storage, private afDatabase: AngularFireDatabase, 
-              private toast: ToastController,  public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder) {      
+  constructor(
+    private angularAuth: AngularFireAuth, 
+    private afDatabase: AngularFireDatabase, 
+    private toast: ToastController,  
+    public navCtrl: NavController, 
+    public navParams: NavParams 
+    ){  
   }
 
   /**
@@ -50,8 +55,8 @@ export class RegisterPage {
       
        await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email.toLowerCase(), this.user.password)
         .then(() =>{
-          let user = firebase.auth().currentUser;
-          user.sendEmailVerification();
+          //let user = firebase.auth().currentUser;
+          //user.sendEmailVerification();
           this.user.password = null;
           this.angularAuth.authState.take(1).subscribe(auth=>{
             this.afDatabase.object(`profile/user/${auth.uid}`).update(this.user);
@@ -64,27 +69,34 @@ export class RegisterPage {
             urlRefBMI.set(this.user.BMI);
           });          
         }).then(()=>{          
+          /*
           this.toast.create({
                 message: "Grande! Verifica la tua e-mail per entrare.",
-                duration: 3000
+                duration: 3000,
+                cssClass: 'cssToast'
               }).present();
           this.navCtrl.setRoot(LoginPage);    
+          */
+          this.navCtrl.setRoot(TrainingListPage);
         }).catch(()=>{
               this.toast.create({
-                message: "Sicuro di aver messo una mail valida?",
-                duration: 3000
+                message: "Sicuro di aver inserito una mail valida?",
+                duration: 3000,
+                cssClass: 'cssToast'
               }).present();
         });        
      } else if(!this.privacyPolicy){
        this.toast.create({
                 message: "Accetta i termini e le condizioni per continuare.",
-                duration: 3000
+                duration: 3000,
+                cssClass: 'cssToast'
         }).present();
      } else {
        console.log("form NON valido");
        this.toast.create({
                 message: "Ricontrolla i tuoi dati",
-                duration: 3000
+                duration: 3000,
+                cssClass: 'cssToast'
         }).present();        
      }     
   }

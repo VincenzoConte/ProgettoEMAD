@@ -1,7 +1,3 @@
-import {ViewController} from 'ionic-angular';
-import { SocialSharing } from '@ionic-native/social-sharing/';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Storage } from '@ionic/storage';
 import {
   Component,
   ViewChild,
@@ -15,9 +11,7 @@ import {
   ToastController,
   AlertController,
   ActionSheetController,
-  ModalController,
   Platform,
-  App
 } from 'ionic-angular';
 
 import BackgroundGeolocation, {
@@ -30,6 +24,9 @@ import BackgroundGeolocation, {
   ConnectivityChangeEvent
 } from 'cordova-background-geolocation-lt';
 import firebase from 'firebase';
+import { SocialSharing } from '@ionic-native/social-sharing/';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../../models/user';
 import { TrainingListPage } from '../training-list/training-list';
@@ -82,7 +79,6 @@ export class HomePage {
   calories:string;
   caloriesNumber:number;
   weight:number;
-  //previousTracks = [];
   currentCoords = [];
 
   //Riferimenti a Google Maps
@@ -99,7 +95,6 @@ export class HomePage {
   localStorage: any;
 
   constructor(
-    private viewCtrl: ViewController,
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
@@ -109,10 +104,8 @@ export class HomePage {
     private storage: Storage,
     private aSheetCtrl: ActionSheetController,
     private socialSharing: SocialSharing,
-    private modal: ModalController,
-    private app: App,
     private afAuth: AngularFireAuth,
-    public afDatabase: AngularFireDatabase, 
+    public afDatabase: AngularFireDatabase
     ){
       //Inizializzazione delle variabili      
       this.timer = 0;
@@ -145,7 +138,6 @@ export class HomePage {
    ionViewDidLoad(){
     this.platform.ready().then(() => {
       this.localStorage = (<any>window).localStorage; 
-      //this.localStorage.clear(); 
       this.checkWeight();      
       this.configureMap();
       this.configureBackgroundGeolocation().then(() =>{
@@ -180,11 +172,11 @@ export class HomePage {
                 self.trainingAlert(); 
               }        
             });
-          });
-        
+          });        
       }
     });   
   }
+
   /**
    * Configura il plugin
    */
@@ -223,12 +215,10 @@ export class HomePage {
         this.state.isMoving = state.isMoving;
         this.state.geofenceProximityRadius = state.geofenceProximityRadius;
         this.state.trackingMode = state.trackingMode;
-      });
-      
+      });      
       if(!state.schedulerEnabled && (state.schedule.length > 0)){
         BackgroundGeolocation.startSchedule();
-      }
-     
+      }     
     });
   }
   
@@ -304,6 +294,9 @@ export class HomePage {
     console.log("provider enabled: "+provider.enabled);
     console.log("provider gps: "+provider.gps);
     console.log('[event] providerchange: ', provider);
+    if(!this.isGPSenabled){
+      this.showToast('Assicurati che il GPS sia acceso', 2000);
+    }
   }
 
   onSchedule(state:State){
@@ -340,7 +333,7 @@ export class HomePage {
         BackgroundGeolocation.start(state =>{
           console.log("start success!: ", state);
           this.isRunning = !this.isRunning;
-          this.isActivityRunning = !this.isActivityRunning;
+          this.isActivityRunning = true;
           this.state.isChangingPace = true;
           this.state.isMoving = !this.state.isMoving;        
           BackgroundGeolocation.changePace(this.state.isMoving)
@@ -375,7 +368,8 @@ export class HomePage {
   */
   stopTrainingAlert() {    
     let alert = this.alertCtrl.create({
-      title: 'Fine allenamento',    
+      title: 'Fine allenamento',   
+      cssClass: 'custom-alert', 
       subTitle: 'Sei sicuro di voler terminare la sessione?',
       buttons: [
         {
@@ -392,7 +386,7 @@ export class HomePage {
           }
         }        
       ],
-      enableBackdropDismiss: true //se è false, impedisce di chiudere l'alert toccando al di fuori di esso    
+      enableBackdropDismiss: false //se è false, impedisce di chiudere l'alert toccando al di fuori di esso    
     });
     alert.present();     
   }
@@ -402,10 +396,13 @@ export class HomePage {
    * L'utente ha cliccato per visualizzare la scheda
    */
   onClickCard(){      
-    let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
-    cardAlert.setCssClass('custom-alert');
-    cardAlert.setTitle("Scheda di allenamento");    
-    this.loadCardList(cardAlert).then(() => cardAlert.present());        
+    if (!navigator.onLine) {
+      this.showToast('Nessuna connessione ad Internet');
+    } else {
+      let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
+      cardAlert.setTitle("Scheda di allenamento");    
+      this.loadCardList(cardAlert).then(() => cardAlert.present());        
+    }
   }
 
   /**
@@ -497,26 +494,24 @@ export class HomePage {
                         if(result || result == null){
                           this.showSharingAlert(); 
                         } else {
-                          this.toastCtrl.create({
-                            message: "Complimenti, hai finito la scheda di allenamento!",
-                            duration: 2500
-                          }).present();
+                          this.showToast("Complimenti, hai finito l'allenamento!", 2500);                          
                         }
                       }).catch(error =>{
                         console.log("errore: ", error);
                         this.showSharingAlert();
                       });                       
                     });                                  
-                } else {         
-                  this.toastCtrl.create({
-                      message: "Completa la scheda per finire l'allenamento",
-                      duration: 2500,
-                  }).present();
+                } else {    
+                  this.showToast("Completa la scheda per terminare l'allenamento", 2500);     
                 }                
               }
             });        
           } else {
             cardAlert.setSubTitle("Non hai una scheda di allenamento, per ora.");
+            cardAlert.addButton({
+              text: 'Ok',
+              cssClass: 'custom-alert-btn'
+            });
             resolve(alert);
           }   
       });         
@@ -529,6 +524,7 @@ export class HomePage {
   showSharingAlert(){
     let alert = this.alertCtrl.create({
             title: "Complimenti!",    
+            cssClass: 'custom-alert',
             subTitle: "Hai finito il tuo allenamento! Vuoi condividere il tuo risultato?",
             buttons: [{
                 text: 'Si',
@@ -906,17 +902,11 @@ export class HomePage {
   onClickGetCurrentPosition() {
     if(this.isGPSenabled){
       BackgroundGeolocation.getCurrentPosition({}, (location) => {
-        //console.log('- getCurrentPosition success: ', location);
         var latlng = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
-        this.map.animateCamera({
-        target: latlng
-        });
+        this.map.moveCamera({
+          'target': latlng
+        }, function(){});
       });
-    } else {
-      this.toastCtrl.create({
-            message: "Abilita il GPS!",
-            duration: 3500
-        }).present();
     }
   }
 
@@ -928,7 +918,8 @@ export class HomePage {
   showToast(message, time?){
     this.toastCtrl.create({
             message: message,
-            duration: time || 3500
+            duration: time || 3500,
+            cssClass: 'cssToast'
         }).present();
   }
 
@@ -941,6 +932,7 @@ export class HomePage {
   trainingAlert(){
     let alert = this.alertCtrl.create({
       title: "E l'allenamento?",    
+      cssClass: 'custom-alert',
       subTitle: 'Seleziona un allenamento per poter proseguire.',
       buttons: [{
         text: 'OK',
@@ -959,6 +951,7 @@ export class HomePage {
   weightAlert(){
     this.alertCtrl.create({
       title: "Un'ultima cosa",
+      cssClass: 'custom-alert',
       subTitle: 'Non sono state trovate queste informazioni, cortesemente aggiungile',
       inputs: [
         {
@@ -1017,6 +1010,7 @@ export class HomePage {
   genderAlert(){
     this.alertCtrl.create({
       title: 'Specifica il tuo genere',
+      cssClass: 'custom-alert',
       subTitle: 'Necessitiamo sapere del tuo genere per poter calcolare correttamente i tuoi parametri fisici',
       inputs: [    
         {

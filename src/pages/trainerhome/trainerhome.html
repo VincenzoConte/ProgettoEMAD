@@ -6,22 +6,21 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Home</ion-title>
     <ion-buttons end>
-      <button ion-button block (click)="logout()">Logout</button>
+      <button ion-button block (click)="logout()">Esci</button>
     </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
-<ion-content padding>
-
+<ion-content>
   <ion-list>
     <ion-item *ngFor="let user of myUsers">
       <ion-icon name="man" *ngIf="!user.hasExercise" item-start></ion-icon>
       <ion-icon name="walk" *ngIf="user.hasExercise" item-start></ion-icon>
-      <ion-label text-wrap (click)="onClickUser(user)">
+      <ion-label (click)="onClickUser(user)">
           <h2>{{user.username}}</h2>
           <p>{{user.training}}</p>
       </ion-label>

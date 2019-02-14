@@ -1,12 +1,9 @@
-import { TrainingHistoryPage } from '../pages/training-history/training-history';
 import { TrainerhomePage } from '../pages/trainerhome/trainerhome';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -17,22 +14,43 @@ import { TabsPage } from '../pages/tabs/tabs';
 })
 export class MyApp {
   rootPage:any;
-
-  constructor(platform: Platform, statusBar: StatusBar, public afDatabase: AngularFireDatabase,
-    splashScreen: SplashScreen, private afAuth: AngularFireAuth, private storage: Storage) {
+  //public onlineOffline: boolean = navigator.onLine;
+  
+  constructor(
+    platform: Platform, 
+    statusBar: StatusBar, 
+    splashScreen: SplashScreen, 
+    alertCtrl: AlertController,
+    private storage: Storage
+    ) {
 
     //this.storage.set('userLoggedID', 'tvq2DppxfiVWq78CobleOX21wOu1');
-    //this.storage.set('trainerLoggedID', 'trainer17');
+    //this.storage.set('trainerLoggedID', 'trainer17');   
     this.keepLogin();
-    //this.rootPage = TrainingHistoryPage;
+    if (!navigator.onLine) {
+    //Do task when no internet connection
+      alertCtrl.create({
+        title: 'Errore di connessione',
+        cssClass: 'custom-alert',
+        subTitle: 'Non risulti connesso ad Internet, la tua esperienza con Capperfit sarà limitata',
+        buttons: [
+          {
+            text: 'Ok',
+            role:'cancel',
+            handler: () =>{
+              console.log('Cancel clicked');
+            }
+          }        
+        ],
+        enableBackdropDismiss: true //se è false, impedisce di chiudere l'alert toccando al di fuori di esso    
+      }).present();
+    }
+
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      //statusBar.styleDefault();
       splashScreen.hide();
-      if(platform.is('android') || platform.is('ios')) {
-        statusBar.backgroundColorByHexString('#bdbdbd');
-      }
+      statusBar.backgroundColorByHexString('#2F71E6');
     });
   }
 
@@ -40,27 +58,23 @@ export class MyApp {
    * Metodo per conservare il login
    */
   keepLogin(){
-    console.log("keepLogin called");
     this.storage.get("userLoggedID").then(result =>{
-      console.log("(appComponent) userLoggedID stauts: "+result);
       if(result !== undefined && result != "" && result != null){
         this.rootPage = TabsPage;
       } else {
         this.storage.get("trainerLoggedID").then(result =>{
-          console.log("(appComponent) trainerLoggedID stauts: "+result);
           if(result !== undefined && result != "" && result != null){
-            //this.rootPage = TrainerhomePage;
             this.rootPage = TrainerhomePage;
           } else this.rootPage = LoginPage;
         }).catch(error =>{
-          //userLoggedID completely empty
+          //userLoggedID completamente vuoto
           console.log("Errore durante il recupero di trainerLoggedID! "+error);
           this.rootPage = LoginPage;
         });
       }
     }).catch(error =>{
-        console.log("Errore durante il recupero di userLoggedID! "+error);
-        this.rootPage = LoginPage;
+      console.log("Errore durante il recupero di userLoggedID! "+error);
+      this.rootPage = LoginPage;
     });
   }
 

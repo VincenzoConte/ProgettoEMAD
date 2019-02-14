@@ -22,9 +22,13 @@ export class ChatPage {
   intervalID: number;
   oldTrainer = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage,
-    private changeRef: ChangeDetectorRef, public toast: ToastController) {
-
+  constructor(
+      public navCtrl: NavController, 
+      public navParams: NavParams, 
+      private storage: Storage,
+      private changeRef: ChangeDetectorRef, 
+      public toast: ToastController
+    ){
   }
 
   sendMessage() {
@@ -34,7 +38,8 @@ export class ChatPage {
     if(this.oldTrainer){
       this.toast.create({
           message: "Questa chat non è più attiva",
-          duration: 3000
+          duration: 3000,
+          cssClass: 'cssToast'
       }).present();
     }
     else{
@@ -53,7 +58,8 @@ export class ChatPage {
     if(this.messages.length < this.limit){
       this.toast.create({
           message: "Non ci sono altri messaggi",
-          duration: 3000
+          duration: 3000,
+          cssClass: 'cssToast'
       }).present();
     } else{
       this.limit += 10;
@@ -99,8 +105,8 @@ export class ChatPage {
         this.changeRef.detectChanges();
       }, 1000);
       if(this.tid === undefined || this.tid == null || this.tid.trim() == ""){
-        firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
-          var email = resp.val().trainer;
+        firebase.database().ref(`/profile/user/${result}/trainer`).once('value', resp => {
+          var email = resp.val();
           self.tid = email.substr(0, email.indexOf('@'));
           firebase.database().ref(`/profile/trainer/${self.tid}`).once('value', resp =>{
             self.trainerName = resp.val().name;

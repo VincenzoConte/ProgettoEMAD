@@ -6,11 +6,10 @@ import { Storage } from '@ionic/storage';
 import { User } from './../../models/user';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Facebook } from '@ionic-native/facebook';
 import { AngularFireDatabase } from '@angular/fire/database';
-
 import * as firebase from 'firebase';
 import { TrainerhomePage } from '../trainerhome/trainerhome';
 
@@ -26,9 +25,15 @@ export class LoginPage {
   forgotLogin: boolean = false; //tasto del login dimenticato inizializzato a false
   sendverificationmail: boolean = false;
 
-  constructor(public afdatabase: AngularFireDatabase, private angAuth: AngularFireAuth,
-      private storage: Storage, private toast: ToastController, private fb: Facebook,
-      public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+      public afdatabase: AngularFireDatabase,
+      private angAuth: AngularFireAuth,
+      private storage: Storage, 
+      private toast: ToastController, 
+      private fb: Facebook,
+      public navCtrl: NavController, 
+      public navParams: NavParams
+    ){
   }
 
   async onLogin(form :NgForm){
@@ -39,7 +44,11 @@ export class LoginPage {
       try{
         this.angAuth.auth.signInWithEmailAndPassword(this.user.email, this.user.password)
         .then(data =>{
-          if(data.user.emailVerified){
+          /**
+           * Per velocizzare i tempi della registrazione durante la presentazione
+           * dell'app, è stato disabilitato il controllo sulla mail verificata
+           */
+          //if(data.user.emailVerified){
             //salva il login
             this.storage.set("userLoggedID", data.user.uid);
             //console.log("(login) email verificata!");
@@ -61,13 +70,14 @@ export class LoginPage {
                 console.log("(login) non hai del tutto eliminato l'utente da Firebase!");
               }
             });
-          } else {
+          /*} else {
             console.log("(login) email non verificata");
             this.toast.create({
                 message: "Devi validare la mail per poter entrare.",
-                duration: 3000
+                duration: 3000,
+                cssClass: 'cssToast'
             }).present();
-          }
+          }*/
         }).catch(()=>{
           //non esiste un utente con questa mail,
           //controlla se è un personal trainer
@@ -116,7 +126,8 @@ export class LoginPage {
         console.log("(login) Errore durante il login: "+error);
         this.toast.create({
           message: "Errore durante il login, riprova.",
-          duration: 2500
+          duration: 2500,
+          cssClass: 'cssToast'
         }).present();
       }
 
@@ -124,7 +135,8 @@ export class LoginPage {
       console.log("(login) Form non valido");
        this.toast.create({
           message: "Errore durante il login, riprova.",
-          duration: 2500
+          duration: 2500,
+          cssClass: 'cssToast'
         }).present();
     }
   }
@@ -182,7 +194,8 @@ export class LoginPage {
       .then(() => {
         this.toast.create({
             message: "Abbiamo inviato una mail di recupero account.",
-            duration: 3500
+            duration: 3500,
+            cssClass: 'cssToast'
           }).present();
       }).catch((error) => console.log(error));
   }

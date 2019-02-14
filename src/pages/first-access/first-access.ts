@@ -2,11 +2,10 @@ import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { TrainingListPage } from './../training-list/training-list';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { User } from '../../models/user';
-import { Validators, FormBuilder, FormGroup, FormControl, NgForm } from '@angular/forms';
-
+import { FormGroup, NgForm } from '@angular/forms';
 
 /**
  * Generated class for the FirstAccessPage page.
@@ -28,9 +27,15 @@ export class FirstAccessPage {
   formgroup:FormGroup;
   public fbUserID:string;
 
-  constructor(public navCtrl: NavController, public afDatabase: AngularFireDatabase, public navParams: NavParams, public storage: Storage,
-              private afAuth: AngularFireAuth, public toast: ToastController, private formBuilder: FormBuilder) {
-    this.setUserID();
+  constructor(
+      public navCtrl: NavController, 
+      public afDatabase: AngularFireDatabase, 
+      public navParams: NavParams, 
+      public storage: Storage,
+      private afAuth: AngularFireAuth,
+      public toast: ToastController
+    ) {
+        this.setUserID();
   }
 
 
@@ -51,13 +56,15 @@ export class FirstAccessPage {
     } else if(!this.privacyPolicy){
       this.toast.create({
                 message: "Accetta i termini e le condizioni per continuare",
-                duration: 3000
+                duration: 3000,
+                cssClass: 'cssToast'
       }).present();
     } else {
       console.log("form NON valido");
       this.toast.create({
                 message: "Ricontrolla i tuoi dati",
-                duration: 3000
+                duration: 3000,
+                cssClass: 'cssToast'
       }).present();
     }
   }
