@@ -9,6 +9,7 @@ import { Storage } from '@ionic/storage';
 import { StatsPage } from '../stats/stats';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { TrainingHistoryPage } from '../training-history/training-history';
+
 /**
  * Generated class for the UserInfoPage page.
  *
@@ -46,7 +47,7 @@ export class UserInfoPage {
         this.userID = result;
       } else this.navCtrl.setRoot(LoginPage);
     }).then(() =>{
-      this.loadUserData();
+      this.loadUserData();    
     });
   }
 
@@ -84,40 +85,58 @@ export class UserInfoPage {
    * Aggiorna il peso dell'utente
    */
   updateWeight(){
-    this.alertCtrl.create({
-      title: "Nuovo peso",
-      subTitle: "Aggiorna il tuo peso inserendolo nell'area sottostante",
-      cssClass: 'custom-alert',
-      inputs: [{
-        name: 'Weight',
-        type: 'number',
-        value: this.user.weight.toString(),
-        placeholder: this.user.weight.toString()
-      }],
-      buttons: [
-        {
-          text: 'Annulla',
-          role: 'cancel'       
-        }, {
-          text: 'Aggiorna',
-          handler: data => {
-            if(data.Weight){
-              let newWeight = data.Weight;
-              let newBMI = newWeight/((this.user.height/100)*(this.user.height/100));
-              this.user.weight = newWeight;
-              this.user.BMI = newBMI;
-              this.afDatabase.object(`profile/user/${this.userID}`).update(this.user);
-              var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
-              var date = new Date().toISOString().split('T')[0];
-              var urlRefBMI =  rootRef.child("/Stats/"+this.userID+"/BMI/"+date+"/Value");
-              var urlRefPeso =  rootRef.child("/Stats/"+this.userID+"/Peso/"+date+"/Value");
-              urlRefPeso.set(newWeight);
-              urlRefBMI.set(newBMI);
+    let self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected");
+        self.alertCtrl.create({
+          title: "Nuovo peso",
+          subTitle: "Aggiorna il tuo peso inserendolo nell'area sottostante",
+          cssClass: 'custom-alert',
+          inputs: [{
+            name: 'Weight',
+            type: 'number',
+            value: self.user.weight.toString(),
+            placeholder: self.user.weight.toString()
+          }],
+          buttons: [
+            {
+              text: 'Annulla',
+              role: 'cancel'       
+            }, {
+              text: 'Aggiorna',
+              handler: data => {
+                if(data.Weight){
+                  let newWeight = data.Weight;
+                  let newBMI = newWeight/((self.user.height/100)*(self.user.height/100));
+                  self.user.weight = newWeight;
+                  self.user.BMI = newBMI;
+                  self.afDatabase.object(`profile/user/${self.userID}`).update(self.user);
+                  var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
+                  var date = new Date().toISOString().split('T')[0];
+                  var urlRefBMI =  rootRef.child("/Stats/"+self.userID+"/BMI/"+date+"/Value");
+                  var urlRefPeso =  rootRef.child("/Stats/"+self.userID+"/Peso/"+date+"/Value");
+                  urlRefPeso.set(newWeight);
+                  urlRefBMI.set(newBMI);
+              }
+            }
           }
-        }
+        ],
+        }).present();
+      } else { 
+        //alert("not connected");
+          self.alertCtrl.create({
+            title: 'Errore di connessione al server',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso ad Internet, e per garantire l'integrità dei dati per favore aggiorna il peso quando tornerà la connessione.",
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'         
+            }]
+          }).present();        
       }
-    ],
-    }).present();
+    });    
   }
 
   /**
@@ -151,6 +170,9 @@ export class UserInfoPage {
 
   /**
    * Carica le informazioni riguardo l'utente
+   * NON c'è un controllo sulla rete dal momento che il controllo
+   * viene effettuato solo in caso di interazione col database
+   * col fine di modificarne alcuni valori
    */
   public loadUserData(){
     let self = this; 
@@ -167,58 +189,57 @@ export class UserInfoPage {
         self.userTrainingID = self.user.training;
         self.userTrainerID = self.user.trainer;
         self.checkTraining();
-    });
-    /*  
-    var connectedRef = firebase.database().ref(".info/connected");
-    connectedRef.on("value", function(snap) {
-      if (snap.val() === true) {
-        //alert("connected");
-          
-      } else {
-        //alert("not connected");
-        self.alertCtrl.create({
-          title:"Errore di connessione",
-          cssClass: 'custom-alert',
-          subTitle: "Sembra che tu non sia connesso ad Internet, l'esperienza d'uso può risentirne",
-          buttons: [{
-            text: 'Ok'
-          }]
-        }).present();
-      }
-    }); 
-    */            
+    });        
   }
 
   /**
    * Mostra un alert per confermare l'intenzione di cambiare allenamento
    */
   onClickChangeTraining(){
-    this.alertCtrl.create({
-      title: "Sei sicuro?",
-      cssClass: 'custom-alert',
-      subTitle: 'Stai per cambiare il tuo allenamento, sei sicuro della tua decisione?',
-      buttons: [
-        {
-          text: 'Si',
-          handler: () =>{
-            this.changeTraining();
-          }
-        },
-        {
-          text: 'No',
-          handler: () =>{
-            console.log("alert dismissed");            
-          }
-        }
-      ],
-      enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
-    }).present();
+    let self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected");
+        self.alertCtrl.create({
+          title: "Sei sicuro?",
+          cssClass: 'custom-alert',
+          subTitle: 'Stai per cambiare il tuo allenamento, sei sicuro della tua decisione?',
+          buttons: [
+            {
+              text: 'Si',
+              handler: () =>{
+                self.changeTraining();
+              }
+            },
+            {
+              text: 'No',
+              handler: () =>{
+                console.log("alert dismissed");            
+              }
+            }
+          ],
+          enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
+        }).present();
+      } else { 
+        //alert("not connected");
+          self.alertCtrl.create({
+            title: 'Nessuna connessione ad Internet',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'
+            }]
+          }).present();
+        }      
+    });  
   }
 
   /**
    * Cambia l'allenamento dell'utente
    */
-  public changeTraining(){
+  public changeTraining(){    
     //allenatore: trainer10@mail.com, allenamento: definition
     var trainerIDpassed = this.user.trainer.substr(0, this.user.trainer.indexOf('@'));
     console.log("User-info) valori passati alla training list: "+this.userTrainerID+", allenamento: "+this.userTrainingID);
@@ -234,26 +255,44 @@ export class UserInfoPage {
    * Mostra un alert per confermare l'intenzione di cambiare allenatore
    */
   onClickChangeTrainer(){
-    this.alertCtrl.create({
-      title: "Sei sicuro?",
-      cssClass: 'custom-alert',
-      subTitle: 'Stai per cambiare il tuo allenatore, sei sicuro della tua decisione?',
-      buttons: [
-        {
-          text: 'Si',
-          handler: () =>{
-            this.changeTrainer();
-          }
-        },
-        {
-          text: 'No',
-          handler: () =>{
-            console.log("alert dismissed");            
-          }
-        }
-      ],
-      enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
-    }).present();
+    let self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected"); 
+        self.alertCtrl.create({
+          title: "Sei sicuro?",
+          cssClass: 'custom-alert',
+          subTitle: 'Stai per cambiare il tuo allenatore, sei sicuro della tua decisione?',
+          buttons: [
+            {
+              text: 'Si',
+              handler: () =>{
+                self.changeTrainer();
+              }
+            },
+            {
+              text: 'No',
+              handler: () =>{
+                console.log("alert dismissed");            
+              }
+            }
+          ],
+          enableBackdropDismiss: false //se si clicca fuori dall'alert non viene chiuso
+        }).present();
+      } else { 
+        //alert("not connected");
+          self.alertCtrl.create({
+            title: 'Nessuna connessione ad Internet',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'            
+            }]
+          }).present();
+        }      
+    });    
   }
 
   onClickLoadHistory(){
@@ -343,15 +382,32 @@ export class UserInfoPage {
    * Esegue il logout dall'applicazione
    */
   logout(){
-    this.storage.ready().then(() => {
-      firebase.auth().signOut();
-      this.storage.set("userLoggedID", "").then(() =>{
-        console.log("logging out...");
-        this.showToast("Alla prossima!", 3500);
-        //this.navCtrl.setRoot(LoginPage); //genera un bug nel tabbed layout
-        window.location.reload();          //workaround
-      });
-    });
+    this.alertCtrl.create({
+      title: 'Logout',
+      subTitle: 'Sicuro di voler uscire da Capperfit?',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'Sì',
+          handler: () =>{
+              this.storage.ready().then(() => {
+                firebase.auth().signOut();
+                 //si assicura che non ci siano errori al logout
+                this.storage.set('userLoggedID','').then(()=>{   
+                  this.storage.remove("userLoggedID").then(() =>{
+                    console.log("logging out...");        
+                    //this.navCtrl.setRoot(LoginPage); //genera un bug nel tabbed layout
+                    window.location.reload();          //workaround
+                  });
+                })      
+              });
+          }
+      },
+      {
+        text: 'No',
+        role: 'cancel'
+      }]
+    }).present();    
   }
 
   /**

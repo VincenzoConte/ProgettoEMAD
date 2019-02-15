@@ -42,4 +42,20 @@ page-login {
     .item-md{
         padding-left: 0px !important;
     }
+
+    .spinnerCenter {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; 
+        height: 100%;
+    }
+
+    ion-spinner > svg {
+        width: 40px !important;
+        height: 40px !important;
+        stroke: #488aff !important;
+        fill: #488aff !important;
+    }
+    
 }

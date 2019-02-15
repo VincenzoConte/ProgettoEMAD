@@ -391,18 +391,31 @@ export class HomePage {
     alert.present();     
   }
 
-
   /**
    * L'utente ha cliccato per visualizzare la scheda
    */
-  onClickCard(){      
-    if (!navigator.onLine) {
-      this.showToast('Nessuna connessione ad Internet');
-    } else {
-      let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
-      cardAlert.setTitle("Scheda di allenamento");    
-      this.loadCardList(cardAlert).then(() => cardAlert.present());        
-    }
+  onClickCard(){   
+    let self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected");
+        let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
+        cardAlert.setTitle("Scheda di allenamento");    
+        this.loadCardList(cardAlert).then(() => cardAlert.present());     
+      } else { 
+        //alert("not connected"); 
+          self.alertCtrl.create({
+            title: 'Errore di connessione',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso ad Internet, assicurati di essere connesso ad una rete.",
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'         
+            }]
+          }).present();      
+        }      
+    });                
   }
 
   /**
@@ -558,6 +571,7 @@ export class HomePage {
   shareResults(sharingText){        
     let shareResults = this.aSheetCtrl.create({
       title: "Seleziona un'applicazione",
+      cssClass: 'custom-sheet',
       buttons: [
         {
           text: "Facebook",
@@ -606,7 +620,8 @@ export class HomePage {
           }
         },
         {
-          text: "e-mail",
+          text: "Condividi via mail",
+          icon: "md-mail",
           handler: () =>{
             this.socialSharing.canShareViaEmail().then(()=>{
               this.socialSharing.shareViaEmail(sharingText, "CAPPERFIT", ['sabdegregorio@gmail.com'])

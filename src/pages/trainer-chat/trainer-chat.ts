@@ -23,9 +23,13 @@ export class TrainerChatPage {
   limit = 10;
   intervalID: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, private changeRef: ChangeDetectorRef, public toast: ToastController) {
-
-
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private storage: Storage, 
+    private changeRef: ChangeDetectorRef, 
+    public toast: ToastController
+    ){ 
   }
 
   sendMessage() {
@@ -58,6 +62,7 @@ export class TrainerChatPage {
   }
 
   messagesCallback(resp){
+    firebase.database().ref(`/profile/trainer/${this.tid}/users/${this.uid}`).update({notRead: false});
     this.messages = [];
     this.messages = snapshotToArray(resp);
     let notRead = 0;
@@ -67,6 +72,7 @@ export class TrainerChatPage {
         firebase.database().ref(`/chat/${this.uid}/${this.tid}/${msg.key}`).update({
           read: true
         });
+        
       }
     });
     if(notRead == 10)
@@ -74,11 +80,14 @@ export class TrainerChatPage {
   }
 
   ionViewWillEnter() {
+    console.log("ionviewWillEnter called trainer chat");
     this.uid = this.navParams.get("userID");
+    console.log("this.uid equivale a",this.uid);
     if(this.uid === undefined || this.uid == null || this.uid.trim() == ""){
       this.navCtrl.setRoot(TrainerhomePage)
     }
-    this.userName = this.navParams.get("name");
+    this.userName = this.navParams.get("name"); 
+    console.log("this.userName equivale a",this.uid);
     this.storage.get("trainerLoggedID").then(result => {
       if(result === undefined || result.trim() == "" || result == null){
         this.navCtrl.setRoot(LoginPage);

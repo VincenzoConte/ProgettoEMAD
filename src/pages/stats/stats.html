@@ -13,41 +13,44 @@
 
 
 <ion-content padding>
+<ion-spinner icon="ripple" style="display: block; margin: auto; width: 50px;" [hidden]="areItemsLoaded"></ion-spinner>
 
-  <ion-card>
-    <ion-card-header>
-      Peso
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #peso></canvas>
-    </ion-card-content>
-  </ion-card>
-
+  <div [hidden]="!areItemsLoaded">
     <ion-card>
       <ion-card-header>
-        Body Mass Index
+        Peso
       </ion-card-header>
       <ion-card-content>
-        <canvas #bmi></canvas>
+        <canvas #peso></canvas>
       </ion-card-content>
     </ion-card>
 
-  <ion-card>
-    <ion-card-header>
-      Distanza percorsa
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #km></canvas>
-    </ion-card-content>
-  </ion-card>
+      <ion-card>
+        <ion-card-header>
+          Body Mass Index
+        </ion-card-header>
+        <ion-card-content>
+          <canvas #bmi></canvas>
+        </ion-card-content>
+      </ion-card>
 
-  <ion-card>
-    <ion-card-header>
-      Consumo energetico
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #cal></canvas>
-    </ion-card-content>
-  </ion-card>
+    <ion-card>
+      <ion-card-header>
+        Distanza percorsa
+      </ion-card-header>
+      <ion-card-content>
+        <canvas #km></canvas>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        Consumo energetico
+      </ion-card-header>
+      <ion-card-content>
+        <canvas #cal></canvas>
+      </ion-card-content>
+    </ion-card>
+  </div>  
 
 </ion-content>

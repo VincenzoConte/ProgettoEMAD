@@ -13,7 +13,9 @@
     <img id="capperfitlogo" src="../../assets/imgs/capperfit_logo.png" alt="Capperfit logo"/>
   </div>
 
-  <form #loginForm="ngForm" novalidate>
+  <ion-spinner icon="ripple" style="display: block; margin: auto; width: 50px;" [hidden]="!isLogging"></ion-spinner>
+
+  <form #loginForm="ngForm" novalidate style="margin-top: 15px;">
     <ion-list>  
       <ion-item>
         <ion-label floating color="primary">Email</ion-label>

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -27,18 +27,21 @@ export class StatsPage {
   databmi: any;
   datakg: any;
   userID: any;
+  areItemsLoaded:boolean = false;
+  isAlertShown:boolean;
 
   constructor(
       public afdatabase: AngularFireDatabase, 
       private angAuth: AngularFireAuth, 
       public navCtrl: NavController, 
+      public alertCtrl: AlertController,
       public navParams: NavParams
     ){
   }
 
   ionViewDidLoad() {
     this.userID = this.angAuth.auth.currentUser.uid.toString(); //ID Utente corrente
-
+    let self = this;
     var listkm = new Array;
     var listkm2 = new Array;
     this.datakm = [];
@@ -46,11 +49,13 @@ export class StatsPage {
     var rootRefkm = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
     var urlRefkm =  rootRefkm.child("/Stats/"+this.userID+"/KM");
     urlRefkm.once("value", function(snapshot) {
+        self.areItemsLoaded = true;
         snapshot.forEach(function(child) {
             listkm2.push(child.key.toString());
   });
 });
 this.afdatabase.list(`/Stats/${this.userID}/KM`).valueChanges().subscribe(snapshots =>{
+    if(snapshots.length === 0) console.log("nun c sta nient");
     snapshots.forEach(snapshot => {
         listkm.push(snapshot);
     });
@@ -248,5 +253,28 @@ this.afdatabase.list(`/Stats/${this.userID}/BMI`).valueChanges().subscribe(snaps
       }
       return toReturn;
   }
+
+  checkConnection(){
+    let self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected");
+      } else { 
+        //alert("not connected");
+        if(!self.isAlertShown){          
+          self.alertCtrl.create({
+            title: 'Nessuna connessione ad Internet',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso alla rete, per favore controlla la tua connessione",
+            buttons: [{
+              text: 'Ok',
+              handler: () => { self.isAlertShown = true; }           
+            }]
+          }).present();      
+        }
+      }
+    });
+  } 
 
 }

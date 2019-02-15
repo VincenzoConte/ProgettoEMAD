@@ -28,13 +28,16 @@ export class TabsPage {
   notify = "";
   uid: string;
   tid: string;
+  isAlertShown:boolean;
 
-  constructor(public storage: Storage, public alertCtrl: AlertController){    
+  constructor(public storage: Storage, public alertCtrl: AlertController){  
     this.storage.get('userLoggedID').then(result => {
       if(result !== undefined && result != "" && result != null){
         this.uid=result;
         let self=this;
         firebase.database().ref(`/profile/user/${this.uid}`).once('value', resp => {
+          console.log("tabs) valore user", this.uid) ;
+          console.log("tabs) valore trainer", resp.val().trainer);
           var email = resp.val().trainer;
           self.tid = email.substr(0, email.indexOf('@'));
           let chat = firebase.database().ref(`/chat/${self.uid}/${self.tid}`);
@@ -59,20 +62,25 @@ export class TabsPage {
   }
 
   checkConnection(){
+    let self = this;
     var connectedRef = firebase.database().ref(".info/connected");
     connectedRef.on("value", function(snap) {
       if (snap.val() === true) {
         //alert("connected");
       } else { 
         //alert("not connected");
-        this.alertCtrl.create({
-          title: 'Nessuna connessione ad Internet',
-          cssClass: 'custom-alert',
-          subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
-          buttons: [{
-            text: 'Ok',              
-          }]
-        }).present();
+        if(!self.isAlertShown){        
+          self.isAlertShown = true;  
+          self.alertCtrl.create({
+            title: 'Nessuna connessione ad Internet',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
+            buttons: [{
+              text: 'Ok',
+              handler: () => { self.isAlertShown = false; }           
+            }]
+          }).present();      
+        }
       }
     });
   } 

@@ -4,7 +4,6 @@ import { User } from '../../models/user';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from 'firebase';
-import { LoginPage } from '../login/login';
 import { FormGroup, NgForm } from '@angular/forms';
 import { TrainingListPage } from '../training-list/training-list';
 
@@ -30,7 +29,8 @@ export class RegisterPage {
     private angularAuth: AngularFireAuth, 
     private afDatabase: AngularFireDatabase, 
     private toast: ToastController,  
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
+    public storage: Storage, 
     public navParams: NavParams 
     ){  
   }
@@ -43,17 +43,20 @@ export class RegisterPage {
      this.submitted = true;
    
 
-     if(form.valid && this.privacyPolicy){      
+     if(form.valid && this.privacyPolicy && this.user.name.match("[a-zA-Z]+")){      
+       //this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
+       this.user.BMI = this.user.weight/Math.pow((this.user.height/100), 2);
+       this.user.hasExercise = false;
        console.log("form valido");  
+       /*
        console.log("utente: "+this.user.email+", pwd: "+this.user.password);
        console.log("genere utente: "+this.user.gender);
-       console.log("Altezza: "+this.user.height+", peso: "+this.user.weight);
-       this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
-       this.user.hasExercise = false;
+       console.log("Altezza: "+this.user.height+", peso: "+this.user.weight);       
        console.log("BMI: "+this.user.BMI);
        console.log("Has Exercise: "+this.user.hasExercise);
+       */
       
-       await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email.toLowerCase(), this.user.password)
+       await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email.toLowerCase().replace(/\s/g,''), this.user.password)
         .then(() =>{
           //let user = firebase.auth().currentUser;
           //user.sendEmailVerification();
@@ -68,37 +71,38 @@ export class RegisterPage {
             urlRefPeso.set(this.user.weight);
             urlRefBMI.set(this.user.BMI);
           });          
-        }).then(()=>{          
-          /*
-          this.toast.create({
-                message: "Grande! Verifica la tua e-mail per entrare.",
-                duration: 3000,
-                cssClass: 'cssToast'
-              }).present();
-          this.navCtrl.setRoot(LoginPage);    
-          */
-          this.navCtrl.setRoot(TrainingListPage);
-        }).catch(()=>{
-              this.toast.create({
-                message: "Sicuro di aver inserito una mail valida?",
-                duration: 3000,
-                cssClass: 'cssToast'
-              }).present();
-        });        
+        }).then(()=>{            
+          //this.showToast('Grande! Verifica la tua e-mail per entrare.');
+          let user = firebase.auth().currentUser;
+          console.log("UID dell'utente appena creato:", user.uid);
+          this.storage.set("userLoggedID", user.uid).then(()=>{
+            this.navCtrl.setRoot(TrainingListPage);
+          });          
+        }).catch((error)=>{
+          console.log("errore nella registrazione", error.code);
+          if(error.code === 'auth/email-already-in-use'){              
+            this.showToast('Sembra che la mail sia già in uso');
+          } else if(error.code === 'auth/weak-password'){ 
+            this.showToast('Password troppo debole, deve essere almeno di 6 caratteri');
+          } else if(error.code === 'auth/invalid-email'){
+            this.showToast('La mail che hai inserito non è valida, controlla!');
+          } else this.showToast('Qualcosa è andato storto durante la registrazione: '+error.code, 3000);              
+        });
      } else if(!this.privacyPolicy){
-       this.toast.create({
-                message: "Accetta i termini e le condizioni per continuare.",
-                duration: 3000,
-                cssClass: 'cssToast'
-        }).present();
+        this.showToast('Accetta i termini e le condizioni per continuare.');
+     } else if(!this.user.name.match("[a-zA-Z]+")){
+       this.showToast('Il nome inserito non è valido, riprova');       
      } else {
-       console.log("form NON valido");
-       this.toast.create({
-                message: "Ricontrolla i tuoi dati",
-                duration: 3000,
-                cssClass: 'cssToast'
-        }).present();        
-     }     
+       this.showToast('Qualcosa è andato storto durante la registrazione');
+     }
+  }
+
+  showToast(message, time?){
+    this.toast.create({
+        message: message,
+        duration: time || 1500,
+        cssClass: 'cssToast'
+    }).present();
   }
 
   /**

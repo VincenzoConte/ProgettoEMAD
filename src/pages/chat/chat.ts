@@ -9,11 +9,11 @@ import { ChatHistoryPage } from '../chat-history/chat-history';
 
 @Component({
   selector: 'page-chat',
-  templateUrl: 'chat.html',
+  templateUrl: 'chat.html', 
 })
-export class ChatPage {
+export class ChatPage { 
 
-  public uid: string;
+  public uid: string; 
   public tid: string;
   timeVisible:boolean=false;
   trainerName: string;
@@ -44,6 +44,7 @@ export class ChatPage {
       }).present();
     }
     else{
+      firebase.database().ref(`/profile/trainer/${this.tid}/users/${this.uid}`).update({notRead: true});
       let newData = firebase.database().ref(`/chat/${this.uid}/${this.tid}`).push();
       newData.set({
         author:this.uid,

@@ -19,26 +19,28 @@
 				<ion-icon name="close"></ion-icon>
 			</button>
   </ion-fab>
-  <div #map id="map"></div>
+  <div #map id="map" style="background: black;"></div>
 </div>
 
-<p id="selectInfo" style="text-align: center;" [hidden]="activityList.length === 0">{{infotext}}</p>
+<p id="selectInfo" style="text-align: center;" [hidden]="activityList.length === 0 || !areItemsLoaded">{{infotext}}</p>
+<ion-spinner icon="ripple" style="display: block; margin: auto; width: 50px;" [hidden]="areItemsLoaded"></ion-spinner>
 
-    <h5 id="emptyListInfo" [hidden]="activityList.length > 0">Non ci sono attivit&agrave; da mostrare.</h5>
-    <ion-list *ngFor="let element of activityList.slice().reverse()">
-      <ion-card padding>
-        <h1 style="margin-bottom: 10px;">{{element.date}}</h1>  
-        <ion-list *ngFor="let activity of element.card">
-          <h2>{{activity}}</h2>
-        </ion-list>   
-        <div style="margin-top: 28px;">
-          <ion-list *ngFor="let hour of element.hours" (click)="onClickHour(hour, element.date)">
-            <button ion-button block style="text-transform: none;">Corsa delle {{hour}}</button> 
-          </ion-list> 
-        </div>
-               
-      </ion-card>                                           
-    </ion-list>
+    <h5 id="emptyListInfo" [hidden]="activityList.length !== 0 || !areItemsLoaded">Non ci sono attivit&agrave; da mostrare.</h5>
+    <div [hidden]="!areItemsLoaded">
+      <ion-list *ngFor="let element of activityList.slice().reverse()">
+        <ion-card padding>
+          <h1 style="margin-bottom: 10px;">{{element.date}}</h1>  
+          <ion-list *ngFor="let activity of element.card">
+            <h2>{{activity}}</h2>
+          </ion-list>   
+          <div style="margin-top: 28px;">
+            <ion-list *ngFor="let hour of element.hours" (click)="onClickHour(hour, element.date)">
+              <button ion-button block style="text-transform: none;">Corsa delle {{hour}}</button> 
+            </ion-list> 
+          </div>               
+        </ion-card>                                           
+      </ion-list>
+    </div>
   
 
 </ion-content>

@@ -25,6 +25,7 @@ export class TrainingHistoryPage {
   coordsArray = [];
   currentMapTrack = null;
   isMapHidden:boolean = false;
+  areItemsLoaded:boolean = false;
   infotext:string;    
   infoString = 'Seleziona una corsa';
   item:any;
@@ -73,7 +74,8 @@ export class TrainingHistoryPage {
     firebase.database()
           .ref(`/oldActivities/${this.userID}`)    
           .once('value', function(snapshot){
-            if(snapshot.exists()){                      
+            self.areItemsLoaded = true;    
+            if(snapshot.exists()){                                
               snapshot.forEach(element => {
                 self.activityList.push({
                   hours: Object.keys(element.val().maps), 
@@ -83,8 +85,8 @@ export class TrainingHistoryPage {
                   isShowedInMap: false
                 });
               });        
-            }
-          });  
+            } else self.areItemsLoaded = true;   
+      });  
     /*
     var connectedRef = firebase.database().ref(".info/connected");
     connectedRef.on("value", function(snap) {

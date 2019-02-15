@@ -29,6 +29,9 @@ export class TrainerCardPage {
     this.trainer = navParams.get('trainer');
     this.user = navParams.get('user');
     this.parentPage = navParams.get('parentPage');
+    console.log("trainer passato",this.trainer);
+    console.log("user passato", this.user);
+    
   }
 
   /**

@@ -1,5 +1,6 @@
+import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import { LoginPage } from '../login/login';
@@ -24,44 +25,66 @@ export class TrainerhomePage {
   myUsers = [];
   tid: string;
   intervalID: number;
+  usersList:Observable<any[]>;
+  isAlertShown:boolean=false;
 
   constructor(
     public navCtrl: NavController, 
     private toastCtrl: ToastController, 
     public navParams: NavParams, 
     public storage: Storage, 
-    private changeRef: ChangeDetectorRef, 
+    public afDatabase: AngularFireDatabase,
     public alertCtrl: AlertController
     ){
+      
   }
 
   checkConnection(){
+    let self = this;
     var connectedRef = firebase.database().ref(".info/connected");
     connectedRef.on("value", function(snap) {
       if (snap.val() === true) {
         //alert("connected");
       } else { 
         //alert("not connected");
-        this.alertCtrl.create({
-          title: 'Nessuna connessione ad Internet',
-          cssClass: 'custom-alert',
-          subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
-          buttons: [{
-            text: 'Ok',              
-          }]
-        }).present();
+        if(!self.isAlertShown){
+          self.isAlertShown = true;
+          self.alertCtrl.create({
+            title: 'Nessuna connessione ad Internet',
+            cssClass: 'custom-alert',
+            subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
+            buttons: [{
+              text: 'Ok',
+              handler: () =>{ self.isAlertShown = false; }              
+            }]
+          }).present();
+        }
       }
     });
   } 
 
   ionViewDidLoad(){
+    /*
     //Controlla ogni 60 secondi la connessione ad Internet
     Observable.interval(60000)
-    .subscribe(() => { this.checkConnection() });       
+    .subscribe(() => { this.checkConnection() });     
+    */
+    this.storage.get("trainerLoggedID").then(result => {
+      if(result === undefined || result == "" || result == null){
+        this.navCtrl.setRoot(LoginPage);
+      }
+      this.tid=result;
+      this.getUsersList(result);
+    });
+     
+  } 
+
+  getUsersList(trainerID){
+    this.usersList = this.afDatabase.list(`/profile/trainer/${trainerID}/users`).valueChanges();
   }
 
   ionViewWillEnter() {
-
+/*
     this.storage.get("trainerLoggedID").then(result => {
       if(result === undefined || result == "" || result == null){
         this.navCtrl.setRoot(LoginPage);
@@ -80,10 +103,10 @@ export class TrainerhomePage {
           users.orderByKey().on('value', resp => {
             self.myUsers = [];
             resp.forEach(child => {
-              /*firebase.database().ref(`/profile/user/${child.val().uid}`).once('value', user => {
-                self.myUsers.push({name: user.val().name, uid: user.key, notRead: false});
-                firebase.database().ref(`/chat/${child.val().uid}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
-              });*/
+              //firebase.database().ref(`/profile/user/${child.val().uid}`).once('value', user => {
+              //  self.myUsers.push({name: user.val().name, uid: user.key, notRead: false});
+              //  firebase.database().ref(`/chat/${child.val().uid}/${self.tid}`).orderByKey().limitToLast(1).on('value', self.checkChat, self);
+              //});
 
               self.myUsers.push({username: child.val().username, uid: child.key, training: child.val().training, hasExercise: child.val().hasExercise, notRead: false});
               console.log(child.val().hasExercise);
@@ -104,6 +127,7 @@ export class TrainerhomePage {
       });
       
     });
+    */
   }
 
   findUser(element, index, array){
@@ -134,8 +158,10 @@ export class TrainerhomePage {
 
 
   openUserChat(user){
+    console.log("user id per la chat MAIUSC",user.UID);     
+    console.log("username per la chat", user.username);
     this.navCtrl.push( TrainerChatPage, {
-      userID: user.uid,
+      userID: user.UID, //user.uid,
       name: user.username
     });
   }
@@ -154,18 +180,16 @@ export class TrainerhomePage {
   }
 
   onClickUser(userClicked){
-    /*
-    console.log("nome: "+userClicked.name);
+    /*console.log("nome: "+userClicked.username);
     console.log("training: "+userClicked.training);
     console.log("ha la scheda?: "+userClicked.hasExercise);
-    console.log("UID: "+userClicked.UID);
-    */
+    console.log("UID: "+userClicked.UID);*/    
     if(!userClicked.hasExercise){
       this.createCard(userClicked);
     } else this.hasAlreadyAnExerciseAlert(userClicked);
   }
 
-  /**
+  /** 
    * Metodo per aprire la pagina per la creazione della scheda
    * @param userClicked
    */
@@ -196,20 +220,18 @@ export class TrainerhomePage {
           }
         },
         {
-          text: 'No',
-          handler: () =>{
-          }
+          text: 'No'
         }
       ],
     }).present();
   }
 
   logout(){
+    this.showToast("Alla prossima!", 3500);
     this.storage.ready().then(() => {
       this.storage.remove("trainerLoggedID").then(() =>{
         console.log("logging out...");
-        firebase.auth().signOut();
-        this.showToast("Alla prossima!", 3500);
+        firebase.auth().signOut();        
         window.location.reload();
       });
     });

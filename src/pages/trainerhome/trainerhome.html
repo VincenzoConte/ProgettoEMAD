@@ -16,10 +16,26 @@
 </ion-header>
 
 <ion-content>
+  <ion-list *ngFor="let user of usersList | async">
+    <ion-card >
+      <ion-item>
+        <ion-icon item-right *ngIf="user.notRead" name="md-mail" color="danger" (click)="openUserChat(user)"></ion-icon>
+        <ion-icon item-right *ngIf="!user.notRead" name="md-mail-open" color="light" (click)="openUserChat(user)"></ion-icon>
+        <ion-label>{{user.username}} </ion-label>
+      </ion-item>         
+        <ion-item>
+          <p>{{user.training}}</p>
+          <ion-icon name="md-clipboard" *ngIf="!user.hasExercise" item-right color="danger" (click)="onClickUser(user)"></ion-icon>
+          <ion-icon name="md-clipboard" *ngIf="user.hasExercise" item-right color="secondary" (click)="onClickUser(user)"></ion-icon>
+        </ion-item>             
+    </ion-card>
+  </ion-list>
+  
+<!---
   <ion-list>
     <ion-item *ngFor="let user of myUsers">
-      <ion-icon name="man" *ngIf="!user.hasExercise" item-start></ion-icon>
-      <ion-icon name="walk" *ngIf="user.hasExercise" item-start></ion-icon>
+      <ion-icon name="md-clipboard" *ngIf="!user.hasExercise" item-start></ion-icon>
+      <ion-icon name="fitness" *ngIf="user.hasExercise" item-start></ion-icon>
       <ion-label (click)="onClickUser(user)">
           <h2>{{user.username}}</h2>
           <p>{{user.training}}</p>
@@ -28,5 +44,5 @@
       <ion-icon *ngIf="!user.notRead" name="chatboxes" (click)="openUserChat(user)" item-end></ion-icon>
     </ion-item>
   </ion-list>
-
+  -->
 </ion-content>
