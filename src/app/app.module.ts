@@ -25,6 +25,7 @@ import { StatsPage } from '../pages/stats/stats';
 import { TrainerCardPage } from '../pages/trainer-card/trainer-card';
 import { SocialSharing } from '@ionic-native/social-sharing/';
 import { TrainingHistoryPage } from '../pages/training-history/training-history';
+import * as firebase from 'firebase';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvBtahWOFGtsiz8k6_3ok9ksx-HS70UUs",
@@ -32,9 +33,9 @@ const firebaseConfig = {
     databaseURL: "https://capgemini-personal-fitness.firebaseio.com",
     projectId: "capgemini-personal-fitness",
     storageBucket: "capgemini-personal-fitness.appspot.com",
-    messagingSenderId: "96328966461"
+    messagingSenderId: "96328966461"  
   };
-
+firebase.initializeApp(firebaseConfig);
 @NgModule({
   declarations: [
     MyApp,

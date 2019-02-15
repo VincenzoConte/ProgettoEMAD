@@ -22,7 +22,9 @@
   <div #map id="map"></div>
 </div>
 
-<p id="selectInfo" style="text-align: center;">{{infotext}}</p>
+<p id="selectInfo" style="text-align: center;" [hidden]="activityList.length === 0">{{infotext}}</p>
+
+    <h5 id="emptyListInfo" [hidden]="activityList.length > 0">Non ci sono attivit&agrave; da mostrare.</h5>
     <ion-list *ngFor="let element of activityList.slice().reverse()">
       <ion-card padding>
         <h1 style="margin-bottom: 10px;">{{element.date}}</h1>  

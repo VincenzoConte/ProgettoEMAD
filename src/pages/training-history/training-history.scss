@@ -9,7 +9,14 @@ page-training-history {
         font-weight: 400 !important;
     }
 
-    ion-title, h1, #selectInfo, button {
+    #emptyListInfo, #selectInfo {
+        font-family: "Prod Sans" !important;
+        font-weight: 700 !important;
+        text-align: center;
+        color: #616161;
+    }
+
+    ion-title, h1, button {
         font-family: "Prod Sans" !important;
         font-weight: 700 !important;
     }

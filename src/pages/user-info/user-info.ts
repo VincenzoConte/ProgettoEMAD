@@ -153,21 +153,40 @@ export class UserInfoPage {
    * Carica le informazioni riguardo l'utente
    */
   public loadUserData(){
-    let self = this;            
+    let self = this; 
     firebase.database().ref(`/profile/user/${self.userID}/`)
-            .once('value', function(snapshot){
-              if(snapshot.exists()){
-                self.user = snapshot.val();
-                self.userBMI = self.user.BMI.toFixed(2);                  
-              } else {
-                console.log("ERRORE! Nessun utente trovato con questo ID!");
-              }
-            }).then(()=>{
-                console.log("user name"+self.user.name);
-                self.userTrainingID = self.user.training;
-                self.userTrainerID = self.user.trainer;
-                self.checkTraining();
-            });
+      .once('value', function(snapshot){
+        if(snapshot.exists()){
+          self.user = snapshot.val();
+          self.userBMI = self.user.BMI.toFixed(2);                  
+        } else {
+          console.log("ERRORE! Nessun utente trovato con questo ID!");
+        }
+    }).then(()=>{
+        console.log("user name"+self.user.name);
+        self.userTrainingID = self.user.training;
+        self.userTrainerID = self.user.trainer;
+        self.checkTraining();
+    });
+    /*  
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected");
+          
+      } else {
+        //alert("not connected");
+        self.alertCtrl.create({
+          title:"Errore di connessione",
+          cssClass: 'custom-alert',
+          subTitle: "Sembra che tu non sia connesso ad Internet, l'esperienza d'uso può risentirne",
+          buttons: [{
+            text: 'Ok'
+          }]
+        }).present();
+      }
+    }); 
+    */            
   }
 
   /**

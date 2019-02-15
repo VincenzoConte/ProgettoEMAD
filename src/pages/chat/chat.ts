@@ -15,6 +15,7 @@ export class ChatPage {
 
   public uid: string;
   public tid: string;
+  timeVisible:boolean=false;
   trainerName: string;
   messages = [];
   message = '';
@@ -89,6 +90,10 @@ export class ChatPage {
   openChatHistory(){
 
     this.navCtrl.push(ChatHistoryPage);
+  }
+
+  showTime(){
+    this.timeVisible = !this.timeVisible;
   }
 
 

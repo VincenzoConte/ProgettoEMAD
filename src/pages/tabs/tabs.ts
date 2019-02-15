@@ -1,10 +1,13 @@
 import { ChatPage } from './../chat/chat';
 import { Component, ViewChild } from '@angular/core';
-import { Tabs } from 'ionic-angular';
+import { Tabs, AlertController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { UserInfoPage } from '../user-info/user-info';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
+import { Observable } from 'rxjs';
+import 'rxjs/add/observable/interval';
+
 
 /**
  * Generated class for the TabsPage page.
@@ -26,8 +29,7 @@ export class TabsPage {
   uid: string;
   tid: string;
 
-  constructor(public storage: Storage){
-
+  constructor(public storage: Storage, public alertCtrl: AlertController){    
     this.storage.get('userLoggedID').then(result => {
       if(result !== undefined && result != "" && result != null){
         this.uid=result;
@@ -54,5 +56,30 @@ export class TabsPage {
         });
       }
     });
+  }
+
+  checkConnection(){
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        //alert("connected");
+      } else { 
+        //alert("not connected");
+        this.alertCtrl.create({
+          title: 'Nessuna connessione ad Internet',
+          cssClass: 'custom-alert',
+          subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
+          buttons: [{
+            text: 'Ok',              
+          }]
+        }).present();
+      }
+    });
+  } 
+
+  ionViewDidLoad(){
+    //Controlla ogni minuto se l'app è connessa ad internet
+    Observable.interval(60000)
+    .subscribe(() => { this.checkConnection() });       
   }
 }

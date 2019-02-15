@@ -19,15 +19,15 @@
 
     <ion-item *ngFor="let msg of messages" no-lines>
       <div>
-        <div class="chat-message" text-right *ngIf="msg.author === uid">
+        <div class="chat-message" text-right *ngIf="msg.author === uid" (click)="showTime()">
           <div class="right-bubble">    
-            <span class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>          
+            <span [hidden]="!timeVisible" class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>          
             <p class="msg" text-wrap>{{msg.msg}}</p>             
           </div>                 
         </div>
-        <div class="chat-message" text-left *ngIf="msg.author !== uid">
+        <div class="chat-message" text-left *ngIf="msg.author !== uid" (click)="showTime()">
           <div class="left-bubble">
-            <span class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
+            <span [hidden]="!timeVisible" class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
             <p class="msg" text-wrap>{{msg.msg}}</p>
           </div>
         </div>

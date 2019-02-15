@@ -58,7 +58,24 @@ export class TrainingListPage {
   }
 
   getTrainings(){
-    this.trainings = this.afDatabase.list(`/gym/trainings`).valueChanges();
+    let self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        self.trainings = self.afDatabase.list(`/gym/trainings`).valueChanges();
+      } else {
+        //alert("not connected");
+        self.alertCtrl.create({
+          title:"Errore di connessione",
+          cssClass: 'custom-alert',
+          subTitle: "Sembra che tu non sia connesso ad Internet, l'esperienza d'uso può risentirne",
+          buttons: [{
+            text: 'Ok'
+          }]
+        }).present();
+      }
+    });
+    
   }
 
   onClickTraining(trainingID, trainingName){

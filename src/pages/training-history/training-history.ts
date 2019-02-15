@@ -1,6 +1,6 @@
 import { LoginPage } from './../login/login';
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams, Platform, Content } from 'ionic-angular';
+import { NavController, NavParams, Platform, Content, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import firebase from 'firebase';
 import { Observable } from 'rxjs';
@@ -37,6 +37,7 @@ export class TrainingHistoryPage {
     public navCtrl: NavController, 
     private storage: Storage, 
     public navParams: NavParams,
+    public alertCtrl: AlertController,
     private platform: Platform
     ){
     this.infotext = this.infoString;
@@ -70,20 +71,38 @@ export class TrainingHistoryPage {
     console.log("loadOldActivity");
     let self = this;  
     firebase.database()
-    .ref(`/oldActivities/${this.userID}`)    
-    .once('value', function(snapshot){
-      if(snapshot.exists()){                      
-        snapshot.forEach(element => {
-          self.activityList.push({
-            hours: Object.keys(element.val().maps), 
-            maps: element.val().maps, 
-            date: element.val().date, 
-            card: element.val().card,
-            isMapHidden: true
-          });
-        });        
+          .ref(`/oldActivities/${this.userID}`)    
+          .once('value', function(snapshot){
+            if(snapshot.exists()){                      
+              snapshot.forEach(element => {
+                self.activityList.push({
+                  hours: Object.keys(element.val().maps), 
+                  maps: element.val().maps, 
+                  date: element.val().date, 
+                  card: element.val().card,
+                  isShowedInMap: false
+                });
+              });        
+            }
+          });  
+    /*
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val() === true) {
+        
+      } else {
+        //alert("not connected");
+        self.alertCtrl.create({
+          title:"Errore di connessione",
+          cssClass: 'custom-alert',
+          subTitle: "Sembra che tu non sia connesso ad Internet, l'esperienza d'uso può risentirne",
+          buttons: [{
+            text: 'Ok'
+          }]
+        }).present();
       }
-    });    
+    });   
+    */   
   }
    
   /**
