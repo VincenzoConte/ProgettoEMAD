@@ -6,6 +6,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from 'firebase';
 import { FormGroup, NgForm } from '@angular/forms';
 import { TrainingListPage } from '../training-list/training-list';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the RegisterPage page.
