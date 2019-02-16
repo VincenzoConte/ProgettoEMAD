@@ -40,12 +40,11 @@ export class LoginPage {
   async onLogin(form :NgForm){
     this.submitted = true;
     this.isLogging = true;
-
+    var mail = this.user.email.toLowerCase().replace(/\s/g,'');
     if(form.valid){
-      console.log("user inserito: ",this.user.email.toLowerCase().replace(/\s/g,''));
       //console.log("login completato! email e password: "+this.login.email+", "+this.login.password);
       try{
-        this.angAuth.auth.signInWithEmailAndPassword(this.user.email.toLowerCase().replace(/\s/g,''), this.user.password)
+        this.angAuth.auth.signInWithEmailAndPassword(mail, this.user.password)
         .then(data =>{
           /**
            * Per velocizzare i tempi della registrazione durante la presentazione

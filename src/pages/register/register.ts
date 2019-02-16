@@ -42,8 +42,9 @@ export class RegisterPage {
    */
   async register(form :NgForm){
      this.submitted = true;
-   
-
+     var mail = this.user.email.toLowerCase().replace(/\s/g,'');
+      console.log("valore mail inserito",this.user.email);
+      console.log("valore mail corretto",this.user.email.toLowerCase().replace(/\s/g,''));
      if(form.valid && this.privacyPolicy && this.user.name.match("[a-zA-Z]+")){      
        //this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
        this.user.BMI = this.user.weight/Math.pow((this.user.height/100), 2);
@@ -57,12 +58,12 @@ export class RegisterPage {
        console.log("Has Exercise: "+this.user.hasExercise);
        */
       
-       await this.angularAuth.auth.createUserWithEmailAndPassword(this.user.email.toLowerCase().replace(/\s/g,''), this.user.password)
+       await this.angularAuth.auth.createUserWithEmailAndPassword(mail, this.user.password)
         .then(() =>{
           //let user = firebase.auth().currentUser;
           //user.sendEmailVerification();
           this.user.password = null;
-          this.angularAuth.authState.take(1).subscribe(auth=>{
+          this.angularAuth.authState.subscribe(auth=>{ //authState.take(1) genera errore
             this.afDatabase.object(`profile/user/${auth.uid}`).update(this.user);
             //Salva il Peso e il BMI nel database delle Statistiche
             var rootRef = firebase.database().refFromURL("https://capgemini-personal-fitness.firebaseio.com/");
@@ -87,7 +88,7 @@ export class RegisterPage {
             this.showToast('Password troppo debole, deve essere almeno di 6 caratteri');
           } else if(error.code === 'auth/invalid-email'){
             this.showToast('La mail che hai inserito non è valida, controlla!');
-          } else this.showToast('Qualcosa è andato storto durante la registrazione: '+error.code, 3000);              
+          } else this.showToast('Registrazione fallita: '+error.code, 3000);              
         });
      } else if(!this.privacyPolicy){
         this.showToast('Accetta i termini e le condizioni per continuare.');

@@ -231,7 +231,6 @@ export class TrainerhomePage {
     this.storage.ready().then(() => {
       this.storage.remove("trainerLoggedID").then(() =>{
         console.log("logging out...");
-        firebase.auth().signOut();        
         window.location.reload();
       });
     });

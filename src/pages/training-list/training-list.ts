@@ -143,7 +143,9 @@ export class TrainingListPage {
         this.afDatabase.object(`/profile/user/${this.userID}/`).update({
           trainer: result,
           training: trainingID,
-          trainingName: trainingName
+          trainingName: trainingName,
+          card: null,
+          hasExercise: false          
         }).then(() =>{
             //rimuove l'utente dal precedente personal trainer
             if(this.userPersonalTrainerID){   
@@ -163,7 +165,9 @@ export class TrainingListPage {
                       .update({
                           UID: self.userID,
                           username: snapshot.val(),
-                          training: trainingName
+                          training: trainingName,
+                          hasExercise: false,
+                          notRead: false
                     }).then(() =>{
                         if(self.parentPage){
                           self.parentPage.loadUserData(); //aggiorna le informazioni nella schermata precedente
@@ -205,7 +209,9 @@ export class TrainingListPage {
     //aggiorna il nodo utente
     this.afDatabase.object(`/profile/user/${this.userID}/`).update({
       training: trainingID,
-      trainingName: trainingName
+      trainingName: trainingName,
+      card: null,
+      hasExercise: false
     }).then(() =>{
   
       //aggiorna il personal trainer
@@ -214,7 +220,8 @@ export class TrainingListPage {
           .update({
              UID: this.userID,
              username: this.userName,
-             training: trainingName
+             training: trainingName,
+             hasExercise: false
           }).then(() =>{
               this.parentPage.loadUserData();
               this.navCtrl.pop();

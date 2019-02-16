@@ -400,11 +400,13 @@ export class HomePage {
     connectedRef.on("value", function(snap) {
       if (snap.val() === true) {
         //alert("connected");
-        let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
+        console.log("onclick card connesso ad internet");
+        let cardAlert = self.alertCtrl.create({cssClass: 'custom-alert'});
         cardAlert.setTitle("Scheda di allenamento");    
-        this.loadCardList(cardAlert).then(() => cardAlert.present());     
+        self.loadCardList(cardAlert).then(() => cardAlert.present());     
       } else { 
         //alert("not connected"); 
+          console.log("onclick card  NON connesso ad internet");
           self.alertCtrl.create({
             title: 'Errore di connessione',
             cssClass: 'custom-alert',
@@ -913,7 +915,7 @@ export class HomePage {
 
   /**
    * Restituisce le coordinate nel momento del click
-   */
+   */ 
   onClickGetCurrentPosition() {
     if(this.isGPSenabled){
       BackgroundGeolocation.getCurrentPosition({}, (location) => {
@@ -983,20 +985,6 @@ export class HomePage {
           name: 'weight',
           placeholder: 'Peso',
           type: 'tableNumber'
-        },
-        {
-          name: 'genderM',
-          type: 'radio',
-          label: 'Maschio',
-          value: '1',
-          checked: true
-        },
-        {
-          name: 'genderF',
-          type: 'radio',
-          label: 'Femmina',
-          value: '0',
-          checked: false
         }
       ],
       buttons: [
@@ -1054,6 +1042,5 @@ export class HomePage {
       ],
       enableBackdropDismiss: false      
       }).present();
-  }
-  
+  }  
 }

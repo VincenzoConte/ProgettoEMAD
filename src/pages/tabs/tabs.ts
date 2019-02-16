@@ -28,7 +28,7 @@ export class TabsPage {
   notify = "";
   uid: string;
   tid: string;
-  isAlertShown:boolean;
+  isAlertShown:boolean=false;
 
   constructor(public storage: Storage, public alertCtrl: AlertController){  
     this.storage.get('userLoggedID').then(result => {
@@ -79,7 +79,8 @@ export class TabsPage {
               text: 'Ok',
               handler: () => { self.isAlertShown = false; }           
             }]
-          }).present();      
+          }).present();  
+          console.log("valore isAlertShown",self.isAlertShown);    
         }
       }
     });

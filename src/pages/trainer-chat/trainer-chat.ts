@@ -14,7 +14,7 @@ import { LoginPage } from '../login/login';
   templateUrl: 'trainer-chat.html',
 })
 export class TrainerChatPage {
-
+  timeVisible:boolean=false;
   uid: string;
   userName: string;
   tid: string;
@@ -59,6 +59,10 @@ export class TrainerChatPage {
       chat.off('value');
       chat.orderByKey().limitToLast(self.limit).on('value', self.messagesCallback, this);
     }
+  }
+
+  showTime(){
+    this.timeVisible = !this.timeVisible;
   }
 
   messagesCallback(resp){

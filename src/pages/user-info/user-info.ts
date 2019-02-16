@@ -9,6 +9,7 @@ import { Storage } from '@ionic/storage';
 import { StatsPage } from '../stats/stats';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { TrainingHistoryPage } from '../training-history/training-history';
+import BackgroundGeolocation from 'cordova-background-geolocation-lt';
 
 /**
  * Generated class for the UserInfoPage page.
@@ -85,11 +86,13 @@ export class UserInfoPage {
    * Aggiorna il peso dell'utente
    */
   updateWeight(){
+    console.log("updateWeight");
     let self = this;
     var connectedRef = firebase.database().ref(".info/connected");
     connectedRef.on("value", function(snap) {
       if (snap.val() === true) {
         //alert("connected");
+        console.log("connesso ad internet");
         self.alertCtrl.create({
           title: "Nuovo peso",
           subTitle: "Aggiorna il tuo peso inserendolo nell'area sottostante",
@@ -126,6 +129,7 @@ export class UserInfoPage {
         }).present();
       } else { 
         //alert("not connected");
+        console.log("NON connesso ad internet");
           self.alertCtrl.create({
             title: 'Errore di connessione al server',
             cssClass: 'custom-alert',
@@ -138,35 +142,6 @@ export class UserInfoPage {
       }
     });    
   }
-
-  /**
-   * Controlla i dati sul login
-   */
-  /*
-  public checkLogin(){
-   this.storage.get("userLoggedID").then(result =>{
-      if(result !== undefined && result != "" && result != null){
-        this.userID = result;
-        console.log("(home) storage user id: "+result);
-      } else this.navCtrl.setRoot(LoginPage);
-    }).then(()=>{
-      let self = this;
-      this.afAuth.authState.subscribe(user =>{
-        if(user && user.email && user.uid){
-          console.log("(home) authstate user id: "+user.uid);
-          if(self.userID != user.uid){
-            console.log("(home) L'user ID su Firebase non combacia con quello sul cellulare");
-            //cancella l'id salvato e manda al login per questioni di sicurezza
-            self.storage.remove("userLoggedID");
-            self.navCtrl.setRoot(LoginPage);
-          } else {
-            this.loadUserData();            
-          }
-        }
-      });
-    });
-  }
-  */
 
   /**
    * Carica le informazioni riguardo l'utente
@@ -196,6 +171,7 @@ export class UserInfoPage {
    * Mostra un alert per confermare l'intenzione di cambiare allenamento
    */
   onClickChangeTraining(){
+    console.log("cambio training");
     let self = this;
     var connectedRef = firebase.database().ref(".info/connected");
     connectedRef.on("value", function(snap) {
@@ -313,7 +289,9 @@ export class UserInfoPage {
         this.getRandomTrainer(trainerList).then(result =>{
           //aggiorna l'utente
           this.afDatabase.object(`/profile/user/${this.userID}/`).update({
-            trainer: result,            
+            trainer: result, 
+            card: null,
+            hasExercise: false           
           }).then(()=>{
             //rimuove l'utente dall'attuale personal trainer
             var currTrainerID = this.user.trainer.substr(0, this.user.trainer.indexOf('@'));
@@ -332,7 +310,9 @@ export class UserInfoPage {
                   .update({
                       UID: this.userID,
                       username: this.user.name,
-                      training: trainingName
+                      training: trainingName,
+                      hasExercise: false,
+                      notRead: false
                 }).then(() =>{
                   this.showToast("Allenatore cambiato con successo!");
                   this.loadUserData();
@@ -391,16 +371,18 @@ export class UserInfoPage {
           text: 'Sì',
           handler: () =>{
               this.storage.ready().then(() => {
-                firebase.auth().signOut();
-                 //si assicura che non ci siano errori al logout
-                this.storage.set('userLoggedID','').then(()=>{   
-                  this.storage.remove("userLoggedID").then(() =>{
-                    console.log("logging out...");        
-                    //this.navCtrl.setRoot(LoginPage); //genera un bug nel tabbed layout
-                    window.location.reload();          //workaround
-                  });
-                })      
-              });
+                  //si assicura che il tracking sia stoppato                  
+                  firebase.auth().signOut();
+                  //si assicura che non ci siano errori al logout
+                  this.storage.set('userLoggedID','').then(()=>{   
+                    this.storage.remove("userLoggedID").then(() =>{
+                      BackgroundGeolocation.stop();
+                      console.log("logging out...");        
+                      //this.navCtrl.setRoot(LoginPage); //genera un bug nel tabbed layout
+                      window.location.reload();          //workaround
+                    });
+                  }); 
+                });                                   
           }
       },
       {
@@ -416,5 +398,35 @@ export class UserInfoPage {
   loadStats(){
     this.navCtrl.push(StatsPage);
   }
+
+  /**
+   * Controlla i dati sul login
+   */
+  /*
+  public checkLogin(){
+   this.storage.get("userLoggedID").then(result =>{
+      if(result !== undefined && result != "" && result != null){
+        this.userID = result;
+        console.log("(home) storage user id: "+result);
+      } else this.navCtrl.setRoot(LoginPage);
+    }).then(()=>{
+      let self = this;
+      this.afAuth.authState.subscribe(user =>{
+        if(user && user.email && user.uid){
+          console.log("(home) authstate user id: "+user.uid);
+          if(self.userID != user.uid){
+            console.log("(home) L'user ID su Firebase non combacia con quello sul cellulare");
+            //cancella l'id salvato e manda al login per questioni di sicurezza
+            self.storage.remove("userLoggedID");
+            self.navCtrl.setRoot(LoginPage);
+          } else {
+            this.loadUserData();            
+          }
+        }
+      });
+    });
+  }
+  */
+
 
 }
