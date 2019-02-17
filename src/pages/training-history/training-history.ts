@@ -75,15 +75,25 @@ export class TrainingHistoryPage {
           .ref(`/oldActivities/${this.userID}`)    
           .once('value', function(snapshot){
             self.areItemsLoaded = true;    
-            if(snapshot.exists()){                                
+            if(snapshot.exists()){        
+              console.log("valore snapshot", snapshot);                        
               snapshot.forEach(element => {
-                self.activityList.push({
-                  hours: Object.keys(element.val().maps), 
-                  maps: element.val().maps, 
-                  date: element.val().date, 
-                  card: element.val().card,
-                  isShowedInMap: false
-                });
+                if(!element.val().maps){
+                  console.log("non ci sono mappe da mostrare :c");
+                  self.activityList.push({
+                    date: element.val().date, 
+                    card: element.val().card,
+                    isShowedInMap: false
+                  });
+                } else {
+                  self.activityList.push({
+                    hours: Object.keys(element.val().maps), 
+                    maps: element.val().maps, 
+                    date: element.val().date, 
+                    card: element.val().card,
+                    isShowedInMap: false
+                  });
+                }
               });        
             } else self.areItemsLoaded = true;   
       });   
