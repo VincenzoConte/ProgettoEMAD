@@ -86,25 +86,7 @@ export class TrainingHistoryPage {
                 });
               });        
             } else self.areItemsLoaded = true;   
-      });  
-    /*
-    var connectedRef = firebase.database().ref(".info/connected");
-    connectedRef.on("value", function(snap) {
-      if (snap.val() === true) {
-        
-      } else {
-        //alert("not connected");
-        self.alertCtrl.create({
-          title:"Errore di connessione",
-          cssClass: 'custom-alert',
-          subTitle: "Sembra che tu non sia connesso ad Internet, l'esperienza d'uso può risentirne",
-          buttons: [{
-            text: 'Ok'
-          }]
-        }).present();
-      }
-    });   
-    */   
+      });   
   }
    
   /**

@@ -69,7 +69,7 @@ export class HomePage {
   odometer: string;
   odometerNumber: number;  
   circlePosColor = '#4285F4';
-  circlePosStrokeColor = '#D1DFF5';
+  circlePosStrokeColor = '#ffffff';
   stationaryColor = '#FF0000';
   stationaryStrokeColor = '#FF0000';
   polylineColor = '#00B3FD';
@@ -93,6 +93,7 @@ export class HomePage {
   user = {} as User;
   activityList:Observable<any>;
   localStorage: any;
+  isPhoneConnected:boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -230,7 +231,7 @@ export class HomePage {
     this.zone.run(()=>{
       this.odometer = location.odometer > 1000 ? ((location.odometer/1000).toFixed(1)+'km') : location.odometer+'m';
       this.odometerNumber = location.odometer;    
-      this.caloriesNumber = 0.7 * location.odometer * this.weight;    //0.5 camminando, 0.9 in corsa = 0.7 di media
+      this.caloriesNumber = 0.4 * location.odometer * this.weight;  //0.5 camminando, 0.9 in corsa ma 0.4 per l'accuratezza
       if(this.caloriesNumber == 0 || isNaN(this.caloriesNumber)) this.calories = '0cal';
       else if(this.caloriesNumber < 1000) this.calories = this.caloriesNumber.toFixed(2)+'cal';
       else {
@@ -282,6 +283,7 @@ export class HomePage {
 
   onConnectivityChange(event:ConnectivityChangeEvent) {
     console.log('[event] connectivitychange, connected? ', event.connected);
+    this.isPhoneConnected = event.connected;
     //this.toast('[event] connectivitychange: Network connected? ', event.connected);
   }
 
@@ -311,7 +313,8 @@ export class HomePage {
    * Inizia la corsa
    */
   onClickRunning(){
-    //console.log('onClickRunning isMoving: '+this.isMoving+", is enabled: "+this.state.enabled);
+    this.onClickGetCurrentPosition();  
+    //console.log('onClickRunning isMoving: '+this.isMoving+", is enabled: "+this.state.enabled);    
     this.isTimeTicking = true;
     this.zone.run(() => {         
         this.startTimer();
@@ -329,19 +332,20 @@ export class HomePage {
       this.resetWorkout();
     }
 
-    if(!this.isRunning){ //l'utente sta iniziando la corsa        
-        BackgroundGeolocation.start(state =>{
-          console.log("start success!: ", state);
-          this.isRunning = !this.isRunning;
-          this.isActivityRunning = true;
-          this.state.isChangingPace = true;
-          this.state.isMoving = !this.state.isMoving;        
-          BackgroundGeolocation.changePace(this.state.isMoving)
-                    .then(onComplete)
-                    .catch(onComplete);                
-        }, error =>{
-          console.log("start error: ", error);
-        });
+    if(!this.isRunning){ //l'utente sta iniziando la corsa   
+         
+      BackgroundGeolocation.start(state =>{
+        console.log("Il tracking è partito! Stato: ", state);
+        this.isRunning = !this.isRunning;
+        this.isActivityRunning = true;
+        this.state.isChangingPace = true;
+        this.state.isMoving = !this.state.isMoving;        
+        BackgroundGeolocation.changePace(this.state.isMoving)
+                  .then(onComplete)
+                  .catch(onComplete);                
+      }, error =>{
+        console.log("Errore nello start tracking: ", error);
+      });
     } else { //l'utente stava correndo e ha messo pausa
       this.isRunning = !this.isRunning;
       this.state.isMoving = false;
@@ -395,29 +399,9 @@ export class HomePage {
    * L'utente ha cliccato per visualizzare la scheda
    */
   onClickCard(){   
-    let self = this;
-    var connectedRef = firebase.database().ref(".info/connected");
-    connectedRef.on("value", function(snap) {
-      if (snap.val() === true) {
-        //alert("connected");
-        console.log("onclick card connesso ad internet");
-        let cardAlert = self.alertCtrl.create({cssClass: 'custom-alert'});
-        cardAlert.setTitle("Scheda di allenamento");    
-        self.loadCardList(cardAlert).then(() => cardAlert.present());     
-      } else { 
-        //alert("not connected"); 
-          console.log("onclick card  NON connesso ad internet");
-          self.alertCtrl.create({
-            title: 'Errore di connessione',
-            cssClass: 'custom-alert',
-            subTitle: "Sembra che tu non sia connesso ad Internet, assicurati di essere connesso ad una rete.",
-            buttons: [{
-              text: 'Ok',
-              role: 'cancel'         
-            }]
-          }).present();      
-        }      
-    });                
+    let cardAlert = this.alertCtrl.create({cssClass: 'custom-alert'});
+    cardAlert.setTitle("Scheda di allenamento");    
+    this.loadCardList(cardAlert).then(() => cardAlert.present());                          
   }
 
   /**
@@ -487,7 +471,7 @@ export class HomePage {
                   firebase.database().ref(`/profile/user/${this.userID}/`)
                     .once('value', function(snapshot){                    
                       userData = snapshot.val();
-                      console.log("valore userData: "+JSON.stringify(userData));
+                      console.log("valore userData (ovvero la scheda):", userData);
                     }).then(()=>{
                       //var day = new Date().toISOString().split('T')[0];
                       var date = new Date();
@@ -496,6 +480,7 @@ export class HomePage {
                       var year = date.getFullYear();
                       var dateFull = day+'-'+month+'-'+year;
                       //la aggiunge nella cronologia delle attività
+                      console.log("activitylist", completedActivitiesList);
                       this.afDatabase.object(`/oldActivities/${this.userID}/${dateFull}/card`).update(userData.card);                    
                       //rimuove la card
                       this.afDatabase.object(`/profile/user/${this.userID}/card`).remove();
@@ -504,6 +489,7 @@ export class HomePage {
                       this.afDatabase.object(`/profile/user/${this.userID}/`).update({hasExercise: false});
                       this.afDatabase.object(`/profile/trainer/${trainerID}/users/${this.userID}`).update({hasExercise: false});
                     }).then(() =>{
+                      this.onClickStop(); //si assicura di aver finito l'allenamento
                       this.localStorage.clear();
                       this.storage.get("showSharingAgain").then(result=>{
                         if(result || result == null){
@@ -679,11 +665,11 @@ export class HomePage {
     this.afDatabase.list(`/Stats/${this.userID}/cal/${date}/`).valueChanges().subscribe(snapshots =>{
         if(snapshots.length==0){
           check2 = 1;
-          urlRefcal.set(cal);
+          urlRefcal.set(isNaN(cal) ? 0 : cal);
         }else{
         snapshots.forEach(snapshot => {
           if(check2==0){
-            urlRefcal.set((cal+parseFloat(snapshot.toString())));
+            urlRefcal.set(((isNaN(cal) ? 0 : cal)+parseFloat(snapshot.toString())));
             check2 = 1;
           }
         });
@@ -692,7 +678,6 @@ export class HomePage {
 
 
     BackgroundGeolocation.stop().then(()=>{
-      //let newRoute =  { finished: new Date().getTime(), path: this.locationMarkers };
       var date = new Date();
       var day = date.getDate();
       var month = date.getMonth()+1;

@@ -43,8 +43,8 @@ export class RegisterPage {
   async register(form :NgForm){
      this.submitted = true;
      var mail = this.user.email.toLowerCase().replace(/\s/g,'');
-      console.log("valore mail inserito",this.user.email);
-      console.log("valore mail corretto",this.user.email.toLowerCase().replace(/\s/g,''));
+      //console.log("valore mail inserito",this.user.email);
+      //console.log("valore mail corretto",this.user.email.toLowerCase().replace(/\s/g,''));
      if(form.valid && this.privacyPolicy && this.user.name.match("[a-zA-Z]+")){      
        //this.user.BMI = this.user.weight/((this.user.height/100)*(this.user.height/100));
        this.user.BMI = this.user.weight/Math.pow((this.user.height/100), 2);

@@ -12,8 +12,7 @@
 
 </ion-header>
 
-<ion-content padding>
-
+<ion-content>
   <ion-list>
     <ion-item *ngFor="let chat of myChats" (click)="openChat(chat.tid, chat.name)">
       {{chat.name}}

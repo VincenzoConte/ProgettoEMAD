@@ -120,6 +120,8 @@ export class LoginPage {
                 }
               } else if(error.code === 'auth/too-many-requests'){
                   self.showToast('Troppi tentativi falliti in poco tempo, aspetta 5 secondi');
+              } else if(error.code === 'auth/user-not-found'){
+                  self.showToast('Non risulta nessun utente registrato con questa mail.');
               } else self.showToast('Qualcosa è andato storto durante il login: '+error.code, 3000);
               //non esiste nessun utente o trainer con i dati inseriti              
             } 

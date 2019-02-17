@@ -2,12 +2,8 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
-
 import { TrainerhomePage } from '../trainerhome/trainerhome';
 import { LoginPage } from '../login/login';
-
-
-
 
 @Component({
   selector: 'page-trainer-chat',

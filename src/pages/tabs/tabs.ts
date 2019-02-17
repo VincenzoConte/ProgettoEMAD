@@ -5,8 +5,6 @@ import { HomePage } from '../home/home';
 import { UserInfoPage } from '../user-info/user-info';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/interval';
 
 
 /**
@@ -59,36 +57,5 @@ export class TabsPage {
         });
       }
     });
-  }
-
-  checkConnection(){
-    let self = this;
-    var connectedRef = firebase.database().ref(".info/connected");
-    connectedRef.on("value", function(snap) {
-      if (snap.val() === true) {
-        //alert("connected");
-      } else { 
-        //alert("not connected");
-        if(!self.isAlertShown){        
-          self.isAlertShown = true;  
-          self.alertCtrl.create({
-            title: 'Nessuna connessione ad Internet',
-            cssClass: 'custom-alert',
-            subTitle: "Sembra che tu non sia connesso ad Internet, verrà fatto un nuovo tentativo di connessione tra un minuto",
-            buttons: [{
-              text: 'Ok',
-              handler: () => { self.isAlertShown = false; }           
-            }]
-          }).present();  
-          console.log("valore isAlertShown",self.isAlertShown);    
-        }
-      }
-    });
-  } 
-
-  ionViewDidLoad(){
-    //Controlla ogni minuto se l'app è connessa ad internet
-    Observable.interval(60000)
-    .subscribe(() => { this.checkConnection() });       
   }
 }

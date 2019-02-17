@@ -3,7 +3,7 @@ import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 
 /**
  * Generated class for the StatsPage page.
@@ -28,7 +28,6 @@ export class StatsPage {
   datakg: any;
   userID: any;
   areItemsLoaded:boolean = false;
-  isAlertShown:boolean;
 
   constructor(
       public afdatabase: AngularFireDatabase, 
@@ -253,28 +252,4 @@ this.afdatabase.list(`/Stats/${this.userID}/BMI`).valueChanges().subscribe(snaps
       }
       return toReturn;
   }
-
-  checkConnection(){
-    let self = this;
-    var connectedRef = firebase.database().ref(".info/connected");
-    connectedRef.on("value", function(snap) {
-      if (snap.val() === true) {
-        //alert("connected");
-      } else { 
-        //alert("not connected");
-        if(!self.isAlertShown){          
-          self.alertCtrl.create({
-            title: 'Nessuna connessione ad Internet',
-            cssClass: 'custom-alert',
-            subTitle: "Sembra che tu non sia connesso alla rete, per favore controlla la tua connessione",
-            buttons: [{
-              text: 'Ok',
-              handler: () => { self.isAlertShown = true; }           
-            }]
-          }).present();      
-        }
-      }
-    });
-  } 
-
 }
