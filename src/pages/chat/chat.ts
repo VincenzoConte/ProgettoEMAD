@@ -1,3 +1,4 @@
+import { AngularFireDatabase } from '@angular/fire/database';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
@@ -5,6 +6,7 @@ import * as firebase from 'firebase';
 
 import { LoginPage } from '../login/login';
 import { ChatHistoryPage } from '../chat-history/chat-history';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -12,7 +14,64 @@ import { ChatHistoryPage } from '../chat-history/chat-history';
   templateUrl: 'chat.html', 
 })
 export class ChatPage { 
+  userID:string;
+  trainerID;
+  timeVisible:boolean=false;
+  trainerName:string;
+  messages:Observable<any[]>;
+  message = '';
+  limit = 10;
+  intervalID:number;
+  oldTrainer:boolean=false;
 
+  constructor(
+  public navCtrl: NavController, 
+      public navParams: NavParams, 
+      private storage: Storage,
+      private afDatabase: AngularFireDatabase,
+      private changeRef: ChangeDetectorRef, 
+      public toast: ToastController
+    ){
+      this.storage.get('userLoggedID').then(result => {
+        if(result === undefined || result === '' || result === null){
+          this.navCtrl.setRoot(LoginPage);
+        } else { 
+          this.userID = result;                  
+
+          afDatabase.object(`/profile/user/${result}/trainer`)
+            .snapshotChanges()
+            .subscribe(action => {
+              this.trainerID = String(action.payload.val()).substr(0, String(action.payload.val()).indexOf('@'));
+              let self= this;
+              firebase.database().ref(`/profile/trainer/${self.trainerID}/name`).once('value', resp =>{
+                self.trainerName = resp.val(); 
+              });
+              this.loadMessages(this.trainerID);
+          });
+        }
+      });
+  }
+
+  ionViewDidLoad(){
+    
+  }
+
+  openChatHistory(){
+
+  }
+
+  loadMessages(trainerID:string){
+    this.messages = this.afDatabase.list(`/chat/${this.userID}/${trainerID}`).valueChanges();
+  }
+
+  showTime(){
+    this.timeVisible = !this.timeVisible;
+  }
+
+  sendMessage(){
+
+  }
+/*
   public uid: string; 
   public tid: string;
   timeVisible:boolean=false;
@@ -145,7 +204,7 @@ export class ChatPage {
     this.messages = [];
     this.limit = 10;
   }
-
+*/
 }
 
 

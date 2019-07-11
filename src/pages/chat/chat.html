@@ -12,6 +12,25 @@
 </ion-header>
 
 <ion-content>
+<ion-list *ngFor="let msg of messages | async" style="margin:5px auto !important;">
+  <ion-item  no-lines >
+      <div>
+        <div class="chat-message" text-right *ngIf="msg.author === userID" (click)="showTime()">
+          <div class="right-bubble">    
+            <span [hidden]="!timeVisible" class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>          
+            <p class="msg" text-wrap>{{msg.msg}}</p>             
+          </div>                 
+        </div>
+        <div class="chat-message" text-left *ngIf="msg.author !== userID" (click)="showTime()">
+          <div class="left-bubble">
+            <span [hidden]="!timeVisible" class="msg-date"> {{msg.sendDate | date:"dd/MM '-' h:mma"}}</span>
+            <p class="msg" text-wrap>{{msg.msg}}</p>
+          </div>
+        </div>
+      </div>      
+  </ion-item>  
+  </ion-list>
+  <!--
   <div class="load">
     <button ion-button round outline (click)="loadMessages()">Mostra altri</button>
   </div>
@@ -34,6 +53,7 @@
       </div>
     </ion-item>
   </ion-list>
+  -->
 </ion-content>
 
 <ion-footer>
